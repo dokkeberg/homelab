@@ -6,7 +6,8 @@
 * Handle KUBECONFIG and export it in bash profile
 * Install helm
 
-Add local DNS entries in router
+### Router
+Add local DNS entries
 * *.k3s.home
 * k3s.home
 
