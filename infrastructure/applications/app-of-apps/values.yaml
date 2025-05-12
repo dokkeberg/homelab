@@ -1,0 +1,14 @@
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/dokkeberg/homelab
+    targetRevision: HEAD
+    argocdPath: infrastructure/applications/argocd
+    portainerPath: infrastructure/applications/portainer
+  argoCd:
+    repoUrl: https://argoproj.github.io/argo-helm
+    targetRevision: 8.0.0
+  portainer:
+    repoUrl: https://portainer.github.io/k8s/
+    targetRevision: 1.0.66

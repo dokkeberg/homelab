@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd     
+spec:
+  project: default
+  destination:
+    namespace: argocd
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: {{ .Values.spec.argoCd.repoUrl }}
+    chart: argo-cd
+    targetRevision: {{ .Values.spec.argoCd.targetRevision }}
+    helm:
+        releaseName: argo
+        values: |
+          configs:
+              params:
+                server.insecure: "true"
+  - repoURL: {{ .Values.spec.source.repoURL }}
+    path: {{ .Values.spec.source.argocdPath }}
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false 
