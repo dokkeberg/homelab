@@ -14,8 +14,8 @@ spec:
       parameters:
         - name: installCRDs
           value: "true"
-    repoURL: {{ .Values.spec.cert-manager.repoUrl }}
-    targetRevision: {{ .Values.spec.cert-manager.targetRevision }}
+    repoURL: {{ .Values.spec.certManager.repoUrl }}
+    targetRevision: {{ .Values.spec.certManager.targetRevision }}
   syncPolicy:
     automated: {}
     syncOptions:

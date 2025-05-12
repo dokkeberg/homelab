@@ -12,6 +12,6 @@ spec:
   portainer:
     repoUrl: https://portainer.github.io/k8s/
     targetRevision: 1.0.66
-  cert-manager:
+  certManager:
     repoUrl: https://charts.jetstack.io
     targetRevision: 1.17.2
