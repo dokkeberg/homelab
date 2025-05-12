@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  destination:
+    namespace: cert-manager
+    server: {{ .Values.spec.destination.server }}
+  project: infrastructure
+  source:
+    chart: cert-manager
+    helm:
+      parameters:
+        - name: installCRDs
+          value: "true"
+    repoURL: {{ .Values.spec.cert-manager.repoUrl }}
+    targetRevision: {{ .Values.spec.cert-manager.targetRevision }}
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
