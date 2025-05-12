@@ -1,4 +1,4 @@
-k3s
+### k3s
 * Setup new VM using ubuntu-server
   * Enable SSH during install
   * Remove install drive after reboot
@@ -10,7 +10,7 @@ Add local DNS entries in router
 * *.k3s.local
 * k3s.local
 
-ArgoCD
+### ArgoCD
 
 > [!NOTE]  
 > Using traefik ingress requires argocd to be run in insecure mode. This should be safe as traefik terminates https.
