@@ -7,8 +7,8 @@
 * Install helm
 
 Add local DNS entries in router
-* *.k3s.local
-* k3s.local
+* *.k3s.home
+* k3s.home
 
 ### ArgoCD
 
