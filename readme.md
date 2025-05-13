@@ -49,3 +49,4 @@ Add local DNS entries
 * Verify that the following webpages are reachable from your network
   * https://argocd.k3s.home/
   * https://portainer.k3s.home/
+* Download the CA cert from your browser, and install in Trusted Root Authorities to get trusted access to all hosted services on *.k3s.home

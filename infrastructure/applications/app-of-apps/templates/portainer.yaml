@@ -16,6 +16,8 @@ spec:
       values: |
         service:
           type: LoadBalancer
+        enterpriseEdition:
+          enabled: {{ .Values.spec.portainer.enterprise }}
   - repoURL: {{ .Values.spec.source.repoURL }}
     path: {{ .Values.spec.source.portainerPath }}
     targetRevision: HEAD
