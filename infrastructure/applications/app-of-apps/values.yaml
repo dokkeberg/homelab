@@ -17,3 +17,6 @@ spec:
   certManager:
     repoUrl: https://charts.jetstack.io
     targetRevision: 1.17.2
+  keycloak:
+    repoUrl: oci://registry-1.docker.io/bitnamicharts/
+    host: keycloak.k3s.home
