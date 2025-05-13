@@ -39,9 +39,6 @@ Add local DNS entries
   ```
 * Install infrastructure app-of-apps
   ```
-  argocd admin initial-password -n argocd
-  ```
-  ```
   argocd app create infrastructure --repo https://github.com/dokkeberg/homelab --path infrastructure/applications/app-of-apps --dest-server https://kubernetes.default.svc --dest-namespace argocd --plaintext --insecure --port-forward-namespace argocd
 
   ```
