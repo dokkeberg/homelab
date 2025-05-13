@@ -10,6 +10,7 @@ spec:
   project: default
   source:
     repoURL: {{ .Values.spec.keycloak.repoUrl }}
+    targetRevision: {{ .Values.spec.keycloak.targetRevision }}
     chart: keycloak
     helm:
         values: |

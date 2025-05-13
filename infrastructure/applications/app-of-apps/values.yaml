@@ -19,4 +19,5 @@ spec:
     targetRevision: 1.17.2
   keycloak:
     repoUrl: oci://registry-1.docker.io/bitnamicharts/
+    targetRevision: 24.6.7
     host: keycloak.k3s.home
