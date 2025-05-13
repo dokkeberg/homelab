@@ -22,4 +22,4 @@ spec:
   tls:
   - hosts:
     - "{{ .Values.ingress.host }}"
-    secretName: portainer-cert-tls
+    secretName: argocd-cert-tls
