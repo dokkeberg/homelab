@@ -1,0 +1,6 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: home-root-ca-issuer-selfsigned
+spec:
+  selfSigned: {}

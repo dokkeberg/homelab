@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: home-intermediate-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: home-intermediate-ca
+  secretName: home-intermediate-ca-secret
+  duration: 43800h # 5y
+  renewBefore: 35040h # 4y
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: home-root-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

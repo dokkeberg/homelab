@@ -5,6 +5,9 @@ metadata:
   namespace: portainer
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    annotations:
+    cert-manager.io/cluster-issuer: home-intermediate-ca1-issuer
+    cert-manager.io/common-name: "{{ .Values.ingress.host }}"
 spec:
   rules:
     - host: "{{ .Values.ingress.host }}"
@@ -18,5 +21,6 @@ spec:
                 port:
                   number: 9000
   tls:
-    - hosts:
-        - "{{ .Values.ingress.host }}"
+  - hosts:
+    - "{{ .Values.ingress.host }}"
+    secretName: portainer-cert-secret

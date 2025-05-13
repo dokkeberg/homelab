@@ -8,14 +8,17 @@ spec:
     namespace: cert-manager
     server: {{ .Values.spec.destination.server }}
   project: default
-  source:
+  sources:
+  - repoURL: {{ .Values.spec.certManager.repoUrl }}
     chart: cert-manager
     helm:
       parameters:
         - name: installCRDs
           value: "true"
-    repoURL: {{ .Values.spec.certManager.repoUrl }}
     targetRevision: {{ .Values.spec.certManager.targetRevision }}
+  - repoURL: {{ .Values.spec.source.repoURL }}
+    path: {{ .Values.spec.source.portainerPath }}
+    targetRevision: HEAD
   syncPolicy:
     automated: {}
     syncOptions:
