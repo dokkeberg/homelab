@@ -50,3 +50,7 @@ Add local DNS entries
   * https://argocd.k3s.home/
   * https://portainer.k3s.home/
 * Download the CA cert from your browser, and install in Trusted Root Authorities to get trusted access to all hosted services on *.k3s.home
+
+### Portainer
+> [!NOTE]
+> The business edition (BE) is free for the first 3 nodes. Sign up here: https://www.portainer.io/take-3
