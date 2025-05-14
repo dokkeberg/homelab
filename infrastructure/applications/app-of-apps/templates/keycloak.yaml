@@ -17,7 +17,7 @@ spec:
           keycloakConfigCli:
             enabled: true
             configuration:
-              portainer-realm.json: |
+              portainer.json: |
                 {
                   "realm": "portainer",
                   "enabled": true,
