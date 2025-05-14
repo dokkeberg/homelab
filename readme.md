@@ -54,3 +54,11 @@ Add local DNS entries
 ### Portainer
 > [!NOTE]
 > The business edition (BE) is free for the first 3 nodes. Sign up here: https://www.portainer.io/take-3
+
+### Keycloak
+* Get adminuser password
+  ```
+  kubectl get secret keycloak -n keycloak -o jsonpath="{.data.admin-password}" | base64 --decode
+  ```
+* Login with user:\<adminpw\>
+* Create a new permanent adminuser as soon as possible, and delete the "user" user
