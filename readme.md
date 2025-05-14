@@ -60,5 +60,10 @@ Add local DNS entries
   ```
   kubectl get secret keycloak -n keycloak -o jsonpath="{.data.admin-password}" | base64 --decode
   ```
+* Change the following parameter in the infrastructure chart to the adminpw. This will allow the keyvault cli to create the initial realm and user
+  ```
+  spec.keycloak.adminPassword
+  ```
 * Login with user:\<adminpw\>
 * Create a new permanent adminuser as soon as possible, and delete the "user" user
+* Login to the home realm with your new user https://keycloak.k3s.home/realms/home/account and change from initialpassword
