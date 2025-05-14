@@ -14,6 +14,16 @@ spec:
     chart: keycloak
     helm:
         values: |
+          keycloakConfigCli:
+            enabled: true
+            configuration:
+              portainer-realm.json: |
+                {
+                  "realm": "portainer",
+                  "enabled": true,
+                  "registrationAllowed": true
+                }
+
           global:
             postgresql:
               auth:
@@ -60,20 +70,7 @@ spec:
               port: http
             initialDelaySeconds: 60
             timeoutSeconds: 5
-          keycloakConfigCli:
-            enabled: true
-            configuration:
-              realms.json: |
-                {
-                  "realm": "portainer",
-                  "enabled": true,
-                  "registrationAllowed": true
-                },
-                {
-                  "realm": "argocd",
-                  "enabled": true,
-                  "registrationAllowed": true
-                }
+
           resources:
             requests:
               memory: "512Mi"
