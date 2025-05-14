@@ -22,3 +22,4 @@ spec:
     targetRevision: 24.6.7
     host: keycloak.k3s.home
     username: cad
+    adminPassword: ""
