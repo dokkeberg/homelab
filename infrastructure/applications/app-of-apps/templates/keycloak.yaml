@@ -14,6 +14,12 @@ spec:
     chart: keycloak
     helm:
         values: |
+          global:
+            postgresql:
+              auth:
+                username: bn_keycloak
+                password: bn_keycloak
+                database: bitnami_keycloak
           extraEnvVars:
             - name: KEYCLOAK_LOG_LEVEL
               value: DEBUG
@@ -40,9 +46,10 @@ spec:
 
           postgresql:
             enabled: true
-            postgresqlUsername: keycloak
-            postgresqlPassword: keycloakpassword
-            postgresqlDatabase: keycloakdb
+            auth:
+              username: bn_keycloak
+              password: bn_keycloak
+              database: bitnami_keycloak
 
           service:
             type: ClusterIP
