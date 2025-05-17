@@ -14,6 +14,9 @@ spec:
     targetRevision: {{ .Values.spec.semaphore.targetRevision }}
     helm:
       values: |
+        admin:
+          create: true
+          password: changeme
         ingress:
           enabled: true
           annotations:
