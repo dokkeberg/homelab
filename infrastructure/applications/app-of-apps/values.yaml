@@ -7,6 +7,7 @@ spec:
     argocdPath: infrastructure/applications/argocd
     portainerPath: infrastructure/applications/portainer
     certManagerPath: infrastructure/applications/cert-manager
+    semaphorePath: infrastructure/applications/semaphore
   argoCd:
     repoUrl: https://argoproj.github.io/argo-helm
     targetRevision: 8.0.0
@@ -24,5 +25,6 @@ spec:
     username: cad
     adminPassword: ""
   semaphore:
-    repoUrl: ghcr.io/semaphoreui/charts/semaphore
+    repoUrl: ghcr.io/semaphoreui/charts
     targetRevision: 15.1.6
+    host: semaphore.k3s.home

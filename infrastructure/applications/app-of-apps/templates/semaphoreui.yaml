@@ -12,6 +12,24 @@ spec:
     repoURL: {{ .Values.spec.semaphore.repoUrl }}
     chart: semaphore
     targetRevision: {{ .Values.spec.semaphore.targetRevision }}
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: home-intermediate-ca-issuer
+            cert-manager.io/common-name: "{{ .Values.spec.semaphore.host }}"
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+          hosts:
+            - host: "{{ .Values.spec.semaphore.host }}"
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+              - "{{ .Values.spec.semaphore.host }}"
+              secretName: semaphore-cert-tls
+
   syncPolicy:
     automated:
       prune: false
