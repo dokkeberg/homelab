@@ -1,3 +1,9 @@
+### proxmox
+* apt install git 
+* Clone this repo
+* apt install ansible
+* ansible-playbook terraform-setup.yaml -e "terraform_password=<<secretpassword>>"
+
 ### k3s
 * Setup new VM using ubuntu-server
   * Enable SSH during install

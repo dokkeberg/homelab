@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: semaphore
+  namespace: argocd     
+spec:
+  project: default
+  destination:
+    namespace: semaphore
+    server: {{ .Values.spec.destination.server }}
+  source:
+    repoURL: {{ .Values.spec.semaphore.repoUrl }}
+    chart: semaphore
+    targetRevision: {{ .Values.spec.semaphore.targetRevision }}
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false 
+    syncOptions:
+      - CreateNamespace=true
