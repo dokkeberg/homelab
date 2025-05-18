@@ -40,6 +40,7 @@
 
     - name: Execute the script
       shell: /tmp/create-ubuntu-2404-template.sh
+      when: not template_exists
 
     - name: Clone VM template into VM
       ansible.builtin.shell: >
@@ -49,3 +50,17 @@
     - name: Start VM
       ansible.builtin.shell: >
         qm start {{ VMID_instance }}
+      when: not vm_exists
+
+    - name: Wait for cloud-init to complete on VM
+      command: qm guest exec {{ VMID_instance }} -- test -f /var/lib/cloud/instance/boot-finished
+      register: result
+      until: result.rc == 0
+      retries: 10
+      delay: 10
+      changed_when: false
+
+    - name: Output result when cloud-init is done
+      debug:
+        msg: "Cloud-init is completed successfully!"
+
