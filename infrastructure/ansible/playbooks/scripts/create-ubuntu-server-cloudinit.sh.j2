@@ -31,10 +31,13 @@ runcmd:
     - curl -sfL https://get.k3s.io | sh -
     - sudo snap install helm --classic
     - export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+ 
+    # argocd
     - helm repo add argo https://argoproj.github.io/argo-helm
     - helm repo update
     - helm install argocd argo/argo-cd   --namespace argocd --create-namespace   --set server.extraArgs="{--insecure}"
     - kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
+
     #argocd-cli
     - curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
     - install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
@@ -42,11 +45,7 @@ runcmd:
 
     #argocd-app-of-apps
     - export HOME=/root
-    - export ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-    #- kubectl port-forward svc/argocd-server -n argocd 8080:443 &
     - argocd login --plaintext --insecure --core
-    #- argocd login --port-forward --port-forward-namespace argocd --plaintext --username admin --password "$ARGOCD_PASSWORD" --insecure
-    #- timeout 60s bash -c 'until kubectl get configmap argocd-cm -n argocd >/dev/null 2>&1; do sleep 2; done'
     - kubectl config set-context --current --namespace=argocd
     - argocd app create infrastructure --repo https://github.com/dokkeberg/homelab --path infrastructure/applications/app-of-apps --dest-server https://kubernetes.default.svc --dest-namespace argocd --plaintext --insecure
     - argocd app sync infrastructure --insecure --plaintext
