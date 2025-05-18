@@ -1,57 +1,36 @@
-### proxmox
-* apt install git 
-* Clone this repo
-* apt install ansible
-* ansible-playbook terraform-setup.yaml -e "terraform_password=<<secretpassword>>"
+## Homelab
+This will publish a ready to go homelab setup using cloud init images on a proxmox host. The following applications and features will be installed and ready to use on your *.k3s.home local domain:
+* ArgoCD
+* Cert-manager
+* Portainer
+* SemaphoreUI 
+* Keycloak
 
-### k3s
-* Setup new VM using ubuntu-server
-  * Enable SSH during install
-  * Remove install drive after reboot
-* Install k3s on ubuntu VM
-* Handle KUBECONFIG and export it in bash profile
-* Install helm
+Using traefik and cert-manager, we get https ingress, with automatically self signed certificates using a self signed root CA. 
+
+To be added later:
+* OIDC on all services using keycloak
+* SemaphoreUI preconfigured
+
+### proxmox
+A computer with proxmox installed is required. Do the following to deploy:
+* apt install git 
+* apt install ansible
+* Clone this repo
+* Run ansible playbook to create a ubuntu-server cloudinit VM template, and create a VM with k3s installed, and argo/portainer/cert-manager/keycloak/semaphoreui stack deployed
+  ```
+  ansible-playbook -i inventory.ini playbooks/ubuntu-server-cloudinit.yaml --extra-vars "VMID_instance=101"
+  ```
 
 ### Router
 Add local DNS entries
-* *.k3s.home
-* k3s.home
+* *.k3s.home (192.168.1.100, or the configured IP of the VM)
 
 ### ArgoCD
 
 > [!NOTE]  
 > Using traefik ingress requires argocd to be run in insecure mode. This should be safe as traefik terminates https.
 
-* Follow installation instructions
-* Install argocd cli tool
-* Temporarily expose argocd
-  ```
-  kubectl port-forward svc/argocd-server -n argocd 8080:443
-  ```
-* Login using initial password and admin user
-  ```
-  argocd admin initial-password -n argocd
-  ```
-  ```
-  argocd login --port-forward --port-forward-namespace argocd --plaintext
-  ```
-* Update password of admin user
-  ```
-  argocd account update-password --port-forward-namespace argocd
-  ```
-* Delete initial admin password resource
-  ```
-  kubectl delete secret argocd-initial-admin-secret -n argocd
-  ```
-* Install infrastructure app-of-apps
-  ```
-  argocd app create infrastructure --repo https://github.com/dokkeberg/homelab --path infrastructure/applications/app-of-apps --dest-server https://kubernetes.default.svc --dest-namespace argocd --plaintext --insecure --port-forward-namespace argocd
-
-  ```
-* Sync applications to create resources
-  ```
-  argocd app sync infrastructure --port-forward-namespace argocd --insecure --plaintext
-  ```
 * Verify that the following webpages are reachable from your network
   * https://argocd.k3s.home/
   * https://portainer.k3s.home/
