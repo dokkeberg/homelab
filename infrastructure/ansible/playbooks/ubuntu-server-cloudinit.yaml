@@ -1,0 +1,51 @@
+---
+- hosts: all
+  tasks:
+    - name: Set VMID for template
+      set_fact:
+        VMID: 9001
+
+    - name: Set VMIP for template
+      set_fact:
+        VMIP: "192.168.1.100"
+
+    - name: Check if template with VMID exists
+      ansible.builtin.shell: |
+        qm list | awk '{print $1}' | grep -wq {{ VMID }}
+      register: check_template
+      changed_when: false
+      failed_when: false
+
+    - name: Set fact if template exists
+      ansible.builtin.set_fact:
+        template_exists: "{{ check_template.rc == 0 }}"
+
+    - name: Check if VM with VMID exists
+      ansible.builtin.shell: |
+        qm list | awk '{print $1}' | grep -wq {{ VMID_instance }}
+      register: check_vm
+      changed_when: false
+      failed_when: false
+
+    - name: Set fact if VM exists
+      ansible.builtin.set_fact:
+        vm_exists: "{{ check_vm.rc == 0 }}"
+
+    - name: Add template creation script
+      template:
+        src: ./scripts/create-ubuntu-server-cloudinit.sh.j2
+        dest: /tmp/create-ubuntu-2404-template.sh
+        mode: '0755'
+      when: not template_exists
+
+    - name: Execute the script
+      shell: /tmp/create-ubuntu-2404-template.sh
+
+    - name: Clone VM template into VM
+      ansible.builtin.shell: >
+        qm clone {{ VMID }} {{ VMID_instance}} --name ubuntu-k3s --full true --storage local-lvm
+      when: not vm_exists
+
+    - name: Start VM
+      ansible.builtin.shell: >
+        qm start {{ VMID_instance }}
