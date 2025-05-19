@@ -9,10 +9,10 @@ wget -qN https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd
 qemu-img resize noble-server-cloudimg-amd64.img 128G
 qm destroy $VMID
 qm create $VMID --name "ubuntu-2404-template" --ostype l26 \
-    --memory 4096 --balloon 0 \
+    --memory 16384 --balloon 1 \
     --agent 1 \
     --bios ovmf --machine q35 --efidisk0 $STORAGE:0,pre-enrolled-keys=0 \
-    --cpu host --cores 4 --numa 1 \
+    --cpu host --cores 6 --numa 1 \
     --vga serial0 --serial0 socket  \
     --net0 virtio,bridge=vmbr0,mtu=1
 qm importdisk $VMID noble-server-cloudimg-amd64.img $STORAGE

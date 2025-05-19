@@ -23,7 +23,6 @@ spec:
     targetRevision: 24.6.7
     host: keycloak.k3s.home
     username: cad
-    adminPassword: ""
   semaphore:
     repoUrl: ghcr.io/semaphoreui/charts
     targetRevision: 15.1.6
