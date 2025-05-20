@@ -36,14 +36,14 @@ runcmd:
     #dns
     - |
         kubectl -n kube-system get configmap coredns -o jsonpath='{.data.Corefile}' > /tmp/Corefile.bak
-        cat <<EOF >> /tmp/Corefile.bak
+        cat <<INNER_EOF >> /tmp/Corefile.bak
 
 k3s.home:53 {
     forward . 192.168.1.1
     cache 30
     log
 }
-EOF
+INNER_EOF
         kubectl -n kube-system create configmap coredns --from-file=Corefile=/tmp/Corefile.bak --dry-run=client -o yaml | kubectl apply -f -
         kubectl -n kube-system delete pod -l k8s-app=kube-dns
 
