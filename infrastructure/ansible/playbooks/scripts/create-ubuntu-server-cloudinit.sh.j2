@@ -36,13 +36,12 @@ runcmd:
     #dns
     - | 
         kubectl -n kube-system get configmap coredns -o jsonpath='{.data.Corefile}' > /tmp/Corefile.bak
-        cat <<EOF >> /tmp/Corefile.bak
-
-    k3s.home:53 {
-        forward . 192.168.1.1
-        cache 30
-        log
-    }
+        cat <<EOF >> /tmp/Corefile.bak \
+    k3s.home:53 { \
+        forward . 192.168.1.1 \
+        cache 30 \
+        log \
+    } \
     EOF
         kubectl -n kube-system create configmap coredns --from-file=Corefile=/tmp/Corefile.bak --dry-run=client -o yaml | kubectl apply -f -
         kubectl -n kube-system delete pod -l k8s-app=kube-dns
@@ -91,19 +90,19 @@ runcmd:
                 
 
         http PUT https://portainer.k3s.home/api/settings "Authorization:Bearer $JWT" \
-            "OAuthSettings": {
-                "AccessTokenURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token",
-                "AuthStyle": 0,
-                "AuthorizationURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/auth",
-                "ClientID": "portainer",
-                "ClientSecret": "$PORTAINER_SECRET",
-                "LogoutURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/logout",
-                "OAuthAutoCreateUsers": true,
-                "RedirectURI": "https://portainer.k3s.home/",
-                "ResourceURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/userinfo",
-                "SSO": true,
-                "Scopes": "openid email profile",
-                "UserIdentifier": "preferred_username"
+            "OAuthSettings": { \
+                "AccessTokenURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token", \
+                "AuthStyle": 0, \
+                "AuthorizationURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/auth", \
+                "ClientID": "portainer", \
+                "ClientSecret": "$PORTAINER_SECRET", \
+                "LogoutURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/logout", \
+                "OAuthAutoCreateUsers": true, \
+                "RedirectURI": "https://portainer.k3s.home/", \
+                "ResourceURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/userinfo", \
+                "SSO": true, \
+                "Scopes": "openid email profile", \
+                "UserIdentifier": "preferred_username" \
             } --verify=no
 
     # finish setup
