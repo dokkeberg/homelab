@@ -29,6 +29,9 @@ spec:
                     {
                       "username": "{{ .Values.spec.keycloak.username }}",
                       "enabled": true,
+                      "email": "christopher.dokkeberg@gmail.com"
+                      "firstname": "Christopher"
+                      "lastname": "Dokkeberg"
                       "credentials": [
                         {
                           "type": "password",
@@ -36,6 +39,33 @@ spec:
                         }
                       ]
 
+                    }
+                  ],
+                  "clients": [
+                    {
+                      "clientId": portainer,
+                      "name": portainer-sso,
+                      "rootUrl": "https://portainer.k3s.home/",
+                      "baseUrl": "https://portainer.k3s.home/",
+                      "adminUrl": "https://portainer.k3s.home/",
+                      "enabled": true,
+                      "clientAuthenticatiorType": "client-secret",
+                      "secret": {{ .Values.spec.keycloak.clients.portainer.clientSecret }},
+                      "redirectUris": [
+                        "https://portainer.k3s.home"
+                      ],
+                      "webOrigins": [
+                        "https://portainer.k3s.home/#!/"
+                      ],
+                      "standardFlowEnabled": true,
+                      "frontchannelLogout": true,
+                      "protocol": "openid-connect",
+                      "attributes": [
+                        "backchannel.logout.session.required": "true",
+                        "post.logout.redirect.uris": "https://portainer.k3s.home/#!/logout",
+                        "oauth2.device.authorization.grant.enabled": "true"
+                      ],
+                      "fullScopeAllowed": true
                     }
                   ]
                 }
