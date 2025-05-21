@@ -65,6 +65,9 @@ runcmd:
 
     #portainer
     - kubectl wait svc portainer -n portainer --for=jsonpath='{.status.loadBalancer.ingress[0].ip}' --timeout=60s
+    - kubectl wait --for=create secret home-root-ca-secret -n cert-manager
+    - kubectl wait --for=create secret portainer-cert-tls -n portainer
+
     - |
         http --ignore-stdin --verify=no POST http://portainer.k3s.home/api/users/admin/init \
             Username="admin" \
