@@ -69,9 +69,12 @@ runcmd:
     - kubectl wait --for=create secret portainer-cert-tls -n portainer
 
     - |
-        http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/users/admin/init \
-            Username="admin" \
-            Password="ChangeMe123!"
+        until http --ignore-stdin --verify=no --check-status \
+          POST https://portainer.k3s.home/api/users/admin/init \
+          Username="admin" Password="ChangeMe123!"; do
+            echo "Waiting for Portainer API to become ready..."
+            sleep 5
+        done
         
         JWT=$(http POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no | jq -r '.jwt')
