@@ -27,6 +27,7 @@ runcmd:
     - apt-get update
     - apt-get install -y qemu-guest-agent
     - apt-get install httpie -y
+    - apt-get install jq
 
     #k3s
     - curl -sfL https://get.k3s.io | sh -
@@ -79,8 +80,6 @@ runcmd:
         
 
         echo "Fetching JWT"
-        http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
-            Password="ChangeMe123!" --verify=no
 
         until http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no; do
@@ -88,8 +87,13 @@ runcmd:
             sleep 5
         done
 
-        JWT=$(http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
-            Password="ChangeMe123!" --verify=no | jq -r '.jwt')
+        http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/auth Username="admin" \
+            Password="ChangeMe123!" > /tmp/portainer_token.json
+        
+        echo "Json content"
+        cat /tmp/portainer_token.json
+
+        JWT=$(jq -r '.jwt' /tmp/portainer_token.json)
         
         echo "JWT Value"
         echo "$JWT"
