@@ -29,28 +29,27 @@ spec:
                     {
                       "username": "{{ .Values.spec.keycloak.username }}",
                       "enabled": true,
-                      "email": "christopher.dokkeberg@gmail.com"
-                      "firstname": "Christopher"
-                      "lastname": "Dokkeberg"
+                      "email": "christopher.dokkeberg@gmail.com",
+                      "firstName": "Christopher",
+                      "lastName": "Dokkeberg",
                       "credentials": [
                         {
                           "type": "password",
                           "value": "ChangeMe123!"
                         }
                       ]
-
                     }
                   ],
                   "clients": [
                     {
-                      "clientId": portainer,
-                      "name": portainer-sso,
+                      "clientId": "portainer",
+                      "name": "portainer-sso",
                       "rootUrl": "https://portainer.k3s.home/",
                       "baseUrl": "https://portainer.k3s.home/",
                       "adminUrl": "https://portainer.k3s.home/",
                       "enabled": true,
                       "clientAuthenticatiorType": "client-secret",
-                      "secret": {{ .Values.spec.keycloak.clients.portainer.clientSecret }},
+                      "secret": "{{ .Values.spec.keycloak.clients.portainer.clientSecret }}",
                       "redirectUris": [
                         "https://portainer.k3s.home"
                       ],
@@ -69,7 +68,6 @@ spec:
                     }
                   ]
                 }
-
           global:
             postgresql:
               auth:

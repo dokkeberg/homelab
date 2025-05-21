@@ -76,6 +76,8 @@ runcmd:
             sleep 5
         done
         
+        sleep 5
+
         JWT=$(http POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no | jq -r '.jwt')
         
