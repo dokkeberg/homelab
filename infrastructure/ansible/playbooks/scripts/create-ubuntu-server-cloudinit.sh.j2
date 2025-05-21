@@ -76,10 +76,10 @@ runcmd:
             sleep 5
         done
         
-        sleep 5
+        
 
         echo "Fetching JWT"
-        JWT=$(http POST https://portainer.k3s.home/api/auth Username="admin" \
+        JWT=$(http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no | jq -r '.jwt')
         
         echo "JWT Value"
