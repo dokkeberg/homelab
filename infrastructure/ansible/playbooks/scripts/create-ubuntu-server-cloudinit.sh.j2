@@ -69,7 +69,7 @@ runcmd:
     - kubectl wait --for=create secret portainer-cert-tls -n portainer
 
     - |
-        http --ignore-stdin --verify=no POST http://portainer.k3s.home/api/users/admin/init \
+        http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/users/admin/init \
             Username="admin" \
             Password="ChangeMe123!"
         
