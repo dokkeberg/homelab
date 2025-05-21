@@ -64,7 +64,7 @@ runcmd:
     - argocd app sync argocd/argocd --insecure --plaintext
 
     #portainer
-    - kubectl wait -n portainer deployment/portainer --for=condition=available --timeout=90s
+    - kubectl wait svc portainer -n portainer --for=jsonpath='{.status.loadBalancer.ingress[0].ip}' --timeout=60s
     - |
         http --ignore-stdin --verify=no POST http://portainer.k3s.home/api/users/admin/init \
             Username="admin" \
