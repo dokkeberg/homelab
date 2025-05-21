@@ -66,9 +66,9 @@ runcmd:
     #portainer
     - kubectl wait -n portainer deployment/portainer --for=condition=available --timeout=90s
     - |
-        http POST http://portainer.k3s.home/api/users/admin/init \
+        http --ignore-stdin --verify=no POST http://portainer.k3s.home/api/users/admin/init \
             Username="admin" \
-            Password="ChangeMe123!" --verify=no
+            Password="ChangeMe123!"
         
         JWT=$(http POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no | jq -r '.jwt')
@@ -77,13 +77,13 @@ runcmd:
         
         cat /tmp/selfsigned_ca.crt
         
-        http --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
+        http --ignore-stdin --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
             "Authorization:Bearer $JWT" \
             folder="/etc/ssl/certs/ca-certificates" \
             file@/tmp/selfsigned_ca.crt
                 
 
-        http PUT https://portainer.k3s.home/api/settings "Authorization:Bearer $JWT" \
+        http --ignore-stdin --verify=no PUT https://portainer.k3s.home/api/settings "Authorization:Bearer $JWT" \
             "OAuthSettings":='{ 
                 "AccessTokenURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token", 
                 "AuthStyle": 0, 
@@ -97,7 +97,7 @@ runcmd:
                 "SSO": true, 
                 "Scopes": "openid email profile", 
                 "UserIdentifier": "preferred_username" 
-            }' --verify=no
+            }'
 
     # finish setup
     - systemctl enable ssh
