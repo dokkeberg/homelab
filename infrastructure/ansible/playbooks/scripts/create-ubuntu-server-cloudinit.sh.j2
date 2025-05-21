@@ -79,6 +79,15 @@ runcmd:
         
 
         echo "Fetching JWT"
+        http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
+            Password="ChangeMe123!" --verify=no
+
+        until http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
+            Password="ChangeMe123!" --verify=no; do
+            echo "Waiting for auth API to become ready..."
+            sleep 5
+        done
+
         JWT=$(http --ignore-stdin POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no | jq -r '.jwt')
         
