@@ -78,14 +78,15 @@ runcmd:
         
         sleep 5
 
+        echo "Fetching JWT"
         JWT=$(http POST https://portainer.k3s.home/api/auth Username="admin" \
             Password="ChangeMe123!" --verify=no | jq -r '.jwt')
         
-        echo "JWT Value:"
-        echo $JWT
+        echo "JWT Value"
+        echo "$JWT"
         kubectl get secret home-root-ca-secret -n cert-manager -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/selfsigned_ca.crt
         
-        echo "CA cert
+        echo "CA cert"
         cat /tmp/selfsigned_ca.crt
         
         sleep 5
