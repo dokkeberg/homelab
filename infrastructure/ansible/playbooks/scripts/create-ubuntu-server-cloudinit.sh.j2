@@ -23,15 +23,6 @@ qm set $VMID --ide2 $STORAGE:cloudinit
 mkdir -p /var/lib/vz/snippets
 cat << OUTER_EOF | tee /var/lib/vz/snippets/ubuntu.yaml
 #cloud-config
-write_files:    
-    - path: /run/create-runner.sh
-      content: |
-        #!/bin/bash
-        REG_TOKEN=$(curl -sX POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${var.runner_manage_token}" https://api.github.com/orgs/${var.github_organisation}/actions/runners/registration-token | jq .token --raw-output)
-        /actions-runner/config.sh --unattended --url https://github.com/${var.github_organisation} --token $${REG_TOKEN} --runnergroup ${var.runner_group} --labels ${var.runner_labels} --replace
-      owner: 'runner-admin'
-      permissions: '0700'
-      defer: true
 runcmd:
     - apt-get update
     - apt-get install -y qemu-guest-agent
