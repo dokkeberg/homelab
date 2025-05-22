@@ -24,6 +24,59 @@ mkdir -p /var/lib/vz/snippets
 cat << OUTER_EOF | tee /var/lib/vz/snippets/ubuntu.yaml
 #cloud-config
 
+write_files:
+  - path: /usr/local/bin/setup-portainer.sh
+    permissions: '0755'
+    owner: root:root
+    content: |
+      #!/bin/bash
+
+      http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/auth Username="admin" \
+          Password="ChangeMe123!" > /tmp/portainer_token.json
+        
+      echo "Json content"
+      cat /tmp/portainer_token.json
+
+      echo "Extracting JWT from token JSON..."
+      PORTAINER_TOKEN=$(jq -r ".jwt" /tmp/portainer_token.json)
+
+      echo "JWT Value"
+      echo "${PORTAINER_TOKEN}"
+
+      echo "Extracting CA certificate..."
+      kubectl get secret home-root-ca-secret -n cert-manager -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/selfsigned_ca.crt
+
+      echo "CA cert:"
+      cat /tmp/selfsigned_ca.crt
+
+      sleep 5
+      echo "Uploading CA cert to Portainer..."
+      http --ignore-stdin --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
+        "Authorization:Bearer ${PORTAINER_TOKEN}" \
+        folder="/etc/ssl/certs/ca-certificates" \
+        file@/tmp/selfsigned_ca.crt
+
+      echo "Updating Portainer OIDC settings..."
+      http --ignore-stdin --verify=no PUT https://portainer.k3s.home/api/settings \
+        "Authorization:Bearer ${PORTAINER_TOKEN}" \
+        --raw '{
+          "OAuthSettings": {
+            "AccessTokenURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token",
+            "AuthStyle": 0,
+            "AuthorizationURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/auth",
+            "ClientID": "portainer",
+            "ClientSecret": "'"${PORTAINER_SECRET}"'",
+            "LogoutURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/logout",
+            "OAuthAutoCreateUsers": true,
+            "RedirectURI": "https://portainer.k3s.home/",
+            "ResourceURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/userinfo",
+            "SSO": true,
+            "Scopes": "openid email profile",
+            "UserIdentifier": "preferred_username"
+          }
+        }'
+
+
 runcmd:
     - apt-get update
     - apt-get install -y qemu-guest-agent
@@ -86,47 +139,8 @@ runcmd:
             sleep 5
         done
 
-        http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/auth Username="admin" \
-            Password="ChangeMe123!" > /tmp/portainer_token.json
-        
-        echo "Json content"
-        cat /tmp/portainer_token.json
+    - /usr/local/bin/setup-portainer.sh
 
-        PORTAINER_TOKEN=$(sed -n 's/.*"jwt":"\([^"]*\)".*/\1/p' /tmp/portainer_token.json)
-           
-        echo "JWT Value"
-        echo "${PORTAINER_TOKEN}"
-        kubectl get secret home-root-ca-secret -n cert-manager -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/selfsigned_ca.crt
-        
-        echo "CA cert"
-        cat /tmp/selfsigned_ca.crt
-        
-        sleep 5
-        echo "Updating CA cert"
-        http --ignore-stdin --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
-            "Authorization:Bearer ${PORTAINER_TOKEN}" \
-            folder="/etc/ssl/certs/ca-certificates" \
-            file@/tmp/selfsigned_ca.crt
-                
-        echo "Updating SSO"
-        http --ignore-stdin --verify=no PUT https://portainer.k3s.home/api/settings \
-            "Authorization:Bearer ${PORTAINER_TOKEN}" \
-            --raw '{
-                "OAuthSettings": {
-                "AccessTokenURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token",
-                "AuthStyle": 0,
-                "AuthorizationURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/auth",
-                "ClientID": "portainer",
-                "ClientSecret": "'"${PORTAINER_SECRET}"'",
-                "LogoutURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/logout",
-                "OAuthAutoCreateUsers": true,
-                "RedirectURI": "https://portainer.k3s.home/",
-                "ResourceURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/userinfo",
-                "SSO": true,
-                "Scopes": "openid email profile",
-                "UserIdentifier": "preferred_username"
-                }
-            }'
 
     # finish setup
     - systemctl enable ssh
