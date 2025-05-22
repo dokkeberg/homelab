@@ -92,8 +92,8 @@ runcmd:
         echo "Json content"
         cat /tmp/portainer_token.json
 
-        PORTAINER_TOKEN=$(jq -r ".jwt" /tmp/portainer_token.json)
-           
+    - [ sh, -c, 'PORTAINER_TOKEN=$(jq -r ".jwt" /tmp/portainer_token.json); echo "JWT: $PORTAINER_TOKEN"' ] 
+    - | 
         echo "JWT Value"
         echo "${PORTAINER_TOKEN}"
         kubectl get secret home-root-ca-secret -n cert-manager -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/selfsigned_ca.crt
