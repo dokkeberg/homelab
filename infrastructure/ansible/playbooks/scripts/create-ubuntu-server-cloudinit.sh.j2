@@ -102,10 +102,10 @@ runcmd:
         echo "Json content"
         cat /tmp/portainer_token.json
 
-    - [ sh, -c, 'JWT=$(jq -r ".jwt" /tmp/portainer_token.json); echo "JWT: $JWT"' ]
-    - |    
+        PORTAINER_TOKEN=$(jq -r ".jwt" /tmp/portainer_token.json)
+           
         echo "JWT Value"
-        echo "$JWT"
+        echo "${PORTAINER_TOKEN]"
         kubectl get secret home-root-ca-secret -n cert-manager -o jsonpath='{.data.ca\.crt}' | base64 -d > /tmp/selfsigned_ca.crt
         
         echo "CA cert"
@@ -114,12 +114,12 @@ runcmd:
         sleep 5
         echo "Updating CA cert"
         http --ignore-stdin --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
-            "Authorization:Bearer $JWT" \
+            "Authorization:Bearer ${PORTAINER_TOKEN}" \
             folder="/etc/ssl/certs/ca-certificates" \
             file@/tmp/selfsigned_ca.crt
                 
         echo "Updating SSO"
-        http --ignore-stdin --verify=no PUT https://portainer.k3s.home/api/settings "Authorization:Bearer $JWT" \
+        http --ignore-stdin --verify=no PUT https://portainer.k3s.home/api/settings "Authorization:Bearer ${PORTAINER_TOKEN}" \
             "OAuthSettings":='{ 
                 "AccessTokenURI": "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token", 
                 "AuthStyle": 0, 
