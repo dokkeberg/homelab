@@ -40,9 +40,9 @@ write_files:
       
       echo "Token content txt"
       cat /tmp/portainer_token.txt
-      
+
       echo "Extracting JWT from token JSON..."
-      PORTAINER_TOKEN=$(cat /tmp/portainer_token.txt)
+      export PORTAINER_TOKEN=$(cat /tmp/portainer_token.txt)
 
       echo "JWT Value"
       echo "${PORTAINER_TOKEN}"
