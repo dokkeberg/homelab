@@ -36,9 +36,13 @@ write_files:
         
       echo "Json content"
       cat /tmp/portainer_token.json
-
+      jq -r ".jwt" /tmp/portainer_token.json > /tmp/portainer_token.txt
+      
+      echo "Token content txt"
+      cat /tmp/portainer_token.txt
+      
       echo "Extracting JWT from token JSON..."
-      PORTAINER_TOKEN=$(jq -r ".jwt" /tmp/portainer_token.json)
+      PORTAINER_TOKEN=$(cat /tmp/portainer_token.txt)
 
       echo "JWT Value"
       echo "${PORTAINER_TOKEN}"
