@@ -5,6 +5,8 @@ ACTION=$1
 INVENTORY="inventory.ini"
 EXTRA_VARS="VMID_instance=101"
 
+ansible-galaxy collection install community.kubernetes
+
 case "$ACTION" in
   up)
     ansible-playbook -i $INVENTORY site.yaml --extra-vars "$EXTRA_VARS"

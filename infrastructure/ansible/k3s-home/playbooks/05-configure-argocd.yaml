@@ -1,5 +1,7 @@
 - name: Configure ArgoCD
   hosts: newvm
+  collections:
+  - community.kubernetes
   become: true
   tasks:
   - name: Add ArgoCD Helm repo
