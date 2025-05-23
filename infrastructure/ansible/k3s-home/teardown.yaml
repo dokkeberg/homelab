@@ -29,3 +29,7 @@
       register: destroy_template_result
       failed_when: false
       changed_when: "'could not be found' not in destroy_template_result.stdout"
+
+    - name: Remove ssh key
+      ansible.builtin.shell: |
+        ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.1.100"
