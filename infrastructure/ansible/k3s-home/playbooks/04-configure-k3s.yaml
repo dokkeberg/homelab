@@ -14,11 +14,22 @@
       ansible.builtin.command: kubectl -n kube-system get configmap coredns -o json
       register: coredns_config
 
-    - name: Patch CoreDNS with custom DNS block
+    - name: Define CoreDNS patch block
+      ansible.builtin.set_fact:
+        coredns_patch_block: |
+          k3s.home:53 {
+            forward . 192.168.1.1
+            cache 30
+            log
+          }
+
+    - name: Patch CoreDNS
       ansible.builtin.shell: |
         echo '{{ coredns_config.stdout }}' | \
-        jq '.data.Corefile += "\nk3s.home:53 {\n  forward . 192.168.1.1\n  cache 30\n  log\n}\n"' | \
+        jq --arg block "\n{{ coredns_patch_block | replace('\n', '\\n') }}" '.data.Corefile += $block' | \
         kubectl apply -f -
+      args:
+        executable: /bin/bash
 
     - name: Restart CoreDNS pods
       ansible.builtin.command: kubectl -n kube-system delete pod -l k8s-app=kube-dns
