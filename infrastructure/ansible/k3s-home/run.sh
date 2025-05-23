@@ -7,10 +7,10 @@ EXTRA_VARS="VMID_instance=101"
 
 case "$ACTION" in
   up)
-    ansible-playbook -i $INVENTORY site.yml --extra-vars "$EXTRA_VARS"
+    ansible-playbook -i $INVENTORY site.yaml --extra-vars "$EXTRA_VARS"
     ;;
   down)
-    ansible-playbook -i $INVENTORY teardown.yml --extra-vars "$EXTRA_VARS"
+    ansible-playbook -i $INVENTORY teardown.yaml --extra-vars "$EXTRA_VARS"
     ;;
   *)
     echo "Usage: $0 {up|down}"
