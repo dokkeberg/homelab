@@ -1,2 +1,8 @@
-- import_playbook: playbooks/provision-vm.yaml
-- import_playbook: playbooks/install-k3s.yaml
+- import_playbook: playbooks/01-provision-vm.yaml
+- import_playbook: playbooks/02-wait-for-ssh.yaml
+- import_playbook: playbooks/03-wait-for-cloud-init-finished.yaml
+- import_playbook: playbooks/04-configure-k3s.yaml
+- import_playbook: playbooks/05-configure-argocd
+- import_playbook: playbooks/06-wait-for-apps.yaml
+- import_playbook: playbooks/07-configure-portainer.yaml
+- import_playbook: playbooks/08-finish-configuration.yaml
