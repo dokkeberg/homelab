@@ -1,0 +1,27 @@
+- name: Teardown Proxmox VMs and template
+  hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+
+    - name: Define VM IDs and template ID
+      ansible.builtin.set_fact:
+        vm_ids: [101]
+        template_id: 9001
+
+    - name: Shutdown and destroy each VM
+      ansible.builtin.shell: |
+        if qm status {{ item }} | grep -q running; then
+          qm shutdown {{ item }} --timeout 30 || qm stop {{ item }}
+        fi
+        qm destroy {{ item }} --purge
+      loop: "{{ vm_ids }}"
+      ignore_errors: true
+
+    - name: Delete the VM template
+      ansible.builtin.shell: |
+        if qm status {{ template_id }} >/dev/null 2>&1; then
+          qm unlock {{ template_id }} || true
+          qm destroy {{ template_id }} --purge
+        fi
+      ignore_errors: true

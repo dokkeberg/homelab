@@ -1,0 +1,90 @@
+- name: Configure ArgoCD
+  hosts: newvm
+  become: true
+  tasks:
+  - name: Add ArgoCD Helm repo
+    community.kubernetes.helm_repository:
+      name: argo
+      repo_url: https://argoproj.github.io/argo-helm
+
+  - name: Update Helm repos
+    ansible.builtin.command: helm repo update
+
+  - name: Install ArgoCD
+    community.kubernetes.helm:
+      name: argocd
+      chart_ref: argo/argo-cd
+      namespace: argocd
+      create_namespace: true
+      values:
+        server:
+          extraArgs:
+            - --insecure
+    environment:
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+  - name: Wait for ArgoCD to become available
+    ansible.builtin.command: >
+      kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
+  
+  - name: Check if ArgoCD CLI is installed
+    ansible.builtin.stat:
+      path: /usr/local/bin/argocd
+    register: argocd_bin
+
+  - name: Download and install ArgoCD CLI if missing
+    ansible.builtin.get_url:
+      url: https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+      dest: /usr/local/bin/argocd
+      mode: '0555'
+    become: true
+    when: not argocd_bin.stat.exists
+
+  - name: Generate random PORTAINER_SECRET
+    ansible.builtin.set_fact:
+      portainer_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
+
+  - name: Login to ArgoCD
+    ansible.builtin.shell: |
+      argocd login --plaintext --insecure --core
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+
+  - name: Set kubectl context namespace to argocd
+    ansible.builtin.shell: |
+      kubectl config set-context --current --namespace=argocd
+    environment:
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+
+  - name: Create ArgoCD app 'infrastructure' with secret parameter
+    ansible.builtin.shell: |
+      argocd app create infrastructure \
+        --repo https://github.com/dokkeberg/homelab \
+        --path infrastructure/applications/app-of-apps \
+        --dest-server https://kubernetes.default.svc \
+        --dest-namespace argocd \
+        --plaintext --insecure \
+        --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}"
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+
+  - name: Sync ArgoCD app 'infrastructure'
+    ansible.builtin.shell: |
+      argocd app sync infrastructure --insecure --plaintext
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+
+  - name: Sync ArgoCD app 'argocd/argocd'
+    ansible.builtin.shell: |
+      argocd app sync argocd/argocd --insecure --plaintext
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true

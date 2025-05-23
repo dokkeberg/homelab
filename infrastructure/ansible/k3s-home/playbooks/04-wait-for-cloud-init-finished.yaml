@@ -1,0 +1,9 @@
+- name: Wait for cloud-init to finish
+  hosts: newvm
+  become: true
+  tasks:
+    - name: Wait for /var/lib/cloud/instance/boot-finished
+      ansible.builtin.wait_for:
+        path: /var/lib/cloud/instance/boot-finished
+        state: present
+        timeout: 300  # seconds

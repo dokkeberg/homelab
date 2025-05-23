@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Provision VM
+  hosts: localhost
   tasks:
     - name: Set VMID for template
       set_fact:

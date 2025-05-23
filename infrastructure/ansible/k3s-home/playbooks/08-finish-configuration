@@ -1,0 +1,8 @@
+- name: Finish configuration
+  hosts: newvm
+  become: true
+  tasks:
+  - name: Reboot the machine
+    ansible.builtin.reboot:
+      reboot_timeout: 300
+    become: true

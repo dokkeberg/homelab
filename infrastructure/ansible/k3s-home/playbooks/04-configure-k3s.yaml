@@ -1,0 +1,24 @@
+- name: Configure Kubernetes
+  hosts: newvm
+  become: true
+  tasks:
+    - name: Install K3s
+      ansible.builtin.shell: curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Install Helm via snap
+      ansible.builtin.command: snap install helm --classic
+
+    - name: Get CoreDNS config
+      ansible.builtin.command: kubectl -n kube-system get configmap coredns -o json
+      register: coredns_config
+
+    - name: Patch CoreDNS with custom DNS block
+      ansible.builtin.shell: |
+        echo '{{ coredns_config.stdout }}' | \
+        jq '.data.Corefile += "\nk3s.home:53 {\n  forward . 192.168.1.1\n  cache 30\n  log\n}\n"' | \
+        kubectl apply -f -
+
+    - name: Restart CoreDNS pods
+      ansible.builtin.command: kubectl -n kube-system delete pod -l k8s-app=kube-dns

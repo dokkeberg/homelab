@@ -1,0 +1,79 @@
+- name: Configure portainer
+  hosts: newvm
+  become: true
+  tasks:
+  - name: Initialize Portainer admin account
+    ansible.builtin.uri:
+      url: https://portainer.k3s.home/api/users/admin/init
+      method: POST
+      body_format: json
+      body:
+        Username: "admin"
+        Password: "ChangeMe123!"
+      validate_certs: false
+      status_code: 204
+    retries: 12
+    delay: 5
+    register: portainer_init_result
+    until: portainer_init_result.status == 204
+
+  - name: Authenticate with Portainer API
+    ansible.builtin.uri:
+      url: https://portainer.k3s.home/api/auth
+      method: POST
+      body_format: json
+      body:
+        Username: "admin"
+        Password: "ChangeMe123!"
+      return_content: true
+      validate_certs: false
+    register: portainer_auth
+    retries: 12
+    delay: 5
+    until: portainer_auth.status == 200
+
+  - name: Extract JWT token
+    ansible.builtin.set_fact:
+      portainer_token: "{{ portainer_auth.json.jwt }}"
+
+  - name: Get CA certificate from secret
+    ansible.builtin.command: >
+      kubectl get secret home-root-ca-secret -n cert-manager -o jsonpath='{.data.ca\.crt}'
+    register: ca_cert_b64
+    changed_when: false
+
+  - name: Decode CA cert
+    ansible.builtin.copy:
+      content: "{{ ca_cert_b64.stdout | b64decode }}"
+      dest: /tmp/selfsigned_ca.crt
+      mode: '0644'
+  
+  - name: Upload CA cert to Portainer
+    ansible.builtin.shell: |
+      http --ignore-stdin --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
+        "Authorization:Bearer {{ portainer_token }}" \
+        folder="/etc/ssl/certs/ca-certificates" \
+        file@/tmp/selfsigned_ca.crt
+
+  - name: Update Portainer OIDC settings
+    ansible.builtin.uri:
+      url: https://portainer.k3s.home/api/settings
+      method: PUT
+      headers:
+        Authorization: "Bearer {{ portainer_token }}"
+      body_format: json
+      body:
+        OAuthSettings:
+          AccessTokenURI: "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token"
+          AuthStyle: 0
+          AuthorizationURI: "https://keycloak.k3s.home/realms/home/protocol/openid-connect/auth"
+          ClientID: "portainer"
+          ClientSecret: "{{ portainer_secret }}"
+          LogoutURI: "https://keycloak.k3s.home/realms/home/protocol/openid-connect/logout"
+          OAuthAutoCreateUsers: true
+          RedirectURI: "https://portainer.k3s.home/"
+          ResourceURI: "https://keycloak.k3s.home/realms/home/protocol/openid-connect/userinfo"
+          SSO: true
+          Scopes: "openid email profile"
+          UserIdentifier: "preferred_username"
+      validate_certs: false

@@ -1,0 +1,16 @@
+- name: Wait for apps
+  hosts: newvm
+  become: true
+  tasks:
+  - name: Wait for Portainer LoadBalancer IP
+    ansible.builtin.command: >
+      kubectl wait svc portainer -n portainer
+      --for=jsonpath='{.status.loadBalancer.ingress[0].ip}' --timeout=60s
+  
+  - name: Wait for home-root-ca-secret
+    ansible.builtin.command: >
+      kubectl wait --for=create secret/home-root-ca-secret -n cert-manager
+
+  - name: Wait for portainer-cert-tls
+    ansible.builtin.command: >
+      kubectl wait --for=create secret/portainer-cert-tls -n portainer
