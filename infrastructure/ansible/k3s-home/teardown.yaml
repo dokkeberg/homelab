@@ -9,19 +9,23 @@
         vm_ids: [101]
         template_id: 9001
 
-    - name: Shutdown and destroy each VM
+    - name: Shutdown and destroy each VM if it exists
       ansible.builtin.shell: |
-        if qm status {{ item }} | grep -q running; then
+        if qm status {{ item }} 2>/dev/null | grep -q running; then
           qm shutdown {{ item }} --timeout 30 || qm stop {{ item }}
         fi
         qm destroy {{ item }} --purge
       loop: "{{ vm_ids }}"
-      ignore_errors: true
+      register: destroy_vm_result
+      failed_when: false
+      changed_when: "'could not be found' not in destroy_vm_result.stdout"
 
-    - name: Delete the VM template
+    - name: Delete the VM template if it exists
       ansible.builtin.shell: |
-        if qm status {{ template_id }} >/dev/null 2>&1; then
+        if qm status {{ template_id }} 2>/dev/null; then
           qm unlock {{ template_id }} || true
           qm destroy {{ template_id }} --purge
         fi
-      ignore_errors: true
+      register: destroy_template_result
+      failed_when: false
+      changed_when: "'could not be found' not in destroy_template_result.stdout"
