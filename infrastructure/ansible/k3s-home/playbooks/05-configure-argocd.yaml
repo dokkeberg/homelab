@@ -34,11 +34,12 @@
       path: /usr/local/bin/argocd
     register: argocd_bin
 
-  - name: Download and install ArgoCD CLI if missing
-    ansible.builtin.get_url:
-      url: https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-      dest: /usr/local/bin/argocd
-      mode: '0555'
+  - name: Download and install ArgoCD CLI via curl if missing
+    ansible.builtin.shell: |
+      curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+      chmod 0555 /usr/local/bin/argocd
+    args:
+      creates: /usr/local/bin/argocd
     become: true
     when: not argocd_bin.stat.exists
 
