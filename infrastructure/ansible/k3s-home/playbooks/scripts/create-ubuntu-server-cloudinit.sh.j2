@@ -28,7 +28,10 @@ runcmd:
     - apt-get install -y qemu-guest-agent
     - apt-get install httpie -y
     - apt-get install jq
+
+    # finish setup
     - systemctl enable ssh
+    - reboot
 OUTER_EOF
 
 qm set $VMID --cicustom "vendor=local:snippets/ubuntu.yaml"
