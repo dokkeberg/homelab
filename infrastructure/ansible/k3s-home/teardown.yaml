@@ -1,7 +1,6 @@
 - name: Teardown Proxmox VMs and template
   hosts: localhost
   gather_facts: false
-  become: true
   tasks:
   - name: Define VM ID and template ID
     ansible.builtin.set_fact:
