@@ -48,7 +48,7 @@ spec:
                       "baseUrl": "https://portainer.k3s.home/",
                       "adminUrl": "https://portainer.k3s.home/",
                       "enabled": true,
-                      "clientAuthenticatiorType": "client-secret",
+                      "clientAuthenticatorType": "client-secret",
                       "secret": "{{ .Values.spec.keycloak.clients.portainer.clientSecret }}",
                       "redirectUris": [
                         "https://portainer.k3s.home"
