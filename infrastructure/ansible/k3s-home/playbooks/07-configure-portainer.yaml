@@ -11,11 +11,11 @@
         Username: "admin"
         Password: "ChangeMe123!"
       validate_certs: false
-      status_code: 204
+      status_code: 200
     retries: 12
     delay: 5
     register: portainer_init_result
-    until: portainer_init_result.status == 204
+    until: portainer_init_result.status == 200
 
   - name: Authenticate with Portainer API
     ansible.builtin.uri:
