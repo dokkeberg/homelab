@@ -59,11 +59,11 @@ spec:
                       "standardFlowEnabled": true,
                       "frontchannelLogout": true,
                       "protocol": "openid-connect",
-                      "attributes": [
+                      "attributes": {
                         "backchannel.logout.session.required": "true",
                         "post.logout.redirect.uris": "https://portainer.k3s.home/#!/logout",
                         "oauth2.device.authorization.grant.enabled": "true"
-                      ],
+                      },
                       "fullScopeAllowed": true
                     }
                   ]
