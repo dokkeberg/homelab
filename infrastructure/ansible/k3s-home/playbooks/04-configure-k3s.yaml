@@ -39,6 +39,7 @@
         path: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
       register: root_ca_cert_file
       delegate_to: localhost
+      become: false
 
     - name: Create cert-manager namespace (if needed)
       kubernetes.core.k8s:
@@ -54,6 +55,7 @@
       register: root_ca_cert
       when: root_ca_cert_file.stat.exists
       delegate_to: localhost
+      become: false
 
     - name: Read root CA key
       ansible.builtin.slurp:
@@ -61,6 +63,7 @@
       register: root_ca_key
       when: root_ca_cert_file.stat.exists
       delegate_to: localhost
+      become: false
 
     - name: Create root-ca Kubernetes Secret from cert/key
       kubernetes.core.k8s:
