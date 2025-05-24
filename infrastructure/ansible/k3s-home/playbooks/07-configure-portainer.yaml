@@ -45,15 +45,31 @@
   - name: Decode CA cert
     ansible.builtin.copy:
       content: "{{ ca_cert_b64.stdout | b64decode }}"
-      dest: /tmp/selfsigned_ca.crt
+      dest: /tmp/ca-certificates.crt
       mode: '0644'
+
+  - name: Confirm cert written
+    stat:
+      path: /tmp/ca-certificates.crt
+    register: cert_written
+
+  - name: Show cert file metadata
+    debug:
+      var: cert_written
   
   - name: Upload CA cert to Portainer
     ansible.builtin.shell: |
       http --ignore-stdin --verify=no --form POST https://portainer.k3s.home/api/upload/tls/ca \
         "Authorization:Bearer {{ portainer_token }}" \
-        folder="/etc/ssl/certs/ca-certificates" \
-        file@/tmp/selfsigned_ca.crt
+        folder="/etc/ssl/certs" \
+        file@/tmp/ca-certificates.crt
+    register: upload_result
+    changed_when: "'204' in upload_result.stdout or '204' in upload_result.stderr"
+    failed_when: upload_result.rc != 0
+
+  - name: Show result of upload
+    debug:
+      var: upload_result
 
   - name: Update Portainer OIDC settings
     ansible.builtin.uri:
