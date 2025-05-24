@@ -33,3 +33,45 @@
 
     - name: Restart CoreDNS pods
       ansible.builtin.command: kubectl -n kube-system delete pod -l k8s-app=kube-dns
+
+    - name: Check if root CA certificate exists locally
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
+      register: root_ca_cert_file
+
+    - name: Create cert-manager namespace (if needed)
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: cert-manager
+        state: present
+      when: root_ca_cert_file.stat.exists
+
+    - name: Read root CA cert
+      ansible.builtin.slurp:
+        src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
+      register: root_ca_cert
+      when: root_ca_cert_file.stat.exists
+      delegate_to: localhost
+
+    - name: Read root CA key
+      ansible.builtin.slurp:
+        src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.key"
+      register: root_ca_key
+      when: root_ca_cert_file.stat.exists
+      delegate_to: localhost
+
+    - name: Create root-ca Kubernetes Secret from cert/key
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: root-ca-secret
+            namespace: cert-manager
+          type: kubernetes.io/tls
+          data:
+            tls.crt: "{{ root_ca_cert.content }}"
+            tls.key: "{{ root_ca_key.content }}"
+      when: root_ca_cert_file.stat.exists
