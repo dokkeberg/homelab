@@ -1,4 +1,4 @@
 service:
   type: LoadBalancer
 enterpriseEdition:
-  enabled: {{ .Values.spec.portainer.enterprise }}
+  enabled: true
