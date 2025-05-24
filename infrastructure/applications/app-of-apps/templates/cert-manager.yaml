@@ -20,6 +20,9 @@ spec:
     path: {{ .Values.spec.source.certManagerPath }}
     targetRevision: HEAD
   syncPolicy:
-    automated: {}
+    automated: 
+      prune: true
+      selfHeal: true
+      allowEmpty: false 
     syncOptions:
       - CreateNamespace=true
