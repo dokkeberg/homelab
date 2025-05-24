@@ -41,13 +41,11 @@
       delegate_to: localhost
       become: false
 
-    - name: Create cert-manager namespace (if needed)
-      kubernetes.core.k8s:
-        api_version: v1
-        kind: Namespace
-        name: cert-manager
-        state: present
-      when: root_ca_cert_file.stat.exists
+    - name: Ensure cert-manager namespace exists using kubectl
+      ansible.builtin.shell: |
+        kubectl get namespace cert-manager || kubectl create namespace cert-manager
+      args:
+        executable: /bin/bash
 
     - name: Read root CA cert
       ansible.builtin.slurp:
@@ -65,17 +63,10 @@
       delegate_to: localhost
       become: false
 
-    - name: Create root-ca Kubernetes Secret from cert/key
-      kubernetes.core.k8s:
-        state: present
-        definition:
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: root-ca-secret
-            namespace: cert-manager
-          type: kubernetes.io/tls
-          data:
-            tls.crt: "{{ root_ca_cert.content }}"
-            tls.key: "{{ root_ca_key.content }}"
+    - name: Create root-ca-secret if missing
+      ansible.builtin.command: >
+        kubectl create secret tls root-ca-secret
+        --cert=/tmp/root-ca.crt
+        --key=/tmp/root-ca.key
+        --namespace=cert-manager
       when: root_ca_cert_file.stat.exists
