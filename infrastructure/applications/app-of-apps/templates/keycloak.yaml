@@ -16,6 +16,9 @@ spec:
         values: |
           keycloakConfigCli:
             enabled: true
+            annotations:
+              argocd.argoproj.io/hook: Sync
+              argocd.argoproj.io/hook-delete-policy: HookSucceeded
             extraEnvVars:
               - name: KEYCLOAK_URL
                 value: http://keycloak-headless.keycloak.svc.cluster.local:8080
