@@ -54,7 +54,7 @@ spec:
                       "clientAuthenticatorType": "client-secret",
                       "secret": "{{ .Values.spec.keycloak.clients.portainer.clientSecret }}",
                       "redirectUris": [
-                        "https://portainer.k3s.home"
+                        "https://portainer.k3s.home/"
                       ],
                       "webOrigins": [
                         "https://portainer.k3s.home/#!/"

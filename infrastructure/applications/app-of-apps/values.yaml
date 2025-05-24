@@ -6,6 +6,7 @@ spec:
     targetRevision: HEAD
     argocdPath: infrastructure/applications/argocd
     portainerPath: infrastructure/applications/portainer
+    portainerPatchPath: infrastructure/applications/portainer-kustomize
     certManagerPath: infrastructure/applications/cert-manager
     semaphorePath: infrastructure/applications/semaphore
   argoCd:

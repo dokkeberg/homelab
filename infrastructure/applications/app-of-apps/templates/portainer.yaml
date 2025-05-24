@@ -9,6 +9,11 @@ spec:
     namespace: portainer
     server: {{ .Values.spec.destination.server }}
   sources:
+  - repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: HEAD
+    path: {{ .Values.spec.source.portainerPatchPath }}
+    kustomize:
+      enabled: true
   - repoURL: {{ .Values.spec.portainer.repoUrl }}
     chart: portainer
     targetRevision: {{ .Values.spec.portainer.targetRevision }}

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portainer
+  namespace: portainer
+spec:
+  template:
+    spec:
+      containers:
+        - name: portainer
+          volumeMounts:
+            - name: ca-cert-volume
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              subPath: ca.crt
+              readOnly: true
+      volumes:
+        - name: ca-cert-volume
+          secret:
+            secretName: home-root-ca-secret
+            items:
+              - key: ca.crt
+                path: ca.crt

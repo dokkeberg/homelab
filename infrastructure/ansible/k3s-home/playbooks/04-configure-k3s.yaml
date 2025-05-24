@@ -47,6 +47,12 @@
       args:
         executable: /bin/bash
 
+    - name: Ensure portainer namespace exists using kubectl
+      ansible.builtin.shell: |
+        kubectl get namespace portainer || kubectl create namespace portainer
+      args:
+        executable: /bin/bash
+
     - name: Read root CA cert
       ansible.builtin.slurp:
         src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
@@ -83,4 +89,11 @@
         --cert=/tmp/root-ca.crt
         --key=/tmp/root-ca.key
         --namespace=cert-manager
+      when: root_ca_cert_file.stat.exists
+
+    - name: Create root-ca-secret with only the cert if missing
+      ansible.builtin.command: >
+        kubectl create secret generic home-root-ca-secret
+        --from-file=ca.crt=/tmp/root-ca.crt
+        --namespace=portainer
       when: root_ca_cert_file.stat.exists
