@@ -91,3 +91,11 @@
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
+
+  - name: Refresh ArgoCD app 'portainer'
+    ansible.builtin.shell: |
+      argocd aapp get portainer --hard-refresh --insecure --plaintext
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
