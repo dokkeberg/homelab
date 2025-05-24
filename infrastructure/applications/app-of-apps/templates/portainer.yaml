@@ -14,15 +14,6 @@ spec:
     path: {{ .Values.spec.source.portainerPatchPath }}
     kustomize:
       enabled: true
-  - repoURL: {{ .Values.spec.portainer.repoUrl }}
-    chart: portainer
-    targetRevision: {{ .Values.spec.portainer.targetRevision }}
-    helm:
-      values: |
-        service:
-          type: LoadBalancer
-        enterpriseEdition:
-          enabled: {{ .Values.spec.portainer.enterprise }}
   - repoURL: {{ .Values.spec.source.repoURL }}
     path: {{ .Values.spec.source.portainerPath }}
     targetRevision: HEAD
