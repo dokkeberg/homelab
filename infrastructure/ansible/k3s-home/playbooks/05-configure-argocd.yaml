@@ -99,3 +99,11 @@
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
+
+  - name: Sync ArgoCD app 'portainer'
+    ansible.builtin.shell: |
+      argocd app sync portainer --insecure --plaintext
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
