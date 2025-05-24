@@ -79,7 +79,7 @@
 
     - name: Create root-ca-secret if missing
       ansible.builtin.command: >
-        kubectl create secret tls root-ca-secret
+        kubectl create secret tls home-root-ca-secret
         --cert=/tmp/root-ca.crt
         --key=/tmp/root-ca.key
         --namespace=cert-manager
