@@ -134,3 +134,12 @@ spec:
       allowEmpty: false 
     syncOptions:
       - CreateNamespace=true
+  ignoreDifferences:
+  - group: batch
+    kind: Job
+    namespace: keycloak
+    name: keycloak-keycloak-config-cli
+    # Prevent ArgoCD from trying to "heal" finished Jobs
+    # This tells ArgoCD: "Ignore this resource's status changes"
+    jqPathExpressions:
+      - .status
