@@ -63,6 +63,20 @@
       delegate_to: localhost
       become: false
 
+    - name: Write root CA cert to remote host
+      ansible.builtin.copy:
+        content: "{{ root_ca_cert.content | b64decode }}"
+        dest: /tmp/root-ca.crt
+        mode: '0600'
+      when: root_ca_cert_file.stat.exists
+
+    - name: Write root CA key to remote host
+      ansible.builtin.copy:
+        content: "{{ root_ca_key.content | b64decode }}"
+        dest: /tmp/root-ca.key
+        mode: '0600'
+      when: root_ca_cert_file.stat.exists
+
     - name: Create root-ca-secret if missing
       ansible.builtin.command: >
         kubectl create secret tls root-ca-secret
