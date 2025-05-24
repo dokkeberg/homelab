@@ -4,5 +4,8 @@ kind: Kustomization
 resources:
   - ../../base
 
-patchesStrategicMerge:
-  - patch-extra-volume.yaml
+patches:
+  - path: patch-extra-volume.yaml
+    target:
+      kind: Deployment
+      name: portainer
