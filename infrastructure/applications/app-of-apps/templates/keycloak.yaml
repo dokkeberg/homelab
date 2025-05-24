@@ -143,3 +143,5 @@ spec:
     # This tells ArgoCD: "Ignore this resource's status changes"
     jqPathExpressions:
       - .status
+      - .metadata.annotations["helm.sh/hook"]
+      - .metadata.annotations["helm.sh/hook-delete-policy"]
