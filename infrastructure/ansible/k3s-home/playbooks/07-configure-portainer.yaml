@@ -75,7 +75,7 @@
     ansible.builtin.stat:
       path: "{{ lookup('env', 'HOME') }}/ansible-secrets/portainer_license"
     register: license_file
-    delegate_to: proxmox
+    delegate_to: localhost
     become: false
 
   - name: Read license file from proxmox
@@ -83,7 +83,7 @@
       src: "{{ lookup('env', 'HOME') }}/ansible-secrets/portainer_license"
     register: portainer_license
     when: license_file.stat.exists
-    delegate_to: proxmox
+    delegate_to: localhost
     become: false
 
   - name: Attach license to Portainer from newvm
