@@ -18,7 +18,7 @@ spec:
             enabled: true
             annotations:
               argocd.argoproj.io/hook: Sync
-              argocd.argoproj.io/hook-delete-policy: HookSucceeded
+              argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
             extraEnvVars:
               - name: KEYCLOAK_URL
                 value: http://keycloak-headless.keycloak.svc.cluster.local:8080
