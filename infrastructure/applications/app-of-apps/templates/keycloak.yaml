@@ -16,6 +16,8 @@ spec:
         values: |
           keycloakConfigCli:
             enabled: true
+            cleanupAfterFinished
+              seconds: 600
             annotations:
               argocd.argoproj.io/hook: Sync
               argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
@@ -137,3 +139,10 @@ spec:
       allowEmpty: false 
     syncOptions:
       - CreateNamespace=true
+      - HookDeletePolicy=BeforeHookCreation
+      - SkipHookWhenJobDeleted=true
+  ignoreDifferences:
+  - group: batch
+    kind: Job
+    name: keycloak-keycloak-config-cli
+    namespace: keycloak
