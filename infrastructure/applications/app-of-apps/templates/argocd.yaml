@@ -18,6 +18,16 @@ spec:
         configs:
           cm: 
             kustomize.buildOptions: "--enable-helm"
+            resource.exclusions: |
+              - apiGroups:
+                  - batch
+                kinds:
+                  - Job
+                clusters:
+                  - "*"
+                namespaces:
+                  - keycloak
+                nameRegex: "keycloak-keycloak-config-cli"
           params:
             server.insecure: "true"
   - repoURL: {{ .Values.spec.source.repoURL }}
