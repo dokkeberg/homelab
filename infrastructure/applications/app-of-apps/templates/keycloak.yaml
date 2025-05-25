@@ -139,5 +139,7 @@ spec:
   ignoreDifferences:
   - group: batch
     kind: Job
-    name: keycloak-keycloak-config-cli
     namespace: keycloak
+    jqPathExpressions:
+        - .metadata.finalizers
+        - .metadata.annotations
