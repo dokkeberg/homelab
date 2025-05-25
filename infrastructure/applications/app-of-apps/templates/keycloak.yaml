@@ -136,10 +136,17 @@ spec:
       - CreateNamespace=true
       - HookDeletePolicy=BeforeHookCreation
       - SkipHookWhenJobDeleted=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 1m
   ignoreDifferences:
   - group: batch
     kind: Job
     namespace: keycloak
+    name: keycloak-keycloak-config-cli
     jqPathExpressions:
         - .metadata.finalizers
         - .metadata.annotations
