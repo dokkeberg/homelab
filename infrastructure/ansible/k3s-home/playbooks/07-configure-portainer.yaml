@@ -86,12 +86,13 @@
     delegate_to: localhost
     become: false
 
-  - name: Attach license to Portainer from newvm
+  - name: Activate Portainer license via API
     ansible.builtin.shell: |
       http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/licenses/add \
         "Authorization:Bearer {{ portainer_token }}" \
         "force==true" \
-        key:="{{ portainer_license.content | b64decode | trim }}"
+        Content-Type:application/json \
+        ':={{ {"key": (portainer_license.content | b64decode | trim)} | to_json }}'
     register: license_result
     changed_when: "'200' in license_result.stdout or '200' in license_result.stderr"
     failed_when: license_result.rc != 0
