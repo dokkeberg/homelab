@@ -71,6 +71,33 @@
     debug:
       var: upload_result
 
+  - name: Check if license file exists on proxmox
+    ansible.builtin.stat:
+      path: "{{ lookup('env', 'HOME') }}/ansible-secrets/portainer_license"
+    register: license_file
+    delegate_to: proxmox
+    become: false
+
+  - name: Read license file from proxmox
+    ansible.builtin.slurp:
+      src: "{{ lookup('env', 'HOME') }}/ansible-secrets/portainer_license"
+    register: portainer_license
+    when: license_file.stat.exists
+    delegate_to: proxmox
+    become: false
+
+  - name: Attach license to Portainer from newvm
+    ansible.builtin.shell: |
+      http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/licenses/add \
+        "Authorization:Bearer {{ portainer_token }}" \
+        "force==true" \
+        Content-Type:application/json \
+        body:='{"keys": ["{{ portainer_license.content | b64decode | trim }}"]}'
+    register: license_result
+    changed_when: "'200' in license_result.stdout or '200' in license_result.stderr"
+    failed_when: license_result.rc != 0
+    when: license_file.stat.exists
+
   - name: Update Portainer OIDC settings
     ansible.builtin.uri:
       url: https://portainer.k3s.home/api/settings
@@ -79,6 +106,7 @@
         Authorization: "Bearer {{ portainer_token }}"
       body_format: json
       body:
+        AuthenticationMethod: 3
         OAuthSettings:
           AccessTokenURI: "https://keycloak.k3s.home/realms/home/protocol/openid-connect/token"
           AuthStyle: 0
