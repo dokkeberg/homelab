@@ -136,6 +136,7 @@ spec:
       - CreateNamespace=true
       - HookDeletePolicy=BeforeHookCreation
       - SkipHookWhenJobDeleted=true
+      - PrunePropagationPolicy=background
     retry:
       limit: 3
       backoff:
