@@ -16,9 +16,6 @@ spec:
         values: |
           keycloakConfigCli:
             enabled: true
-            extraEnvVars:
-              - name: KEYCLOAK_URL
-                value: http://keycloak-headless.keycloak.svc.cluster.local:8080
             configuration:
               home.json: |
                 {
