@@ -1,19 +1,17 @@
 - name: Configure ArgoCD
   hosts: newvm
   collections:
-  - community.kubernetes
+  - kubernetes.core
   become: true
   tasks:
   - name: Add ArgoCD Helm repo
-    community.kubernetes.helm_repository:
-      name: argo
-      repo_url: https://argoproj.github.io/argo-helm
+    ansible.builtin.command: helm repo add argo https://argoproj.github.io/argo-helm
 
   - name: Update Helm repos
     ansible.builtin.command: helm repo update
 
   - name: Install ArgoCD
-    community.kubernetes.helm:
+    kubernetes.core.helm:
       name: argocd
       chart_ref: argo/argo-cd
       namespace: argocd
