@@ -1,5 +1,5 @@
 - name: Wait for SSH
-  hosts: localhost
+  hosts: proxmox
   tasks:
     - name: Wait for SSH
       wait_for:
