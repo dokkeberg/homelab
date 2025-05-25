@@ -16,8 +16,6 @@ spec:
         values: |
           keycloakConfigCli:
             enabled: true
-            cleanupAfterFinished
-              seconds: 600
             annotations:
               argocd.argoproj.io/hook: Sync
               argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
