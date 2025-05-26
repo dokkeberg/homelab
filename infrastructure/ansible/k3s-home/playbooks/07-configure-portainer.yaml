@@ -102,6 +102,38 @@
     failed_when: license_result.status != 200
     when: license_file.stat.exists
 
+  - name: Add Portainer developer team
+    ansible.builtin.uri:
+      url: https://portainer.k3s.home/api/teams
+      method: POST
+      headers:
+        Authorization: "Bearer {{ portainer_token }}"
+        Content-Type: "application/json"
+      body_format: json
+      body:
+        name: "development"
+      validate_certs: false
+      status_code: 200
+    register: team_result
+    failed_when: team_result.status != 200
+
+  - name: Add Portainer developer team access to default environment
+    ansible.builtin.uri:
+      url: https://portainer.k3s.home/api/endpoints/1
+      method: PUT
+      headers:
+        Authorization: "Bearer {{ portainer_token }}"
+        Content-Type: "application/json"
+      body_format: json
+      body:
+        TeamAccessPolicies:
+          "1":
+            RoleId: 1
+      validate_certs: false
+      status_code: 200
+    register: access_result
+    failed_when: access_result.status != 200
+
   - name: Update Portainer OIDC settings
     ansible.builtin.uri:
       url: https://portainer.k3s.home/api/settings
@@ -123,5 +155,12 @@
           ResourceURI: "https://keycloak.k3s.home/realms/home/protocol/openid-connect/userinfo"
           SSO: true
           Scopes: "openid email profile"
+          DefaultTeamID: 1
+          TeamMemberships:
+            AdminAutoPopulate: true
+            AdminGroupClaimsRegexList:
+            - "preferred_username"
+            OAuthClaimMappings: []
+            OAuthClaimName: "preferred_username"
           UserIdentifier: "preferred_username"
       validate_certs: false
