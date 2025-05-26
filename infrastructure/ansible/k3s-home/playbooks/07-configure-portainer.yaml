@@ -87,15 +87,19 @@
     become: false
 
   - name: Activate Portainer license via API
-    ansible.builtin.shell: |
-      http --ignore-stdin --verify=no POST https://portainer.k3s.home/api/licenses/add \
-        "Authorization:Bearer {{ portainer_token }}" \
-        "force==true" \
-        Content-Type:application/json \
-        ':={{ {"key": (portainer_license.content | b64decode | trim)} | to_json }}'
+    ansible.builtin.uri:
+      url: https://portainer.k3s.home/api/licenses/add?force=true
+      method: POST
+      headers:
+        Authorization: "Bearer {{ portainer_token }}"
+        Content-Type: "application/json"
+      body_format: json
+      body:
+        key: "{{ portainer_license.content | b64decode | trim }}"
+      validate_certs: false
+      status_code: 200
     register: license_result
-    changed_when: "'200' in license_result.stdout or '200' in license_result.stderr"
-    failed_when: license_result.rc != 0
+    failed_when: license_result.status != 200
     when: license_file.stat.exists
 
   - name: Update Portainer OIDC settings
