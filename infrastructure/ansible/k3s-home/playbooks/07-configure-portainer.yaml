@@ -126,12 +126,10 @@
         Content-Type: "application/json"
       body_format: json
       body:
-        Name: "local"
-        EndpointType: 5
+        Name: "homelab"
+        EndpointCreationType: 5
         URL: "https://kubernetes.default.svc"
         GroupID: 1
-        Id: 1
-        PublicURL: "localhost"
         TLS: false
         TLSSkipVerify: true
         TLSSkipClientVerify: true
