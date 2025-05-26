@@ -11,6 +11,11 @@ spec:
     semaphorePath: infrastructure/applications/semaphore
   argoCd:
     repoUrl: https://argoproj.github.io/argo-helm
+    url: https://argocd.k3s.home
+    oidc:
+      issuer: https://keycloak.k3s.home
+      clientID: argocd
+      requestedScopes: ["openid", "profile", "email", "groups"]
     targetRevision: 8.0.0
   portainer:
     repoUrl: https://portainer.github.io/k8s/
@@ -26,6 +31,8 @@ spec:
     username: cad
     clients:
       portainer:
+        clientSecret: ""
+      argocd:
         clientSecret: ""
   semaphore:
     repoUrl: ghcr.io/semaphoreui/charts

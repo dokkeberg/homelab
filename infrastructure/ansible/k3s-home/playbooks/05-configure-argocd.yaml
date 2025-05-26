@@ -41,6 +41,14 @@
     become: true
     when: not argocd_bin.stat.exists
 
+  - name: Genrate random ARGOCD_OIDC_SECRET 
+    ansible.builtin.set_fact:
+      argocd_oidc_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
+
+  - name: Save ArgoCD OIDC secret
+    ansible.builtin.command: >
+      kubectl -n argo-cd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
+
   - name: Generate random PORTAINER_SECRET
     ansible.builtin.set_fact:
       portainer_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
@@ -69,6 +77,7 @@
         --dest-namespace argocd \
         --plaintext --insecure \
         --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}"
+        --parameter "spec.keycloak.clients.argocd.clientSecret={{ argocd_oidc_secret }}"
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml

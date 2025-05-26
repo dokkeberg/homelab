@@ -62,6 +62,31 @@ spec:
                         "oauth2.device.authorization.grant.enabled": "true"
                       },
                       "fullScopeAllowed": true
+                    },
+                                        {
+                      "clientId": "argocd",
+                      "name": "argocd-sso",
+                      "rootUrl": "https://argocd.k3s.home/",
+                      "baseUrl": "https://argocd.k3s.home/",
+                      "adminUrl": "https://argocd.k3s.home/",
+                      "enabled": true,
+                      "clientAuthenticatorType": "client-secret",
+                      "secret": "{{ .Values.spec.keycloak.clients.argocd.clientSecret }}",
+                      "redirectUris": [
+                        "https://argocd.k3s.home/auth/callback"
+                      ],
+                      "webOrigins": [
+                        "https://argocd.k3s.home/#!/"
+                      ],
+                      "standardFlowEnabled": true,
+                      "frontchannelLogout": true,
+                      "protocol": "openid-connect",
+                      "attributes": {
+                        "backchannel.logout.session.required": "true",
+                        "post.logout.redirect.uris": "https://argocd.k3s.home/applications",
+                        "oauth2.device.authorization.grant.enabled": "true"
+                      },
+                      "fullScopeAllowed": true
                     }
                   ]
                 }
