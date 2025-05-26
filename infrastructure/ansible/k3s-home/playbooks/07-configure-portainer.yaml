@@ -117,22 +117,21 @@
     register: team_result
     failed_when: team_result.status != 200
 
-  - name: Add portainer default environment
+  - name: Add Portainer default environment
     ansible.builtin.uri:
       url: https://portainer.k3s.home/api/endpoints
       method: POST
       headers:
         Authorization: "Bearer {{ portainer_token }}"
-        Content-Type: "application/json"
-      body_format: json
+      body_format: form-multipart
       body:
         Name: "homelab"
-        EndpointCreationType: 5
+        EndpointCreationType: "5"
         URL: "https://kubernetes.default.svc"
-        GroupID: 1
-        TLS: false
-        TLSSkipVerify: true
-        TLSSkipClientVerify: true
+        GroupID: "1"
+        TLS: "false"
+        TLSSkipVerify: "true"
+        TLSSkipClientVerify: "true"
       validate_certs: false
       status_code: 200
     register: environment_result
