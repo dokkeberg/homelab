@@ -99,6 +99,10 @@
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
+  - name: Wait for ArgoCD to become available
+    ansible.builtin.command: >
+      kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
+
   - name: Sync ArgoCD app 'argocd/argocd'
     ansible.builtin.shell: |
       argocd app sync argocd/argocd --insecure --plaintext
