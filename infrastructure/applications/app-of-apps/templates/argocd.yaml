@@ -17,6 +17,7 @@ spec:
       values: |              
         configs:
           cm:
+            oidc.tls.insecure.skip.verify: "true"
             url: {{ .Values.spec.argoCd.url }}
             kustomize.buildOptions: "--enable-helm"
             oidc.config: |
