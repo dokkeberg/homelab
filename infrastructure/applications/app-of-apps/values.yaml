@@ -15,7 +15,7 @@ spec:
     oidc:
       issuer: https://keycloak.k3s.home/realms/home
       clientID: argocd
-    targetRevision: 8.0.0
+    targetRevision: 8.0.10
     caCert: ""
   portainer:
     repoUrl: https://portainer.github.io/k8s/

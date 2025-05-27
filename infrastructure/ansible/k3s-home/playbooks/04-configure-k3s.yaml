@@ -38,7 +38,7 @@
       ansible.builtin.stat:
         path: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
       register: root_ca_cert_file
-      delegate_to: localhost
+      delegate_to: proxmox
       become: false
 
     - name: Ensure cert-manager namespace exists using kubectl
@@ -58,7 +58,7 @@
         src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
       register: root_ca_cert
       when: root_ca_cert_file.stat.exists
-      delegate_to: localhost
+      delegate_to: proxmox
       become: false
 
     - name: Read root CA key
@@ -66,7 +66,7 @@
         src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.key"
       register: root_ca_key
       when: root_ca_cert_file.stat.exists
-      delegate_to: localhost
+      delegate_to: proxmox
       become: false
 
     - name: Write root CA cert to remote host

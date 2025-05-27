@@ -17,13 +17,12 @@ spec:
       values: |              
         configs:
           cm:
-            url: {{ .Values.spec.argoCd.url }}
+            kustomize.buildOptions: "--enable-helm"
             oidc.config: |
               name: Keycloak
               issuer: {{ .Values.spec.argoCd.oidc.issuer }}
               clientID: {{ .Values.spec.argoCd.oidc.clientID }}
               clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
-            kustomize.buildOptions: "--enable-helm"
           params:
             server.insecure: "true"
   - repoURL: {{ .Values.spec.source.repoURL }}
