@@ -27,7 +27,11 @@ spec:
               issuer: {{ .Values.spec.argoCd.oidc.issuer }}
               clientID: {{ .Values.spec.argoCd.oidc.clientID }}
               clientSecret: $oidc.keycloak.clientSecret
-              requestedScopes: ["openid", "profile", "email", "groups"]
+              requestedScopes:
+                - openid
+                - profile
+                - email
+                - groups
               {{- if .Values.spec.argoCd.caCert }}
               rootCA: |
                 {{ .Values.spec.argoCd.caCert | indent 8 }}
