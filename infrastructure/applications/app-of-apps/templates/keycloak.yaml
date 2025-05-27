@@ -63,7 +63,7 @@ spec:
                       },
                       "fullScopeAllowed": true
                     },
-                                        {
+                    {
                       "clientId": "argocd",
                       "name": "argocd-sso",
                       "rootUrl": "https://argocd.k3s.home/",

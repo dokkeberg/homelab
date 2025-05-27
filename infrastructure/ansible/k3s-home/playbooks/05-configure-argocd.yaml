@@ -47,7 +47,7 @@
 
   - name: Save ArgoCD OIDC secret
     ansible.builtin.command: >
-      kubectl -n argo-cd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
+      kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
 
   - name: Generate random PORTAINER_SECRET
     ansible.builtin.set_fact:
