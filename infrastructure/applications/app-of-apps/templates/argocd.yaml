@@ -18,7 +18,7 @@ spec:
         configs:
           secret:
             createSecret: true
-            extra:
+            extra: |
               oidc.keycloak.clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
           cm: 
             url: {{ .Values.spec.argoCd.url }}
