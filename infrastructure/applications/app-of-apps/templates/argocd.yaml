@@ -31,7 +31,12 @@ spec:
     path: {{ .Values.spec.source.argocdPath }}
     targetRevision: HEAD
   syncPolicy:
-    automated:
+    automated: 
       prune: true
       selfHeal: true
-      allowEmpty: false
+      allowEmpty: true 
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
