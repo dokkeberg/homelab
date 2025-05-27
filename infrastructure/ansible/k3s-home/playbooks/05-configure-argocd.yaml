@@ -45,10 +45,6 @@
     ansible.builtin.set_fact:
       argocd_oidc_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
 
-  - name: Save ArgoCD OIDC secret
-    ansible.builtin.command: >
-      kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
-
   - name: Generate random PORTAINER_SECRET
     ansible.builtin.set_fact:
       portainer_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
@@ -98,6 +94,10 @@
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
+
+  - name: Save ArgoCD OIDC secret
+    ansible.builtin.command: >
+      kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
 
   - name: Refresh ArgoCD app 'portainer'
     ansible.builtin.shell: |
