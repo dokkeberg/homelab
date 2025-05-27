@@ -23,10 +23,6 @@ spec:
               issuer: {{ .Values.spec.argoCd.oidc.issuer }}
               clientID: {{ .Values.spec.argoCd.oidc.clientID }}
               clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
-              {{- if .Values.spec.argoCd.caCert }}
-              rootCA: |
-                {{ .Values.spec.argoCd.caCert | indent 8 }}
-              {{- end }}
             kustomize.buildOptions: "--enable-helm"
           params:
             server.insecure: "true"
