@@ -17,6 +17,7 @@ spec:
       values: |              
         configs:
           cm:
+            url: {{ .Values.spec.argoCd.url }}
             kustomize.buildOptions: "--enable-helm"
             oidc.config: |
               name: Keycloak

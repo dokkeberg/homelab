@@ -51,7 +51,7 @@
 
   - name: Login to ArgoCD
     ansible.builtin.shell: |
-      argocd login --plaintext --insecure --core
+      argocd login --core
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
@@ -82,7 +82,6 @@
         --path infrastructure/applications/app-of-apps \
         --dest-server https://kubernetes.default.svc \
         --dest-namespace argocd \
-        --plaintext --insecure \
         --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}" \
         --parameter "spec.keycloak.clients.argocd.clientSecret={{ argocd_oidc_secret }}" \
         --parameter "spec.argoCd.caCert={{ oidc_root_ca | quote }}"
@@ -93,23 +92,23 @@
 
   - name: Sync ArgoCD app 'infrastructure'
     ansible.builtin.shell: |
-      argocd app sync infrastructure --insecure --plaintext
+      argocd app sync infrastructure
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
-  - name: Wait for ArgoCD to become available
-    ansible.builtin.command: >
-      kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
+  # - name: Wait for ArgoCD to become available
+  #   ansible.builtin.command: >
+  #     kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
 
-  - name: Sync ArgoCD app 'argocd/argocd'
-    ansible.builtin.shell: |
-      argocd app sync argocd/argocd --insecure --plaintext
-    environment:
-      HOME: /root
-      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-    become: true
+  # - name: Sync ArgoCD app 'argocd/argocd'
+  #   ansible.builtin.shell: |
+  #     argocd app sync argocd/argocd
+  #   environment:
+  #     HOME: /root
+  #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  #   become: true
 
   # - name: Save ArgoCD OIDC secret
   #   ansible.builtin.command: >
@@ -117,7 +116,7 @@
 
   - name: Refresh ArgoCD app 'portainer'
     ansible.builtin.shell: |
-      argocd app get portainer --hard-refresh --insecure --plaintext
+      argocd app get portainer --hard-refresh
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
@@ -125,7 +124,7 @@
 
   - name: Sync ArgoCD app 'portainer'
     ansible.builtin.shell: |
-      argocd app sync portainer --insecure --plaintext
+      argocd app sync portainer
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
