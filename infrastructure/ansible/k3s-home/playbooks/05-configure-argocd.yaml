@@ -102,13 +102,13 @@
   #   ansible.builtin.command: >
   #     kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
 
-  # - name: Sync ArgoCD app 'argocd/argocd'
-  #   ansible.builtin.shell: |
-  #     argocd app sync argocd/argocd
-  #   environment:
-  #     HOME: /root
-  #     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-  #   become: true
+  - name: Sync ArgoCD app 'argocd/argocd'
+    ansible.builtin.shell: |
+      argocd app sync argocd/argocd
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
 
   # - name: Save ArgoCD OIDC secret
   #   ansible.builtin.command: >
