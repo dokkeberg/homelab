@@ -15,7 +15,6 @@ spec:
     oidc:
       issuer: https://keycloak.k3s.home/realms/home
       clientID: argocd
-      requestedScopes: ["openid", "profile", "email", "groups"]
     targetRevision: 8.0.0
     caCert: ""
   portainer:
@@ -32,9 +31,9 @@ spec:
     username: cad
     clients:
       portainer:
-        clientSecret: ""
+        clientSecret: "foo"
       argocd:
-        clientSecret: ""
+        clientSecret: "foo"
   semaphore:
     repoUrl: ghcr.io/semaphoreui/charts
     targetRevision: 15.1.6
