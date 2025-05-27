@@ -64,16 +64,16 @@
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
-  - name: Read CA cert file from proxmox
-    ansible.builtin.slurp:
-      src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
-    register: root_ca_encoded
-    delegate_to: localhost
-    become: false
+  # - name: Read CA cert file from proxmox
+  #   ansible.builtin.slurp:
+  #     src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
+  #   register: root_ca_encoded
+  #   delegate_to: localhost
+  #   become: false
 
-  - name: Decode OIDC root CA cert
-    set_fact:
-      oidc_root_ca: "{{ root_ca_encoded.content | b64decode }}"
+  # - name: Decode OIDC root CA cert
+  #   set_fact:
+  #     oidc_root_ca: "{{ root_ca_encoded.content | b64decode }}"
 
   - name: Create ArgoCD app 'infrastructure' with secret parameter
     ansible.builtin.shell: |
