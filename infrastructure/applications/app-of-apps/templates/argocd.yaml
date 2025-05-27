@@ -16,6 +16,10 @@ spec:
       releaseName: argo
       values: |              
         configs:
+          secret:
+            createSecret: true
+            extra:
+              oidc.keycloak.clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
           cm: 
             url: {{ .Values.spec.argoCd.url }}
             oidc.config: |

@@ -95,9 +95,9 @@
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
-  - name: Save ArgoCD OIDC secret
-    ansible.builtin.command: >
-      kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
+  # - name: Save ArgoCD OIDC secret
+  #   ansible.builtin.command: >
+  #     kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
 
   - name: Refresh ArgoCD app 'portainer'
     ansible.builtin.shell: |
