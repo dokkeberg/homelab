@@ -76,7 +76,7 @@
         --dest-server https://kubernetes.default.svc \
         --dest-namespace argocd \
         --plaintext --insecure \
-        --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}"
+        --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}" \
         --parameter "spec.keycloak.clients.argocd.clientSecret={{ argocd_oidc_secret }}"
     environment:
       HOME: /root
