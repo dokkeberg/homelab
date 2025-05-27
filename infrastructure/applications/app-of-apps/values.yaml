@@ -13,10 +13,11 @@ spec:
     repoUrl: https://argoproj.github.io/argo-helm
     url: https://argocd.k3s.home
     oidc:
-      issuer: https://keycloak.k3s.home
+      issuer: https://keycloak.k3s.home/realms/home
       clientID: argocd
       requestedScopes: ["openid", "profile", "email", "groups"]
     targetRevision: 8.0.0
+    caCert: ""
   portainer:
     repoUrl: https://portainer.github.io/k8s/
     targetRevision: 1.0.66
