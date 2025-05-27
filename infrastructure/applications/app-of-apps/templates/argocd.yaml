@@ -16,22 +16,13 @@ spec:
       releaseName: argo
       values: |              
         configs:
-          secret:
-            createSecret: true
-            extra:
-              oidc.keycloak.clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
           cm:
             url: {{ .Values.spec.argoCd.url }}
             oidc.config: |
-            - name: Keycloak
+              name: Keycloak
               issuer: {{ .Values.spec.argoCd.oidc.issuer }}
               clientID: {{ .Values.spec.argoCd.oidc.clientID }}
-              clientSecret: $oidc.keycloak.clientSecret
-              requestedScopes:
-                - openid
-                - profile
-                - email
-                - groups
+              clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
               {{- if .Values.spec.argoCd.caCert }}
               rootCA: |
                 {{ .Values.spec.argoCd.caCert | indent 8 }}
