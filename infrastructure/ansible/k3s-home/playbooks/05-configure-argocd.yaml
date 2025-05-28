@@ -120,7 +120,7 @@
     become: true
 
   - name: Sync ArgoCD app 'argocd/argocd'
-    ansible.builtin.shell: |
+    ansible.builtin.command: >
       argocd app sync argocd/argocd
     environment:
       HOME: /root
