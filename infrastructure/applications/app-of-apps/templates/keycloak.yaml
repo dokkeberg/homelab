@@ -134,3 +134,11 @@ spec:
       - PrunePropagationPolicy=background 
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
+  ignoreDifferences:
+  - group: ""
+    kind: Secret
+    name: keycloak-postgresql
+    namespace: keycloak
+    jsonPointers:
+      - /data/password
+      - /data/postgres-password

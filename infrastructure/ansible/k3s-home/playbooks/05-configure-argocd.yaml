@@ -84,7 +84,7 @@
 
   - name: Sync ArgoCD app 'argocd/argocd'
     ansible.builtin.shell: |
-      argocd app sync argocd/argocd --insecure --plaintext
+      argocd app get argocd --hard-refresh --insecure --plaintext
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
