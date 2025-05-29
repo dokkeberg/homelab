@@ -23,9 +23,17 @@ qm set $VMID --ide2 $STORAGE:cloudinit
 mkdir -p /var/lib/vz/snippets
 cat << OUTER_EOF | tee /var/lib/vz/snippets/ubuntu.yaml
 #cloud-config
+apt_update: true
+apt_upgrade: true
+
+packages:
+  - qemu-guest-agent
+  - httpie
+  - jq
+
 runcmd:
-    - systemctl enable ssh
-    - reboot
+  - systemctl enable ssh
+  - reboot
 OUTER_EOF
 
 qm set $VMID --cicustom "vendor=local:snippets/ubuntu.yaml"
