@@ -1,6 +1,6 @@
 ---
 - name: Provision VM
-  hosts: localhost
+  hosts: proxmox
   tasks:
     - name: Set VMID for template
       set_fact:
@@ -57,7 +57,7 @@
       command: qm guest exec {{ VMID_instance }} -- test -f /var/lib/cloud/instance/boot-finished
       register: result
       until: result.rc == 0
-      retries: 10
+      retries: 20
       delay: 10
       changed_when: false
 

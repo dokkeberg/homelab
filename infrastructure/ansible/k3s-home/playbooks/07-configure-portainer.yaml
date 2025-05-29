@@ -12,7 +12,7 @@
         Password: "ChangeMe123!"
       validate_certs: false
       status_code: 200
-    retries: 15
+    retries: 20
     delay: 5
     register: portainer_init_result
     until: portainer_init_result.status == 200
@@ -28,7 +28,7 @@
       return_content: true
       validate_certs: false
     register: portainer_auth
-    retries: 12
+    retries: 20
     delay: 5
     until: portainer_auth.status == 200
 
