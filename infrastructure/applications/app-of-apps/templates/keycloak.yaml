@@ -37,6 +37,9 @@ spec:
                       ]
                     }
                   ],
+                  "clientScopes": [
+                    "name": "groups",
+                  ]
                   "clients": [
                     {
                       "clientId": "portainer",
@@ -86,7 +89,16 @@ spec:
                         "post.logout.redirect.uris": "https://argocd.k3s.home/applications",
                         "oauth2.device.authorization.grant.enabled": "true"
                       },
-                      "fullScopeAllowed": true
+                      "fullScopeAllowed": true,
+                      "defaultClientScopes": [
+                        "web-origins",
+                        "acr",
+                        "roles",
+                        "profile",
+                        "groups",
+                        "basic",
+                        "email"
+                      ],
                     }
                   ]
                 }
