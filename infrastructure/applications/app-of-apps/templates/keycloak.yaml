@@ -39,7 +39,8 @@ spec:
                   ],
                   "clientScopes": [
                     {
-                      "name": "groups"
+                      "name": "groups",
+                      "protocol": "openid-connect"
                     }
                   ],
                   "clients": [
