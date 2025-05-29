@@ -38,7 +38,9 @@ spec:
                     }
                   ],
                   "clientScopes": [
-                    "name": "groups",
+                    {
+                      "name": "groups"
+                    }
                   ],
                   "clients": [
                     {
@@ -98,7 +100,7 @@ spec:
                         "groups",
                         "basic",
                         "email"
-                      ],
+                      ]
                     }
                   ]
                 }
