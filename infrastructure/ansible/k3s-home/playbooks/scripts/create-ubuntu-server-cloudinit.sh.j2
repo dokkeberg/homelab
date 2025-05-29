@@ -24,10 +24,10 @@ mkdir -p /var/lib/vz/snippets
 cat << OUTER_EOF | tee /var/lib/vz/snippets/ubuntu.yaml
 #cloud-config
 runcmd:
-    - apt-get update
-    - apt-get install -y qemu-guest-agent
-    - apt-get install httpie -y
-    - apt-get install jq
+    - apt update
+    - apt install -y qemu-guest-agent
+    - apt install -y httpie -y
+    - apt install -y jq
 
     # finish setup
     - systemctl enable ssh
