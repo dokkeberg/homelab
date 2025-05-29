@@ -49,6 +49,10 @@
     ansible.builtin.set_fact:
       portainer_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
 
+  - name: Generate random SEMAPHORE_SECRET
+    ansible.builtin.set_fact:
+      semaphore_secret: "{{ lookup('password', '/dev/null length=32 chars=hexdigits') }}"
+
   - name: Login to ArgoCD
     ansible.builtin.shell: |
       argocd login --core
@@ -83,13 +87,12 @@
         --dest-server https://kubernetes.default.svc \
         --dest-namespace argocd \
         --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}" \
+        --parameter "spec.keycloak.clients.semaphore.clientSecret={{ semaphore_secret }}" \
         --parameter "spec.keycloak.clients.argocd.clientSecret={{ argocd_oidc_secret }}" 
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
-
-
 
         # --parameter "spec.argoCd.caCert={{ oidc_root_ca | quote }}"
   - name: Sync ArgoCD app 'infrastructure'

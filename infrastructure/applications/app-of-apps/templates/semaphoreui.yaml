@@ -39,11 +39,10 @@ spec:
               provider_url: {{ .Values.spec.semaphore.oidc.issuer }}
               redirect_url: https://{{ .Values.spec.semaphore.host }}/api/auth/oidc/keycloak/redirect
               client_id: semaphore
-              client_secret: {{ .Values.spec.keycloak.clients.semaphore.clientSecret }}
+              client_secret: {{ .Values.spec.keycloak.clients.semaphore.clientSecret | quote }}
               username_claim: preferred_username
               name_claim: preferred_username
               email_claim: email
-
   syncPolicy:
     automated:
       prune: false
