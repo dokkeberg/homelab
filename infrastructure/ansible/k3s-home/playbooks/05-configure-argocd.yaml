@@ -100,6 +100,7 @@
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
+
   # - name: Wait for ArgoCD to become available
   #   ansible.builtin.command: >
   #     kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
@@ -119,9 +120,9 @@
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
-  - name: Sync ArgoCD app 'argocd/argocd'
-    ansible.builtin.command: >
-      argocd app sync argocd/argocd
+  - name: Refresh ArgoCD app 'argocd/argocd'
+    ansible.builtin.shell: |
+      argocd app get argocd --hard-refresh --insecure --plaintext
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
@@ -130,6 +131,19 @@
   # - name: Save ArgoCD OIDC secret
   #   ansible.builtin.command: >
   #     kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
+
+  - name: Sync ArgoCD app 'argocd/argocd'
+    ansible.builtin.shell: |
+      argocd app sync argocd --insecure --plaintext
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+    register: sync_result
+    retries: 5
+    delay: 10
+    until: sync_result.rc == 0
+
 
   - name: Refresh ArgoCD app 'portainer'
     ansible.builtin.shell: |

@@ -1,6 +1,6 @@
 ---
 - name: Provision VM
-  hosts: localhost
+  hosts: proxmox
   tasks:
     - name: Set VMID for template
       set_fact:
