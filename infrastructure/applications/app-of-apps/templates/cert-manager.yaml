@@ -21,9 +21,11 @@ spec:
     targetRevision: HEAD
   syncPolicy:
     automated: 
-      prune: true
+      prune: false
       selfHeal: true
       allowEmpty: true 
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
