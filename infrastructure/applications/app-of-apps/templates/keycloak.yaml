@@ -102,6 +102,40 @@ spec:
                         "basic",
                         "email"
                       ]
+                    },
+                    {
+                      "clientId": "semaphore",
+                      "name": "semaphore-sso",
+                      "rootUrl": "https://semaphore.k3s.home/",
+                      "baseUrl": "https://semaphore.k3s.home/",
+                      "adminUrl": "https://semaphore.k3s.home/",
+                      "enabled": true,
+                      "clientAuthenticatorType": "client-secret",
+                      "secret": "{{ .Values.spec.keycloak.clients.semaphore.clientSecret }}",
+                      "redirectUris": [
+                        "https://semaphore.k3s.home/api/auth/oidc/keycloak/redirect"
+                      ],
+                      "webOrigins": [
+                        "https://semaphore.k3s.home/"
+                      ],
+                      "standardFlowEnabled": true,
+                      "frontchannelLogout": true,
+                      "protocol": "openid-connect",
+                      "attributes": {
+                        "backchannel.logout.session.required": "true",
+                        "post.logout.redirect.uris": "https://semaphore.k3s.home",
+                        "oauth2.device.authorization.grant.enabled": "true"
+                      },
+                      "fullScopeAllowed": true,
+                      "defaultClientScopes": [
+                        "web-origins",
+                        "acr",
+                        "roles",
+                        "profile",
+                        "groups",
+                        "basic",
+                        "email"
+                      ]
                     }
                   ]
                 }

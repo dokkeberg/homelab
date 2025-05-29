@@ -15,8 +15,7 @@ spec:
     helm:
       values: |
         admin:
-          create: true
-          password: changeme
+          create: false
         ingress:
           enabled: true
           annotations:
@@ -32,6 +31,18 @@ spec:
             - hosts:
               - "{{ .Values.spec.semaphore.host }}"
               secretName: semaphore-cert-tls
+        oidc:
+          enable: true
+          providers:
+            keycloak:
+              display_name: Keycloak
+              provider_url: {{ .Values.spec.semaphore.oidc.issuer }}
+              redirect_url: https://{{ .Values.spec.semaphore.host }}/api/auth/oidc/keycloak/redirect
+              client_id: semaphore
+              client_secret: {{ .Values.spec.keycloak.clients.semaphore.clientSecret }}
+              username_claim: preferred_username
+              name_claim: preferred_username
+              email_claim: email
 
   syncPolicy:
     automated:

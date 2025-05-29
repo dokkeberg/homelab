@@ -34,7 +34,11 @@ spec:
         clientSecret: "foo"
       argocd:
         clientSecret: "foo"
+      semaphore:
+        clientSecret: "foo"
   semaphore:
     repoUrl: ghcr.io/semaphoreui/charts
     targetRevision: 15.1.6
     host: semaphore.k3s.home
+    oidc:
+      issuer: https://keycloak.k3s.home/realms/home
