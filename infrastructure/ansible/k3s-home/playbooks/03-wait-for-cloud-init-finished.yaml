@@ -1,4 +1,4 @@
-- name: Wait for cloud-init to finish
+- name: Wait for cloud-init to finish and install packages
   hosts: newvm
   become: true
   tasks:
@@ -7,3 +7,22 @@
         path: /var/lib/cloud/instance/boot-finished
         state: present
         timeout: 300  # seconds
+
+    - name: Update APT package index
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install qemu-guest-agent
+      ansible.builtin.apt:
+        name: qemu-guest-agent
+        state: present
+
+    - name: Install httpie
+      ansible.builtin.apt:
+        name: httpie
+        state: present
+
+    - name: Install jq
+      ansible.builtin.apt:
+        name: jq
+        state: present
