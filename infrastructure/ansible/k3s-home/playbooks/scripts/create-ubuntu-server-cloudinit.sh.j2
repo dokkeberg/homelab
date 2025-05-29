@@ -23,6 +23,11 @@ qm set $VMID --ide2 $STORAGE:cloudinit
 mkdir -p /var/lib/vz/snippets
 cat << OUTER_EOF | tee /var/lib/vz/snippets/ubuntu.yaml
 #cloud-config
+
+bootcmd:
+  - sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
+  - sed -i 's|http://security.ubuntu.com|https://security.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
+
 apt_update: true
 apt_upgrade: true
 
