@@ -50,3 +50,6 @@ spec:
       allowEmpty: false 
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
