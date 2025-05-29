@@ -2,6 +2,9 @@
   hosts: newvm
   become: true
   tasks:
+    - name: Sleep for 30 seconds
+      ansible.builtin.command: sleep 30
+      
     - name: Wait for /var/lib/cloud/instance/boot-finished
       ansible.builtin.wait_for:
         path: /var/lib/cloud/instance/boot-finished
