@@ -53,3 +53,12 @@ spec:
       - PrunePropagationPolicy=background 
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
+  ignoreDifferences:
+  - group: ""
+    kind: Secret
+    name: semaphore-general
+    namespace: semaphore
+    jsonPointers:
+      - /data/cookieEncryption
+      - /data/cookieHash
+      - /data/accesskeyEncryption
