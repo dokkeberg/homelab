@@ -39,7 +39,7 @@ spec:
                   ],
                   "clientScopes": [
                     "name": "groups",
-                  ]
+                  ],
                   "clients": [
                     {
                       "clientId": "portainer",
