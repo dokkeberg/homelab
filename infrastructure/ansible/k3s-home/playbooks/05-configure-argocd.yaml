@@ -146,6 +146,7 @@
     retries: 5
     delay: 10
     until: sync_result.rc == 0
+    timeout: 10
 
 
   - name: Refresh ArgoCD app 'portainer'
