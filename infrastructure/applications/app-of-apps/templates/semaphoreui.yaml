@@ -65,3 +65,9 @@ spec:
       - /data/cookieEncryption
       - /data/cookieHash
       - /data/accesskeyEncryption
+  - group: ""
+    kind: Secret
+    name: semaphore-runner
+    namespace: semaphore
+    jsonPointers:
+      - /data/token
