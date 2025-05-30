@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: semaphore
+  namespace: argocd     
+spec:
+  project: default
+  destination:
+    namespace: semaphore
+    server: {{ .Values.spec.destination.server }}
+  source:
+    repoURL: {{ .Values.spec.semaphore.repoUrl }}
+    chart: semaphore
+    targetRevision: {{ .Values.spec.semaphore.targetRevision }}
+    helm:
+      values: |
+        admin:
+          create: false
+        oidc:
+          enable: true
+          providers:
+            keycloak:
+              display_name: Keycloak
+              provider_url: {{ .Values.spec.semaphore.oidc.issuer }}
+              redirect_url: https://{{ .Values.spec.semaphore.host }}/api/auth/oidc/keycloak/redirect
+              client_id: semaphore
+              client_secret: {{ .Values.spec.keycloak.clients.semaphore.clientSecret | quote }}
+              username_claim: preferred_username
+              name_claim: preferred_username
+              email_claim: email
+              auth_url: {{ .Values.spec.semaphore.oidc.issuer }}/protocol/openid-connect/auth
+              token_url: {{ .Values.spec.semaphore.oidc.issuer }}/protocol/openid-connect/token
+              userinfo_url: {{ .Values.spec.semaphore.oidc.issuer }}/protocol/openid-connect/userinfo
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: home-intermediate-ca-issuer
+            cert-manager.io/common-name: "{{ .Values.spec.semaphore.host }}"
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+          hosts:
+            - host: "{{ .Values.spec.semaphore.host }}"
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+              - "{{ .Values.spec.semaphore.host }}"
+              secretName: semaphore-cert-tls
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false 
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+  - group: ""
+    kind: Secret
+    name: semaphore-general
+    namespace: semaphore
+    jsonPointers:
+      - /data/cookieEncryption
+      - /data/cookieHash
+      - /data/accesskeyEncryption
+  - group: ""
+    kind: Secret
+    name: semaphore-runner
+    namespace: semaphore
+    jsonPointers:
+      - /data/token
