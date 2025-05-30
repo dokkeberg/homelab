@@ -1,0 +1,15 @@
+# Template config
+template_id: 9001
+template_name: ubuntu-2404-template
+template_image: ubuntu-24.04-server-cloudimg-amd64.img
+template_url: https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-amd64.img
+
+# Target VM config
+vm_id: 101
+vm_name: ubuntu-k3s
+vm_node: pve
+vm_storage: local-lvm
+vm_ip: 192.168.1.100
+vm_gateway: 192.168.1.1
+ci_user: root
+ssh_key: "~/.ssh/id_rsa.pub"

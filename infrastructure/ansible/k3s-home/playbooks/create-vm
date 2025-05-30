@@ -1,0 +1,33 @@
+---
+- name: Create VM
+  hosts: proxmox
+  become: true
+  vars_files:
+  - ../vars/all.yaml
+  tasks:
+    - name: Check if VM with VMID exists
+      ansible.builtin.shell: |
+        qm list | awk '{print $1}' | grep -wq {{ VMID_instance }}
+      register: check_vm
+      changed_when: false
+      failed_when: false
+
+    - name: Set fact if VM exists
+      ansible.builtin.set_fact:
+        vm_exists: "{{ check_vm.rc == 0 }}"
+    
+    - name: Clone the VM
+      shell: |
+        qm clone {{ template_id }} {{ vm_id }} --name {{ vm_name }} --full true --storage {{ vm_storage }}
+      args:
+        creates: "/etc/pve/qemu-server/{{ vm_id }}.conf"
+      when: not vm_exists
+
+    - name: Start the VM
+      shell: qm start {{ vm_id }}
+
+    - name: Wait for SSH
+      wait_for:
+        port: 22
+        host: "{{ vm_ip }}"
+        timeout: 300
