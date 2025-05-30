@@ -9,7 +9,7 @@ vm_id: 102
 vm_name: semaphore
 vm_node: pve
 vm_storage: local-lvm
-vm_ip: 192.168.1..101/24
+vm_ip: 192.168.1.101/24
 vm_gateway: 192.168.1.1
 ci_user: root
-ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+ssh_key: "~/.ssh/id_rsa.pub"
