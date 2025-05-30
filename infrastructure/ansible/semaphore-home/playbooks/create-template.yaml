@@ -34,6 +34,33 @@
       shell: |
         qm set {{ template_id }} --scsihw virtio-scsi-pci --virtio0 {{ vm_storage }}:vm-{{ template_id }}-disk-1,discard=on
 
+    - name: Update cloud-init config
+      shell: |
+        mkdir -p /var/lib/vz/snippets
+        cat << 'EOF' > /var/lib/vz/snippets/ubuntu.yaml
+        #cloud-config
+
+        bootcmd:
+          - sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
+          - sed -i 's|http://security.ubuntu.com|https://security.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
+
+        apt_update: true
+        apt_upgrade: true
+
+        apt:
+          preserve_sources_list: true
+
+        packages:
+          - qemu-guest-agent
+          - httpie
+          - jq
+
+        runcmd:
+          - apt update
+          - systemctl enable ssh
+          - reboot
+        EOF
+
     - name: Convert the VM to template
       shell: |
         qm set {{ template_id }} --cicustom "vendor=local:snippets/ubuntu.yaml"
