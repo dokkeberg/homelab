@@ -37,5 +37,9 @@
 
     - name: Convert the VM to template
       shell: |
+        qm set {{ template_id }} --cicustom "vendor=local:snippets/ubuntu.yaml"
+        qm set {{ template_id }} --sshkeys ~/.ssh/authorized_keys
+        qm set {{ template_id }} --ipconfig0 ip={{ vm_ip }}/24,gw={{ vm_gateway }}
         qm set {{ template_id }} --ciuser {{ ci_user }}
+        
         qm template {{ template_id }}

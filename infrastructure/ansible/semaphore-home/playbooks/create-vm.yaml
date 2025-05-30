@@ -10,13 +10,6 @@
       args:
         creates: "/etc/pve/qemu-server/{{ vm_id }}.conf"
 
-    - name: Set cloud-init user, IP and SSH key
-      shell: |
-        qm set {{ vm_id }} \
-          --ciuser {{ ci_user }} \
-          --ipconfig0 ip={{ vm_ip }}/24,gw={{ vm_gateway }}
-          --sshkeys ~/.ssh/authorized_keys \
-
     - name: Start the VM
       shell: qm start {{ vm_id }}
 
