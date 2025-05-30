@@ -1,0 +1,15 @@
+# Template config
+template_id: 9002
+template_name: ubuntu-2404-template-minimal
+template_image: ubuntu-24.04-server-cloudimg-amd64.img
+template_url: https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-amd64.img
+
+# Target VM config
+vm_id: 102
+vm_name: semaphore
+vm_node: pve
+vm_storage: local-lvm
+vm_ip: 192.168.1..101/24
+vm_gateway: 192.168.1.1
+ci_user: root
+ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

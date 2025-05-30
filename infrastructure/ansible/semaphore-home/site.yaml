@@ -1,0 +1,3 @@
+- import_playbook: playbooks/create-template.yaml
+- import_playbook: playbooks/create-vm.yaml
+- import_playbook: playbooks/deploy-semaphore.yaml

@@ -1,0 +1,41 @@
+- name: Create Ubuntu Cloud-Init Template in Proxmox
+  hosts: proxmox
+  become: true
+  vars_files:
+    - ../vars/all.yml
+  tasks:
+    - name: Download Ubuntu cloud image
+      get_url:
+        url: "{{ template_url }}"
+        dest: "/var/lib/vz/template/{{ template_image }}"
+        mode: '0644'
+
+    - name: Create a new VM
+      shell: |
+        qm create {{ template_id }} \
+          --name {{ template_name }} \
+          --memory 1024 \
+          --net0 virtio,bridge=vmbr0 \
+          --cores 1 \
+          --ostype l26 \
+          --scsihw virtio-scsi-pci \
+          --scsi0 {{ vm_storage }}:32 \
+          --ide2 {{ vm_storage }}:cloudinit \
+          --boot c \
+          --bootdisk scsi0 \
+          --serial0 socket \
+          --vga serial0 \
+          --agent enabled=1
+
+    - name: Import the downloaded image into the VM
+      shell: |
+        qm importdisk {{ template_id }} /var/lib/vz/template/{{ template_image }} {{ vm_storage }}
+
+    - name: Attach the disk to the VM
+      shell: |
+        qm set {{ template_id }} --scsi0 {{ vm_storage }}:vm-{{ template_id }}-disk-0
+
+    - name: Convert the VM to template
+      shell: |
+        qm set {{ template_id }} --ciuser {{ ci_user }} --cipassword {{ ci_password }}
+        qm template {{ template_id }}

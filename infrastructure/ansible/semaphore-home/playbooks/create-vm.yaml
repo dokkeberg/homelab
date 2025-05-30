@@ -1,0 +1,30 @@
+- name: Clone and start Semaphore VM
+  hosts: proxmox
+  become: true
+  vars_files:
+    - ../vars/all.yml
+  tasks:
+    - name: Clone the VM
+      shell: |
+        qm clone {{ template_id }} {{ vm_id }} --name {{ vm_name }} --full true --storage {{ vm_storage }}
+      args:
+        creates: "/etc/pve/qemu-server/{{ vm_id }}.conf"
+
+    - name: Set cloud-init user, IP and SSH key
+      shell: |
+        qm set {{ vm_id }} \
+          --ciuser {{ ci_user }} \
+          --sshkey "{{ ssh_key }}" \
+          --ipconfig0 ip={{ vm_ip }},gw={{ vm_gateway }}
+
+    - name: Start the VM
+      shell: qm start {{ vm_id }}
+
+- name: Wait for SSH
+  hosts: proxmox
+  tasks:
+    - name: Wait for SSH
+      wait_for:
+        port: 22
+        host: "{{ vm_ip }}"
+        timeout: 300
