@@ -17,16 +17,17 @@
     - name: Create a new VM
       shell: |
         qm create {{ template_id }} --name {{ template_name }} --ostype l26 \
-            --memory 4096 --balloon 1 \
-            --agent 1 \
-            --bios ovmf --machine q35 --efidisk0 {{ vm_storage }}:0,pre-enrolled-keys=0 \
-            --cpu host --cores 2 --numa 1 \
-            --vga serial0 --serial0 socket  \
-            --net0 virtio,bridge=vmbr0,mtu=1
+          --memory 4096 --balloon 0 \
+          --agent 1 \
+          --bios ovmf --machine q35 \
+          --efidisk0 {{ vm_storage }}:128K,format=raw,efitype=4m,pre-enrolled-keys=0 \
+          --cpu host --cores 2 --numa 1 \
+          --vga serial0 --serial0 socket \
+          --net0 virtio,bridge=vmbr0
 
         qm importdisk {{ template_id }} /var/lib/vz/template/{{ template_image }} {{ vm_storage }}
         qm set {{ template_id }} --scsihw virtio-scsi-pci --virtio0 {{ vm_storage }}:vm-{{ template_id }}-disk-1,discard=on
-        qm set {{ template_id }} --boot order=virtio0
+        qm set {{ template_id }} --boot order=virtio0 --bootdisk virtio0
         qm set {{ template_id }} --ide2 {{ vm_storage }}:cloudinit
 
     - name: Copy cloud-init user config snippet to Proxmox host
