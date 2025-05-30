@@ -1,0 +1,19 @@
+#cloud-config
+
+bootcmd:
+  - sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
+  - sed -i 's|http://security.ubuntu.com|https://security.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
+
+apt_update: true
+apt_upgrade: true
+
+apt:
+  preserve_sources_list: true
+
+packages:
+  - qemu-guest-agent
+
+runcmd:
+  - apt update
+  - systemctl enable ssh
+  - reboot

@@ -29,30 +29,11 @@
         qm set {{ template_id }} --boot order=virtio0
         qm set {{ template_id }} --ide2 {{ vm_storage }}:cloudinit
 
-    - name: Update cloud-init config
-      shell: |
-        mkdir -p /var/lib/vz/snippets
-        cat << 'EOF' > /var/lib/vz/snippets/ubuntu.yaml
-        #cloud-config
-
-        bootcmd:
-          - sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
-          - sed -i 's|http://security.ubuntu.com|https://security.ubuntu.com|' /etc/apt/sources.list.d/ubuntu.sources
-
-        apt_update: true
-        apt_upgrade: true
-
-        apt:
-          preserve_sources_list: true
-
-        packages:
-          - qemu-guest-agent
-
-        runcmd:
-          - apt update
-          - systemctl enable ssh
-          - reboot
-        EOF
+    - name: Copy cloud-init user config snippet to Proxmox host
+      copy:
+        src: files/cloudinit/ubuntu.yaml
+        dest: /var/lib/vz/snippets/ubuntu.yaml
+        mode: '0644'
 
     - name: Convert the VM to template
       shell: |
