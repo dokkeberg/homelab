@@ -31,7 +31,7 @@
 
     - name: Copy cloud-init user config snippet to Proxmox host
       copy:
-        src: files/cloudinit/ubuntu.yaml
+        src: ../files/cloudinit/ubuntu.yaml
         dest: /var/lib/vz/snippets/ubuntu.yaml
         mode: '0644'
 
