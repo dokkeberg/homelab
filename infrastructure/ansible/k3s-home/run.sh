@@ -12,7 +12,7 @@ case "$ACTION" in
     ansible-playbook -vvv -i $INVENTORY site.yaml --extra-vars "$EXTRA_VARS"
     ;;
   down)
-    ansible-playbook -i $INVENTORY teardown.yaml --extra-vars "$EXTRA_VARS"
+    ansible-playbook -i $INVENTORY down.yaml --extra-vars "$EXTRA_VARS"
     ;;
   teardown)
     ansible-playbook -i $INVENTORY teardown.yaml --extra-vars "$EXTRA_VARS"
