@@ -26,6 +26,14 @@
     - name: Start the VM
       shell: qm start {{ vm_id }}
 
+    - name: Wait for cloud-init to complete on VM
+      command: qm guest exec {{ vm_id }} -- test -f /var/lib/cloud/instance/boot-finished
+      register: result
+      until: result.rc == 0
+      retries: 10
+      delay: 10
+      changed_when: false
+
     - name: Wait for SSH
       wait_for:
         port: 22
