@@ -37,5 +37,5 @@
 
     - name: Convert the VM to template
       shell: |
-        qm set {{ template_id }} --ciuser {{ ci_user }} --cipassword {{ ci_password }}
+        qm set {{ template_id }} --ciuser {{ ci_user }}
         qm template {{ template_id }}

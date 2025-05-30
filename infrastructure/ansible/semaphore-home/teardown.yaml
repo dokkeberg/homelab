@@ -1,0 +1,26 @@
+- name: Teardown Proxmox VMs and template
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+  - vars/all.yaml
+  tasks:
+  - name: Shutdown and destroy VM if it exists
+    ansible.builtin.shell: |
+      if qm status {{ vm_id }} 2>/dev/null | grep -q running; then
+        qm shutdown {{ vm_id }} --timeout 30 || qm stop {{ vm_id }}
+      fi
+      qm destroy {{ vm_id }} --purge
+    register: destroy_vm_result
+    failed_when: false
+
+  - name: Delete the VM template if it exists
+    ansible.builtin.shell: |
+      if qm status {{ template_id }} 2>/dev/null; then
+        qm unlock {{ template_id }} || true
+        qm destroy {{ template_id }} --purge
+      fi
+    failed_when: false
+
+  - name: Remove ssh key
+    ansible.builtin.shell: |
+      ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.1.101"
