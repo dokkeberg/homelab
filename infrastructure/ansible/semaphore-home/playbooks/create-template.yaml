@@ -23,16 +23,11 @@
             --cpu host --cores 1 --numa 1 \
             --vga serial0 --serial0 socket  \
             --net0 virtio,bridge=vmbr0,mtu=1
+
+        qm importdisk {{ template_id }} /var/lib/vz/template/{{ template_image }} {{ vm_storage }}
+        qm set {{ template_id }} --scsihw virtio-scsi-pci --virtio0 {{ vm_storage }}:vm-{{ template_id }}-disk-1,discard=on
         qm set {{ template_id }} --boot order=virtio0
         qm set {{ template_id }} --ide2 {{ vm_storage }}:cloudinit
-
-    - name: Import the downloaded image into the VM
-      shell: |
-        qm importdisk {{ template_id }} /var/lib/vz/template/{{ template_image }} {{ vm_storage }}
-
-    - name: Attach the disk to the VM
-      shell: |
-        qm set {{ template_id }} --scsihw virtio-scsi-pci --virtio0 {{ vm_storage }}:vm-{{ template_id }}-disk-1,discard=on
 
     - name: Update cloud-init config
       shell: |
@@ -52,8 +47,6 @@
 
         packages:
           - qemu-guest-agent
-          - httpie
-          - jq
 
         runcmd:
           - apt update
