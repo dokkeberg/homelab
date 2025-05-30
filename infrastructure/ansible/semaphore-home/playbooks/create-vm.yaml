@@ -14,7 +14,7 @@
       shell: |
         qm set {{ vm_id }} \
           --ciuser {{ ci_user }} \
-          --sshkey "{{ ssh_key }}" \
+          --sshkey ~/.ssh/authorized_keys \
           --ipconfig0 ip={{ vm_ip }},gw={{ vm_gateway }}
 
     - name: Start the VM
