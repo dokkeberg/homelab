@@ -12,7 +12,7 @@
 
     - name: Resize VM
       shell: |
-        qemu-img resize /var/lib/vz/template/noble-server-cloudimg-amd64.img 64G
+        qemu-img resize /var/lib/vz/template/{{ template_image }} 64G
 
     - name: Create a new VM
       shell: |
