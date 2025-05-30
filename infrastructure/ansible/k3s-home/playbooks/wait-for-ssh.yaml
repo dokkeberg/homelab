@@ -1,5 +1,7 @@
 - name: Wait for SSH
   hosts: proxmox
+  vars_files:
+  - ../vars/all.yaml
   tasks:
     - name: Wait for SSH
       wait_for:
