@@ -1,0 +1,21 @@
+- name: Teardown Proxmox VMs and template
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Define VM ID and template ID
+    ansible.builtin.set_fact:
+      vm_id: 101
+      template_id: 9001
+
+  - name: Shutdown and destroy VM if it exists
+    ansible.builtin.shell: |
+      if qm status {{ vm_id }} 2>/dev/null | grep -q running; then
+        qm shutdown {{ vm_id }} --timeout 30 || qm stop {{ vm_id }}
+      fi
+      qm destroy {{ vm_id }} --purge
+    register: destroy_vm_result
+    failed_when: false
+
+  - name: Remove ssh key
+    ansible.builtin.shell: |
+      ssh-keygen -f "/root/.ssh/known_hosts" -R "192.168.1.100"

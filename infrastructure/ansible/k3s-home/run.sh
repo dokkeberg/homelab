@@ -14,8 +14,11 @@ case "$ACTION" in
   down)
     ansible-playbook -i $INVENTORY teardown.yaml --extra-vars "$EXTRA_VARS"
     ;;
+  teardown)
+    ansible-playbook -i $INVENTORY teardown.yaml --extra-vars "$EXTRA_VARS"
+    ;;
   *)
-    echo "Usage: $0 {up|down}"
+    echo "Usage: $0 {up|down|teardown}"
     exit 1
     ;;
 esac
