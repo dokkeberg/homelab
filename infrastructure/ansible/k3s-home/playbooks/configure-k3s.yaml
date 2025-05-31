@@ -46,6 +46,12 @@
         kubectl get namespace cert-manager || kubectl create namespace cert-manager
       args:
         executable: /bin/bash
+    
+    - name: Ensure semaphore namespace exists using kubectl
+      ansible.builtin.shell: |
+        kubectl get namespace semaphore || kubectl create namespace semaphore
+      args:
+        executable: /bin/bash
 
     - name: Ensure portainer namespace exists using kubectl
       ansible.builtin.shell: |
