@@ -10,7 +10,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
   source:
     repoURL: {{ .Values.spec.semaphore.repoUrl }}
-    chart: semaphore
+    path: {{ .Values.spec.semaphore.path }}
     targetRevision: {{ .Values.spec.semaphore.targetRevision }}
     helm:
       values: |
