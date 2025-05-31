@@ -15,7 +15,8 @@ spec:
     helm:
       values: |
         admin:
-          create: false
+          create: true
+          password: ChangeMe123!
         oidc:
           enable: true
           providers:
