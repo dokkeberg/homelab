@@ -91,9 +91,16 @@
         --namespace=cert-manager
       when: root_ca_cert_file.stat.exists
 
-    - name: Create root-ca-secret with only the cert if missing
+    - name: Create root-ca-secret for portainer
       ansible.builtin.command: >
         kubectl create secret generic home-root-ca-secret
         --from-file=ca.crt=/tmp/root-ca.crt
         --namespace=portainer
+      when: root_ca_cert_file.stat.exists
+
+    - name: Create root-ca-secret for semaphore
+      ansible.builtin.command: >
+        kubectl create secret generic home-root-ca-secret
+        --from-file=ca.crt=/tmp/root-ca.crt
+        --namespace=semaphore
       when: root_ca_cert_file.stat.exists

@@ -46,6 +46,15 @@ spec:
             - hosts:
               - "{{ .Values.spec.semaphore.host }}"
               secretName: semaphore-cert-tls
+        extraVolumes:
+        - name: root-ca
+          secret:
+            secretName: home-root-ca-secret
+        extraVolumeMounts:
+          - name: root-ca
+            mountPath: /etc/ssl/certs/ca-certificates.crt
+            subPath: ca.crt
+    readOnly: true
   syncPolicy:
     automated:
       prune: false
