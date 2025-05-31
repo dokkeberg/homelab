@@ -17,6 +17,8 @@ spec:
         admin:
           create: true
           password: ChangeMe123!
+        general:
+          useRemoteRunner: true
         oidc:
           enable: true
           providers:

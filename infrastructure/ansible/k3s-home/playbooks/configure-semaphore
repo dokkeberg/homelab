@@ -1,0 +1,47 @@
+- name: Configure Semaphore
+  hosts: newvm
+  become: true
+  tasks:
+  - name: Login
+    shell: |
+      http --verify=no --session=/tmp/semaphore-cookie \
+        POST https://semaphore.k3s.home/api/auth/login \
+        Content-Type:application/json \
+        Accept:application/json \
+        auth=admin password=ChangeMe123!
+
+  - name: Create project
+    shell: |
+      http --verify=no --session=/tmp/semaphore-cookie \
+        POST https://semaphore.k3s.home/api/projects \
+        Content-Type:application/json \
+        Accept:application/json \
+        name="ubuntu-k3s"
+
+  - name: Add repo to project
+    shell: |
+      http --follow --verify=no --session=/tmp/semaphore-cookie \
+        POST https://semaphore.k3s.home/api/project/1/repositories \
+        Content-Type:application/json \
+        Accept:application/json \
+        id:=1 \
+        name="homelab" \
+        project_id:=1 \
+        git_url="https://github.com/dokkeberg/homelab.git" \
+        git_branch="master" \
+        ssh_key_id:=1
+  
+  - name: Add repo to project
+    shell: |
+      http --follow --verify=no --session=/tmp/semaphore-cookie \
+        POST https://semaphore.k3s.home/api/project/1/inventory \
+        Content-Type:application/json \
+        Accept:application/json \
+        id:=1 \
+        name="home-inventory" \
+        inventory="infrastructure/ansible/k3s-home/inventory.ini" \
+        project_id:=1 \
+        ssh_key_id:=1 \
+        repository_id:=1 \
+        type="file"
+
