@@ -26,6 +26,6 @@ spec:
           parameters:
             fsType: ext4
         driver:
+          existingConfigSecret: democratic-csi-secret
           config:
-            driver: freenas-api-iscsi
-            existingConfigSecret: democratic-csi-secret
+            driver: freenas-api-iscsi            
