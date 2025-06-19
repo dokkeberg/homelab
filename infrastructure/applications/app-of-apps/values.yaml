@@ -36,6 +36,10 @@ spec:
         clientSecret: "foo"
       semaphore:
         clientSecret: "foo"
+  codeserver:
+    repoUrl: https://github.com/coder/code-server
+    path: ci/helm-chart
+    host: codeserver.k3s.home
   semaphore:
     repoUrl: https://github.com/dokkeberg/semaphoreui-charts
     targetRevision: bug/oidc-trailing-comma

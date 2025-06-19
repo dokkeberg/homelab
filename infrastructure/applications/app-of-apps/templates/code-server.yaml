@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: codeserver
+  namespace: argocd     
+spec:
+  project: default
+  destination:
+    namespace: codeserver
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: {{ .Values.spec.codeserver.repoUrl }}
+    path: {{ .Values.spec.codeserver.path }}
+    targetRevision: HEAD
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          hosts:
+            - host: {{ .Values.spec.codeserver.host }}
+              paths:
+                - /
+          tls:
+            - secretName: codeserver-tls
+              hosts:
+                - {{ .Values.spec.codeserver.host }}
+          annotations:
+            cert-manager.io/cluster-issuer: home-intermediate-ca-issuer
+            cert-manager.io/common-name: "{{ .Values.spec.codeserver.host }}"
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
