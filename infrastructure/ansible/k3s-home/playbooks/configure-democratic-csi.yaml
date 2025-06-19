@@ -24,7 +24,17 @@
       set_fact:
         nas_apikey: "{{ api_key['content'] | b64decode }}"
 
-    - name: Apply democratic-csi secret using k8s module
-      kubernetes.core.k8s:
-        state: present
-        definition: "{{ lookup('template', '..files/democratic-csi/democratic-csi-secret.yaml.j2') }}"
+    - name: Render democratic-csi secret manifest to a file
+      ansible.builtin.template:
+        src: ../files/democratic-csi/democratic-csi-secret.yaml.j2
+        dest: /tmp/democratic-csi-secret.yaml
+      vars:
+        # Pass any variables needed by your template here, e.g.
+        namespace: default
+        private_key_content: "{{ hostvars['proxmox']['private_key_for_newvm'] }}"
+
+    - name: Apply the democratic-csi secret manifest using kubectl
+      ansible.builtin.shell: | 
+        kubectl apply -f /tmp/democratic-csi-secret.yaml
+      args:
+        executable: /bin/bash
