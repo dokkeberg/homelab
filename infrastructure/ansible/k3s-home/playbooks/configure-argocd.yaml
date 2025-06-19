@@ -68,18 +68,18 @@
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
-  # - name: Read CA cert file from proxmox
-  #   ansible.builtin.slurp:
-  #     src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"
-  #   register: root_ca_encoded
-  #   delegate_to: localhost
-  #   become: false
+  - name: Check if ArgoCD app 'infrastructure' exists
+    ansible.builtin.shell: |
+      argocd app get infrastructure
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+    register: app_check
+    failed_when: false
+    changed_when: false
 
-  # - name: Decode OIDC root CA cert
-  #   set_fact:
-  #     oidc_root_ca: "{{ root_ca_encoded.content | b64decode }}"
-
-  - name: Create ArgoCD app 'infrastructure' with secret parameter
+  - name: Create ArgoCD app 'infrastructure' if missing
     ansible.builtin.shell: |
       argocd app create infrastructure \
         --repo https://github.com/dokkeberg/homelab \
@@ -88,38 +88,18 @@
         --dest-namespace argocd \
         --parameter "spec.keycloak.clients.portainer.clientSecret={{ portainer_secret }}" \
         --parameter "spec.keycloak.clients.semaphore.clientSecret={{ semaphore_secret }}" \
-        --parameter "spec.keycloak.clients.argocd.clientSecret={{ argocd_oidc_secret }}" 
+        --parameter "spec.keycloak.clients.argocd.clientSecret={{ argocd_oidc_secret }}"
     environment:
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
+    when: app_check.rc != 0
 
-        # --parameter "spec.argoCd.caCert={{ oidc_root_ca | quote }}"
   - name: Sync ArgoCD app 'infrastructure'
     ansible.builtin.shell: |
       argocd app sync infrastructure
     environment:
       HOME: /root
-      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-    become: true
-
-
-  # - name: Wait for ArgoCD to become available
-  #   ansible.builtin.command: >
-  #     kubectl wait -n argocd deployment/argocd-server --for=condition=available --timeout=90s
-
-  - name: Login to ArgoCD
-    ansible.builtin.shell: |
-      argocd login --core
-    environment:
-      HOME: /root
-      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
-    become: true
-
-  - name: Set kubectl context namespace to argocd
-    ansible.builtin.shell: |
-      kubectl config set-context --current --namespace=argocd
-    environment:
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
 
@@ -130,10 +110,6 @@
       HOME: /root
       KUBECONFIG: /etc/rancher/k3s/k3s.yaml
     become: true
-
-  # - name: Save ArgoCD OIDC secret
-  #   ansible.builtin.command: >
-  #     kubectl -n argocd patch secret argocd-secret --patch='{"stringData": { "oidc.keycloak.clientSecret": "{{ argocd_oidc_secret }}" }}'
 
   - name: Sync ArgoCD app 'argocd/argocd'
     ansible.builtin.shell: |
@@ -146,7 +122,6 @@
     retries: 5
     delay: 10
     until: sync_result.rc == 0
-
 
   - name: Refresh ArgoCD app 'portainer'
     ansible.builtin.shell: |

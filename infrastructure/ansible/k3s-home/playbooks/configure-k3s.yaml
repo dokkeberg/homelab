@@ -7,12 +7,24 @@
       args:
         creates: /usr/local/bin/k3s
 
+    - name: Check if Helm is installed via snap
+      ansible.builtin.command: snap list helm
+      register: helm_installed
+      failed_when: false
+      changed_when: false
+
     - name: Install Helm via snap
       ansible.builtin.command: snap install helm --classic
+      when: helm_installed.rc != 0
 
     - name: Get CoreDNS config
       ansible.builtin.command: kubectl -n kube-system get configmap coredns -o json
       register: coredns_config
+      changed_when: false
+
+    - name: Determine if patch is needed
+      ansible.builtin.set_fact:
+        patch_needed: "{{ 'k3s.home:53' not in coredns_config.stdout }}"
 
     - name: Define CoreDNS patch block
       ansible.builtin.set_fact:
@@ -23,16 +35,18 @@
             log
           }
 
-    - name: Patch CoreDNS
+    - name: Patch CoreDNS if needed
       ansible.builtin.shell: |
         echo '{{ coredns_config.stdout }}' | \
         jq --arg block "\n{{ coredns_patch_block | replace('\n', '\\n') }}" '.data.Corefile += $block' | \
         kubectl apply -f -
       args:
         executable: /bin/bash
+      when: patch_needed
 
-    - name: Restart CoreDNS pods
+    - name: Restart CoreDNS pods if patched
       ansible.builtin.command: kubectl -n kube-system delete pod -l k8s-app=kube-dns
+      when: patch_needed
 
     - name: Check if root CA certificate exists locally
       ansible.builtin.stat:
@@ -90,23 +104,32 @@
       when: root_ca_cert_file.stat.exists
 
     - name: Create root-ca-secret if missing
-      ansible.builtin.command: >
-        kubectl create secret tls home-root-ca-secret
-        --cert=/tmp/root-ca.crt
-        --key=/tmp/root-ca.key
-        --namespace=cert-manager
+      ansible.builtin.shell: |
+        kubectl get secret home-root-ca-secret -n cert-manager || \
+        kubectl create secret tls home-root-ca-secret \
+          --cert=/tmp/root-ca.crt \
+          --key=/tmp/root-ca.key \
+          --namespace=cert-manager
+      args:
+        executable: /bin/bash
       when: root_ca_cert_file.stat.exists
 
-    - name: Create root-ca-secret for portainer
-      ansible.builtin.command: >
-        kubectl create secret generic home-root-ca-secret
-        --from-file=ca.crt=/tmp/root-ca.crt
-        --namespace=portainer
+    - name: Create root-ca-secret for portainer if missing
+      ansible.builtin.shell: |
+        kubectl get secret home-root-ca-secret -n portainer || \
+        kubectl create secret generic home-root-ca-secret \
+          --from-file=ca.crt=/tmp/root-ca.crt \
+          --namespace=portainer
+      args:
+        executable: /bin/bash
       when: root_ca_cert_file.stat.exists
 
-    - name: Create root-ca-secret for semaphore
-      ansible.builtin.command: >
-        kubectl create secret generic home-root-ca-secret
-        --from-file=ca.crt=/tmp/root-ca.crt
-        --namespace=semaphore
+    - name: Create root-ca-secret for semaphore if missing
+      ansible.builtin.shell: |
+        kubectl get secret home-root-ca-secret -n semaphore || \
+        kubectl create secret generic home-root-ca-secret \
+          --from-file=ca.crt=/tmp/root-ca.crt \
+          --namespace=semaphore
+      args:
+        executable: /bin/bash
       when: root_ca_cert_file.stat.exists
