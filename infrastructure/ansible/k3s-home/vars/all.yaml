@@ -13,3 +13,6 @@ vm_ip: 192.168.1.100
 vm_gateway: 192.168.1.1
 ci_user: root
 ssh_key: "~/.ssh/id_rsa.pub"
+
+nas_user: democrat
+nas_host: nas.home

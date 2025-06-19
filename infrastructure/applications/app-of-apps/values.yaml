@@ -47,3 +47,11 @@ spec:
     path: stable/semaphore
     oidc:
       issuer: https://keycloak.k3s.home/realms/home
+  democraticcsi:
+    repoUrl: https://democratic-csi.github.io/charts/
+    targetRevision: 0.15.0
+    username: ""
+    apiKey: ""
+    host: nas.home
+    iscsi:
+      targetPortal: "nas.home:3260"

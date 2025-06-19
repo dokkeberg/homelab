@@ -3,6 +3,7 @@
 - import_playbook: playbooks/wait-for-ssh.yaml
 - import_playbook: playbooks/wait-for-cloud-init-finished.yaml
 - import_playbook: playbooks/configure-k3s.yaml
+- import_playbook: playbooks/configure-democratic-csi.yaml
 - import_playbook: playbooks/configure-argocd.yaml
 - import_playbook: playbooks/wait-for-apps.yaml
 - import_playbook: playbooks/configure-portainer.yaml

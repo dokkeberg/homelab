@@ -1,0 +1,30 @@
+- name: Configure democratic-csi
+  hosts: newvm
+  become: true
+  vars_files:
+  - ../vars/all.yaml
+  tasks:
+    - name: Read private SSH key
+      ansible.builtin.slurp:
+        src: "{{ lookup('env', 'HOME') }}/ansible-secrets/democrat-ssh"
+      register: private_key
+      delegate_to: localhost
+
+    - name: Read api key
+      ansible.builtin.slurp:
+        src: "{{ lookup('env', 'HOME') }}/ansible-secrets/democrat-apikey"
+      register: api_key
+      delegate_to: localhost
+
+    - name: Decode private key
+      set_fact:
+        private_key_content: "{{ private_key['content'] | b64decode }}"
+
+    - name: Decode api key
+      set_fact:
+        nas_apikey: "{{ api_key['content'] | b64decode }}"
+
+    - name: Apply democratic-csi secret using k8s module
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', '..files/democratic-csi/democratic-csi-secret.yaml.j2') }}"
