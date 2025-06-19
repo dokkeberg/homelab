@@ -28,4 +28,4 @@ spec:
         driver:
           existingConfigSecret: democratic-csi-secret
           config:
-            driver: freenas-api-iscsi            
+            driver: freenas-iscsi            
