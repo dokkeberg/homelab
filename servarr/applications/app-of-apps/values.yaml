@@ -1,0 +1,10 @@
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoUrl: https://github.com/dokkeberg/homelab
+    targetRevision: HEAD
+  plex:
+    repoUrl: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
+    targetRevision: 1.0.2
+    host: plex.k3s.home

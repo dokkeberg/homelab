@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: democratic-csi
+  name: democratic-csi-iscsi
   namespace: argocd     
 spec:
   project: default
@@ -20,7 +20,7 @@ spec:
         storageClasses:
         - name: truenas-iscsi-nonroot
           defaultClass: false
-          reclaimPolicy: Delete
+          reclaimPolicy: Retain
           volumeBindingMode: Immediate
           allowVolumeExpansion: true
           parameters:

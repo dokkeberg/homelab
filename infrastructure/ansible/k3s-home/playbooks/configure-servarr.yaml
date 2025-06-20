@@ -1,0 +1,52 @@
+- name: Configure ArgoCD
+  hosts: newvm
+  collections:
+  - kubernetes.core
+  become: true
+  tasks:
+  - name: Login to ArgoCD
+    ansible.builtin.shell: |
+      argocd login --core
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+
+  - name: Set kubectl context namespace to argocd
+    ansible.builtin.shell: |
+      kubectl config set-context --current --namespace=argocd
+    environment:
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+
+  - name: Check if ArgoCD app 'servarr' exists
+    ansible.builtin.shell: |
+      argocd app get servarr
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+    register: app_check
+    failed_when: false
+    changed_when: false
+
+  - name: Create ArgoCD app 'servarr' if missing
+    ansible.builtin.shell: |
+      argocd app create servarr \
+        --repo https://github.com/dokkeberg/homelab \
+        --path servarr/applications/app-of-apps \
+        --dest-server https://kubernetes.default.svc \
+        --dest-namespace argocd
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
+    when: app_check.rc != 0
+
+  - name: Sync ArgoCD app 'servarr'
+    ansible.builtin.shell: |
+      argocd app sync servarr
+    environment:
+      HOME: /root
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    become: true
