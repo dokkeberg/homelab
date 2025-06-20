@@ -11,4 +11,3 @@ spec:
   nfs:
     path: /mnt/hdd1/multimedia/movies
     server: {{ .Values.nas.host }}
-  storageClassName: nfs-multimedia-movies

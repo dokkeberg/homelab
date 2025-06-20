@@ -5,7 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadOnlyMany
-  storageClassName: nfs-multimedia-movies
+  volumeName: pv-movies
   resources:
     requests:
       storage: 1Ti
