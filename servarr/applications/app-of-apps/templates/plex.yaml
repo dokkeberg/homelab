@@ -18,6 +18,10 @@ spec:
     helm:
       releaseName: plex
       values: |
+        pms:
+          storageClassName: truenas-iscsi-nonroot
+          configStorage: 10Gi
+
         ingress:
           enabled: true
           annotations:
