@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-tv
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: nfs-multimedia-tv
+  resources:
+    requests:
+      storage: 1Ti

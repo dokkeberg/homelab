@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-movies
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: nfs-multimedia-movies
+  resources:
+    requests:
+      storage: 1Ti

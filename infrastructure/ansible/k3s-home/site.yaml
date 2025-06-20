@@ -5,6 +5,7 @@
 - import_playbook: playbooks/configure-k3s.yaml
 - import_playbook: playbooks/configure-democratic-csi.yaml
 - import_playbook: playbooks/configure-argocd.yaml
+- import_playbook: playbooks/configure-servarr.yaml
 - import_playbook: playbooks/wait-for-apps.yaml
 - import_playbook: playbooks/configure-portainer.yaml
 - import_playbook: playbooks/finish-configuration.yaml

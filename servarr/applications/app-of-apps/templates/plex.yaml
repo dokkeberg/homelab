@@ -9,6 +9,9 @@ spec:
     namespace: plex
     server: {{ .Values.spec.destination.server }}
   sources:
+  - repoURL: {{ .Values.spec.source.repoUrl }}
+    path: {{ .Values.spec.source.plexPath }}
+    targetRevision: HEAD
   - repoURL: {{ .Values.spec.plex.repoUrl }}
     chart: plex-media-server
     targetRevision: {{ .Values.spec.plex.targetRevision }}
@@ -27,6 +30,22 @@ spec:
                 - {{ .Values.spec.plex.host }}
           ingressClassName: traefik
           url: {{ .Values.spec.plex.host }}
+        
+        extraVolumeMounts:
+          - name: plex-tv
+            mountPath: /tv
+            readOnly: true
+          - name: plex-movies
+            mountPath: /movies
+            readOnly: true
+        
+        extraVolumes:
+          - name: plex-tv
+            persistentVolumeClaim:
+              claimName: pvc-tv
+          - name: plex-movies
+            persistentVolumeClaim:
+              claimName: pvc-movies
 
   syncPolicy:
     syncOptions:

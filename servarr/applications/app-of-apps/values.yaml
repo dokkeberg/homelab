@@ -4,6 +4,8 @@ spec:
   source:
     repoUrl: https://github.com/dokkeberg/homelab
     targetRevision: HEAD
+    multimediaPath: servarr/applications/multimedia
+    plexPath: servarr/applications/plex
   plex:
     repoUrl: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
     targetRevision: 1.0.2
