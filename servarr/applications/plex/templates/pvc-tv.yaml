@@ -6,6 +6,7 @@ spec:
   accessModes:
     - ReadOnlyMany
   volumeName: pv-tv
+  storageClassName: ""
   resources:
     requests:
       storage: 1Ti
