@@ -15,6 +15,7 @@ spec:
     sabnzbdVolumesPath: servarr/applications/sabnzbd-volumes
     prowlarrPath: servarr/applications/prowlarr
     prowlarrVolumesPath: servarr/applications/prowlarr-volumes
+    homepagePath: servarr/applications/homepage
   plex:
     repoUrl: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
     targetRevision: 1.0.2

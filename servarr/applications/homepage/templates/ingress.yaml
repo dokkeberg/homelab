@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: home-intermediate-ca-issuer
+    cert-manager.io/common-name: {{ .Values.homepage.host }}
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    gethomepage.dev/description: Dynamically Detected Homepage
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Cluster Management
+    gethomepage.dev/icon: homepage.png
+    gethomepage.dev/name: Homepage
+  name: homepage-ingress
+  labels:
+    app.kubernetes.io/name: homepage
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ .Values.homepage.host }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: homepage
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - {{ .Values.homepage.host }}
+      secretName: homepage-tls

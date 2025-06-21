@@ -1,0 +1,4 @@
+nas:
+  host: nas.home
+homepage:
+  host: homepage.k3s.home

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage
+  namespace: argocd     
+spec:
+  project: default
+  destination:
+    namespace: homepage
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: {{ .Values.spec.source.repoUrl }}
+    path: {{ .Values.spec.source.homepagePath }}
+    targetRevision: HEAD
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
