@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: radarr
+  namespace: radarr
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/name: radarr
+  serviceName: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+        app.kubernetes.io/instance: radarr
+        app.kubernetes.io/name: radarr
+        
+    spec:
+      initContainers:
+        - name: format-data
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y e2fsprogs && \
+              if ! blkid /dev/radarr-data; then \
+                echo "Formatting /dev/radarr-data"; \
+                mkfs.ext4 /dev/radarr-data; \
+              else \
+                echo "/dev/radarr-data already formatted"; \
+              fi
+          volumeDevices:
+            - name: radarr-device
+              devicePath: /dev/radarr-data
+
+      containers:
+        - name: radarr
+          image: lscr.io/linuxserver/radarr:latest
+          securityContext:
+            privileged: true    # or at least allow mount capability
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Oslo"
+          volumeDevices:
+            - name: radarr-device
+              devicePath: /dev/radarr-data
+          volumeMounts:
+            - mountPath: /movies
+              name: radarr-movies
+            - mountPath: /downloads
+              name: radarr-downloads
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /config && \
+              mount /dev/radarr-data /config && \
+              chown -R 1000:1000 /config && \
+              exec /init
+      volumes:
+        - name: radarr-device
+          persistentVolumeClaim:
+            claimName: data-pvc
+        - name: radarr-movies
+          persistentVolumeClaim:
+            claimName: movies-pvc
+        - name: radarr-downloads
+          persistentVolumeClaim:
+            claimName: downloads-pvc

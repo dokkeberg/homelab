@@ -1,0 +1,6 @@
+apiVersion: v2
+name: radarr-volumes
+description: radarr volume claims
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

@@ -9,6 +9,8 @@ spec:
     plexVolumesPath: servarr/applications/plex-volumes
     sonarrPath: servarr/applications/sonarr
     sonarrVolumesPath: servarr/applications/sonarr-volumes
+    radarrPath: servarr/applications/radarr
+    radarrVolumesPath: servarr/applications/radarr-volumes
     prowlarrPath: servarr/applications/prowlarr
     prowlarrVolumesPath: servarr/applications/prowlarr-volumes
   plex:

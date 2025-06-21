@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: movies-pvc
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeName: radarr-movies-pv
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Ti
