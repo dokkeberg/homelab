@@ -19,7 +19,7 @@ spec:
       releaseName: plex
       values: |
         extraEnv:
-          ADVERTISE_IP: "https://{{ .Values.spec.plex.host }}""
+          ADVERTISE_IP: "https://{{ .Values.spec.plex.host }}"
         pms:
           storageClassName: truenas-iscsi-nonroot
           configStorage: 10Gi
