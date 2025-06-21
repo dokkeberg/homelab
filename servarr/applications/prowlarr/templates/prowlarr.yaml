@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prowlarr
+  namespace: prowlarr
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: prowlarr
+      app.kubernetes.io/name: prowlarr
+  serviceName: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+        app.kubernetes.io/instance: prowlarr
+        app.kubernetes.io/name: prowlarr
+        
+    spec:
+      initContainers:
+        - name: format-data
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y e2fsprogs && \
+              if ! blkid /dev/prowlarr-data; then \
+                echo "Formatting /dev/prowlarr-data"; \
+                mkfs.ext4 /dev/prowlarr-data; \
+              else \
+                echo "/dev/prowlarr-data already formatted"; \
+              fi
+          volumeDevices:
+            - name: prowlarr-device
+              devicePath: /dev/prowlarr-data
+
+      containers:
+        - name: prowlarr
+          image: lscr.io/linuxserver/prowlarr:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Oslo"
+          volumeDevices:
+            - name: prowlarr-device
+              devicePath: /dev/prowlarr-data
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /config && \
+              mount /dev/prowlarr-data /config && \
+              chown -R 1000:1000 /config && \
+              exec /init
+      volumes:
+        - name: prowlarr-device
+          persistentVolumeClaim:
+            claimName: data-pvc

@@ -9,6 +9,8 @@ spec:
     plexVolumesPath: servarr/applications/plex-volumes
     sonarrPath: servarr/applications/sonarr
     sonarrVolumesPath: servarr/applications/sonarr-volumes
+    prowlarrPath: servarr/applications/prowlarr
+    prowlarrVolumesPath: servarr/applications/prowlarr-volumes
   plex:
     repoUrl: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
     targetRevision: 1.0.2
