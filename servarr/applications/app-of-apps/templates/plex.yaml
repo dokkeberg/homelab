@@ -37,10 +37,10 @@ spec:
         
         extraVolumeMounts:
           - name: plex-tv
-            mountPath: /tv
+            mountPath: /data/tv
             readOnly: true
           - name: plex-movies
-            mountPath: /movies
+            mountPath: /data/movies
             readOnly: true
         
         extraVolumes:
