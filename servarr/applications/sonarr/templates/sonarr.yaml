@@ -53,7 +53,7 @@ spec:
             - name: TZ
               value: "Europe/Oslo"
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /config
               name: data-mount
             - mountPath: /tv
               name: sonarr-tv
