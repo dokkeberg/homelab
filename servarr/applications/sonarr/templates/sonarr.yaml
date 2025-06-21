@@ -54,10 +54,8 @@ spec:
               name: data-mount
             - mountPath: /tv
               name: sonarr-tv
-              readOnly: true
             - mountPath: /downloads
               name: sonarr-tv
-              readOnly: true
       serviceAccountName: sonarr
       terminationGracePeriodSeconds: 120
       volumes:
