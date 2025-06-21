@@ -22,13 +22,6 @@ spec:
           image: ubuntu
           securityContext:
             privileged: true
-          env:
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-            - name: TZ
-              value: "Europe/Oslo"
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -47,6 +40,12 @@ spec:
         - env:
             - name: ADVERTISE_IP
               value: https://{{ .Values.plex.host }}:443
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Oslo"
           image: index.docker.io/plexinc/pms-docker:1.41.6.9685-d301f511a
           imagePullPolicy: IfNotPresent
           name: plex-media-server-pms
