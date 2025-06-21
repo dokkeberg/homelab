@@ -19,8 +19,7 @@ spec:
       releaseName: plex
       values: |
         pms:
-          storageClassName: truenas-iscsi-nonroot
-          configStorage: 10Gi
+          configExistingClaim: pvc-config
 
         ingress:
           enabled: true
