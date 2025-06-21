@@ -7,6 +7,7 @@ spec:
     - ReadWriteMany
   storageClassName: truenas-iscsi-nonroot
   volumeMode: Block
+  volumeName: pv-plex-config
   resources:
     requests:
       storage: 100Gi
