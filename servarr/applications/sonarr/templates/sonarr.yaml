@@ -35,22 +35,28 @@ spec:
           volumeMounts:
             - name: data-mount
               mountPath: /mnt/data
-      containers:
-        - image: lscr.io/linuxserver/sonarr:latest
-          imagePullPolicy: IfNotPresent
-          name: sonarr
-          ports:
-            - containerPort: 32400
+          containers:
+            - image: lscr.io/linuxserver/sonarr:latest
+              imagePullPolicy: IfNotPresent
               name: sonarr
-          volumeMounts:
-            - mountPath: /data
-              name: data-mount
-            - mountPath: /tv
-              name: sonarr-tv
-              readOnly: true
-            - mountPath: /downloads
-              name: sonarr-tv
-              readOnly: true
+              ports:
+                - containerPort: 8989
+                  name: sonarr
+              env:
+                - name: PUID
+                  value: "1000"
+                - name: PGID
+                  value: "1000"
+                - name: TZ
+                  value: "Europe/Oslo"
+              volumeMounts:
+                - mountPath: /config
+                  name: sonarr-config
+                - mountPath: /tv
+                  name: sonarr-tv
+                  readOnly: true
+                - mountPath: /downloads
+                  name: sonarr-downloads
       serviceAccountName: sonarr
       terminationGracePeriodSeconds: 120
       volumes:
