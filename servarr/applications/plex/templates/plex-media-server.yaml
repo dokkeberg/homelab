@@ -64,8 +64,6 @@ spec:
             - name: plex-device
               devicePath: /dev/plex-data
           volumeMounts:
-            - name: plex-filesystem
-              mountPath: /config
             - mountPath: /transcode
               name: pms-transcode
             - mountPath: /data/tv
