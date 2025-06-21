@@ -23,12 +23,12 @@ spec:
           securityContext:
             privileged: true
           command: ["/bin/sh", "-c"]
-              args:
-                - |
-                  apt update && apt install -y e2fsprogs mount && \
-                  mkfs.ext4 /dev/plex-config || true && \
-                  mkdir -p /mnt/config && \
-                  mount /dev/plex-config /mnt/config
+          args:
+            - |
+              apt update && apt install -y e2fsprogs mount && \
+              mkfs.ext4 /dev/plex-config || true && \
+              mkdir -p /mnt/config && \
+              mount /dev/plex-config /mnt/config
           volumeDevices:
             - name: pms-config
               devicePath: /dev/plex-config
