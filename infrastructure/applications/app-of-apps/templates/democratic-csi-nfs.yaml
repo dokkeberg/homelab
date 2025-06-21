@@ -24,8 +24,11 @@ spec:
           volumeBindingMode: Immediate
           allowVolumeExpansion: true
           parameters:
-            fsType: ext4
+            fsType: nfs
+          mountOptions:
+          - noatime
+          - nfsvers=4
         driver:
-          existingConfigSecret: democratic-csi-secret-nfs
+          existingConfigSecret: democratic-csi-nfs-secret
           config:
             driver: freenas-nfs            
