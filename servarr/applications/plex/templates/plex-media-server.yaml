@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: plex-media-server
+  namespace: plex
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: plex
+      app.kubernetes.io/name: plex-media-server
+  serviceName: plex-media-server
+  template:
+    spec:
+      initContainers:
+        - name: format-config
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkfs.ext4 /dev/plex-config || true
+              mkdir -p /mnt/config
+              mount /dev/plex-config /mnt/config
+              umount /mnt/config
+          volumeDevices:
+            - name: pms-config
+              devicePath: /dev/plex-config
+          volumeMounts:
+            - name: config-mount
+              mountPath: /mnt/config
+      containers:
+        - env:
+            - name: ADVERTISE_IP
+              value: https://{{ .Values.plex.host }}:443
+          image: index.docker.io/plexinc/pms-docker:1.41.6.9685-d301f511a
+          imagePullPolicy: IfNotPresent
+          name: plex-media-server-pms
+          ports:
+            - containerPort: 32400
+              name: pms
+          volumeMounts:
+            - mountPath: /config
+              name: config-mount
+            - mountPath: /transcode
+              name: pms-transcode
+            - mountPath: /data/tv
+              name: plex-tv
+              readOnly: true
+            - mountPath: /data/movies
+              name: plex-movies
+              readOnly: true
+      serviceAccountName: plex-media-server
+      terminationGracePeriodSeconds: 120
+      volumes:
+        - name: pms-config
+          persistentVolumeClaim:
+            claimName: config-pvc
+        - name: config-mount
+          emptyDir: {}
+
+        - name: pms-transcode
+          emptyDir: {}
+        - name: plex-tv
+          persistentVolumeClaim:
+            claimName: tv-pvc
+        - name: plex-movies
+          persistentVolumeClaim:
+            claimName: movies-pvc

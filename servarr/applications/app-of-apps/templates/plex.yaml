@@ -9,43 +9,9 @@ spec:
     namespace: plex
     server: {{ .Values.spec.destination.server }}
   sources:
-  - repoURL: {{ .Values.spec.plex.repoUrl }}
-    chart: plex-media-server
-    targetRevision: {{ .Values.spec.plex.targetRevision }}
-    helm:
-      releaseName: plex
-      values: |
-        pms:
-          configExistingClaim: config-pvc
-
-        ingress:
-          enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: home-intermediate-ca-issuer
-            cert-manager.io/common-name: "{{ .Values.spec.plex.host }}"
-            traefik.ingress.kubernetes.io/router.entrypoints: websecure
-          tls:
-            - secretName: plex-tls
-              hosts:
-                - {{ .Values.spec.plex.host }}
-          ingressClassName: traefik
-          url: "https://{{ .Values.spec.plex.host }}"
-        
-        extraVolumeMounts:
-          - name: plex-tv
-            mountPath: /data/tv
-            readOnly: true
-          - name: plex-movies
-            mountPath: /data/movies
-            readOnly: true
-        
-        extraVolumes:
-          - name: plex-tv
-            persistentVolumeClaim:
-              claimName: tv-pvc
-          - name: plex-movies
-            persistentVolumeClaim:
-              claimName: movies-pvc
+  - repoURL: {{ .Values.spec.source.repoUrl }}
+    path: {{ .Values.spec.source.plexPath }}
+    targetRevision: HEAD
 
   syncPolicy:
     syncOptions:
