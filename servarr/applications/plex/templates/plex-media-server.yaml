@@ -18,7 +18,7 @@ spec:
         
     spec:
       initContainers:
-        - name: format-and-mount
+        - name: format-data
           image: ubuntu
           securityContext:
             privileged: true
@@ -35,27 +35,15 @@ spec:
           volumeDevices:
             - name: plex-device
               devicePath: /dev/plex-data
-
-      containers:
-        - name: mount-plex
-          image: ubuntu
-          securityContext:
-            privileged: true
-          command: ["/bin/sh", "-c"]
+      containers:    
+        - command: ["/bin/sh", "-c"]
           args:
             - |
-              apt update && apt install -y mount && \
-              mkdir -p /mnt/config && \
-              mount /dev/plex-data /mnt/config && \
-              chown -R 1000:1000 /mnt/config && \
-              tail -f /dev/null
-          volumeDevices:
-            - name: plex-device
-              devicePath: /dev/plex-data
-          volumeMounts:
-            - name: plex-filesystem
-              mountPath: /mnt/config
-        - env:
+              mkdir -p /config && \
+              mount /dev/plex-data /config && \
+              chown -R 1000:1000 /config && \
+              exec /init
+          env:
             - name: ADVERTISE_IP
               value: https://{{ .Values.plex.host }}:443
             - name: PUID
@@ -67,9 +55,14 @@ spec:
           image: index.docker.io/plexinc/pms-docker:1.41.6.9685-d301f511a
           imagePullPolicy: IfNotPresent
           name: plex-media-server-pms
+          securityContext:
+            privileged: true
           ports:
             - containerPort: 32400
               name: pms
+          volumeDevices:
+            - name: plex-device
+              devicePath: /dev/plex-data
           volumeMounts:
             - name: plex-filesystem
               mountPath: /config
@@ -81,16 +74,12 @@ spec:
             - mountPath: /data/movies
               name: plex-movies
               readOnly: true
-
       serviceAccountName: plex-media-server
       terminationGracePeriodSeconds: 120
       volumes:
         - name: plex-device
           persistentVolumeClaim:
             claimName: config-pvc
-        - name: plex-filesystem
-          emptyDir: {}
-
         - name: pms-transcode
           emptyDir: {}
         - name: plex-tv
