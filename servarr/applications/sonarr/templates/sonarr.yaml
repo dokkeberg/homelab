@@ -18,7 +18,7 @@ spec:
         
     spec:
       initContainers:
-        - name: format-config
+        - name: format-data
           image: ubuntu
           securityContext:
             privileged: true
@@ -26,48 +26,43 @@ spec:
           args:
             - |
               apt update && apt install -y e2fsprogs mount && \
-              mkfs.ext4 /dev/sonarr-config || true && \
-              mkdir -p /mnt/config && \
-              mount /dev/sonarr-config /mnt/config
+              mkfs.ext4 /dev/sonarr-data || true && \
+              mkdir -p /mnt/data && \
+              mount /dev/sonarr-data /mnt/data
           volumeDevices:
-            - name: sonarr-config
-              devicePath: /dev/sonarr-config
+            - name: sonarr-data
+              devicePath: /dev/sonarr-data
           volumeMounts:
-            - name: config-mount
-              mountPath: /mnt/config
+            - name: data-mount
+              mountPath: /mnt/data
       containers:
-        - env:
-            - name: ADVERTISE_IP
-              value: https://{{ .Values.sonarr.host }}:443
-          image: index.docker.io/sonarrinc/sonarr-docker:1.41.6.9685-d301f511a
+        - image: lscr.io/linuxserver/sonarr:latest
           imagePullPolicy: IfNotPresent
-          name: sonarr-media-server-sonarr
+          name: sonarr
           ports:
             - containerPort: 32400
               name: sonarr
           volumeMounts:
-            - mountPath: /config
-              name: config-mount
-            - mountPath: /transcode
-              name: sonarr-transcode
-            - mountPath: /data/tv
+            - mountPath: /data
+              name: data-mount
+            - mountPath: /tv
               name: sonarr-tv
               readOnly: true
-            - mountPath: /data/movies
-              name: sonarr-movies
+            - mountPath: /downloads
+              name: sonarr-tv
               readOnly: true
       serviceAccountName: sonarr-media-server
       terminationGracePeriodSeconds: 120
       volumes:
-        - name: sonarr-config
+        - name: sonarr-data
           persistentVolumeClaim:
-            claimName: config-pvc
-        - name: config-mount
+            claimName: data-pvc
+        - name: data-mount
           emptyDir: {}
 
         - name: sonarr-tv
           persistentVolumeClaim:
             claimName: tv-pvc
-        - name: sonarr-movies
+        - name: sonarr-downloads
           persistentVolumeClaim:
-            claimName: movies-pvc
+            claimName: downloads-pvc
