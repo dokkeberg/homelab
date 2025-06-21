@@ -10,6 +10,12 @@ spec:
       app.kubernetes.io/name: plex-media-server
   serviceName: plex-media-server
   template:
+    metadata:
+      labels:
+        app: plex-media-server
+        app.kubernetes.io/instance: plex
+        app.kubernetes.io/name: plex-media-server
+        
     spec:
       initContainers:
         - name: format-config
