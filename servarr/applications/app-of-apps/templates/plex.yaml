@@ -18,6 +18,8 @@ spec:
     helm:
       releaseName: plex
       values: |
+        extraEnv:
+          ADVERTISE_IP: "https://{{ .Values.spec.plex.host }}""
         pms:
           storageClassName: truenas-iscsi-nonroot
           configStorage: 10Gi
@@ -33,7 +35,7 @@ spec:
               hosts:
                 - {{ .Values.spec.plex.host }}
           ingressClassName: traefik
-          url: {{ .Values.spec.plex.host }}
+          url: "https://{{ .Values.spec.plex.host }}""
         
         extraVolumeMounts:
           - name: plex-tv
