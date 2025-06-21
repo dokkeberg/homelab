@@ -6,7 +6,6 @@ spec:
   accessModes:
     - ReadWriteMany
   storageClassName: truenas-iscsi-nonroot
-  volumeName: pv-plex-config
   volumeMode: Block
   resources:
     requests:
