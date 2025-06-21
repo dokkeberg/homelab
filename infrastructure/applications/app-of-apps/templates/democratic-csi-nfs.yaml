@@ -13,7 +13,7 @@ spec:
     chart: democratic-csi
     targetRevision: {{ .Values.spec.democraticcsi.targetRevision }}
     helm:
-      releaseName: democratic-csi
+      releaseName: democratic-csi-nfs
       values: |              
         csiDriver:
           name: "org.democratic-csi.nfs"
