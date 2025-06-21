@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sabnzbd
+  namespace: sabnzbd
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: sabnzbd
+      app.kubernetes.io/name: sabnzbd
+  serviceName: sabnzbd
+  template:
+    metadata:
+      labels:
+        app: sabnzbd
+        app.kubernetes.io/instance: sabnzbd
+        app.kubernetes.io/name: sabnzbd
+        
+    spec:
+      initContainers:
+        - name: format-data
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y e2fsprogs && \
+              if ! blkid /dev/sabnzbd-data; then \
+                echo "Formatting /dev/sabnzbd-data"; \
+                mkfs.ext4 /dev/sabnzbd-data; \
+              else \
+                echo "/dev/sabnzbd-data already formatted"; \
+              fi
+          volumeDevices:
+            - name: sabnzbd-device
+              devicePath: /dev/sabnzbd-data
+      containers:
+        - name: sabnzbd
+          image: lscr.io/linuxserver/sabnzbd:latest
+          securityContext:
+            privileged: true    # or at least allow mount capability
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Oslo"
+          volumeDevices:
+            - name: sabnzbd-device
+              devicePath: /dev/sabnzbd-data
+          volumeMounts:
+            - mountPath: /downloads-incomplete
+              name: sabnzbd-downloads-incomplete
+            - mountPath: /downloads
+              name: sabnzbd-downloads
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /config && \
+              mount /dev/sabnzbd-data /config && \
+              chown -R 1000:1000 /config && \
+              exec /init
+      volumes:
+        - name: sabnzbd-device
+          persistentVolumeClaim:
+            claimName: data-pvc
+        - name: sabnzbd-downloads-incomplete
+          persistentVolumeClaim:
+            claimName: downloads-incomplete-pvc
+        - name: sabnzbd-downloads
+          persistentVolumeClaim:
+            claimName: downloads-pvc
