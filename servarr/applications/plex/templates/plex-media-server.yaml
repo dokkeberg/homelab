@@ -26,7 +26,12 @@ spec:
           args:
             - |
               apt update && apt install -y e2fsprogs mount && \
-              mkfs.ext4 /dev/plex-config || true && \
+              if ! blkid /dev/plex-config; then \
+                echo "Formatting /dev/plex-config"; \
+                mkfs.ext4 /dev/plex-config; \
+              else \
+                echo "/dev/plex-config already formatted"; \
+              fi && \
               mkdir -p /mnt/config && \
               mount /dev/plex-config /mnt/config
           volumeDevices:

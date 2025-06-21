@@ -26,7 +26,12 @@ spec:
           args:
             - |
               apt update && apt install -y e2fsprogs mount && \
-              mkfs.ext4 /dev/sonarr-data || true && \
+              if ! blkid /dev/sonarr-data; then \
+                echo "Formatting /dev/sonarr-data"; \
+                mkfs.ext4 /dev/sonarr-data; \
+              else \
+                echo "/dev/sonarr-data already formatted"; \
+              fi && \
               mkdir -p /mnt/data && \
               mount /dev/sonarr-data /mnt/data
           volumeDevices:
