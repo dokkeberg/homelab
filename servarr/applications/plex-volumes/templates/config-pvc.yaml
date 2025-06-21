@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-config
+  name: config-pvc
 spec:
   accessModes:
     - ReadWriteMany
   storageClassName: truenas-iscsi-nonroot
   volumeMode: Block
-  volumeName: pv-plex-config
   resources:
     requests:
       storage: 100Gi

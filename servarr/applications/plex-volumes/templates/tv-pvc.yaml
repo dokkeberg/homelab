@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-movies
+  name: tv-pvc
 spec:
   accessModes:
     - ReadOnlyMany
-  volumeName: pv-movies
+  volumeName: plex-tv-pv
   storageClassName: ""
   resources:
     requests:

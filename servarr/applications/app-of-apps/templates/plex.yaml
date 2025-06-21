@@ -9,9 +9,6 @@ spec:
     namespace: plex
     server: {{ .Values.spec.destination.server }}
   sources:
-  - repoURL: {{ .Values.spec.source.repoUrl }}
-    path: {{ .Values.spec.source.plexPath }}
-    targetRevision: HEAD
   - repoURL: {{ .Values.spec.plex.repoUrl }}
     chart: plex-media-server
     targetRevision: {{ .Values.spec.plex.targetRevision }}
@@ -19,7 +16,7 @@ spec:
       releaseName: plex
       values: |
         pms:
-          configExistingClaim: pvc-config
+          configExistingClaim: config-pvc
 
         ingress:
           enabled: true
@@ -45,10 +42,10 @@ spec:
         extraVolumes:
           - name: plex-tv
             persistentVolumeClaim:
-              claimName: pvc-tv
+              claimName: tv-pvc
           - name: plex-movies
             persistentVolumeClaim:
-              claimName: pvc-movies
+              claimName: movies-pvc
 
   syncPolicy:
     syncOptions:
