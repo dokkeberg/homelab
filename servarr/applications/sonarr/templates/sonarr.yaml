@@ -37,10 +37,10 @@ spec:
               chown -R 1000:1000 /mnt/data && \
               umount /mnt/data
           volumeDevices:
-            - name: sonarr-data
+            - name: sonarr-device
               devicePath: /dev/sonarr-data
           volumeMounts:
-            - name: sonarr-data
+            - name: sonarr-filesystem
               mountPath: /mnt/data
 
       containers:
@@ -55,13 +55,16 @@ spec:
               value: "Europe/Oslo"
           volumeMounts:
             - mountPath: /config
-              name: sonarr-data
+              name: sonarr-filesystem
             - mountPath: /tv
               name: sonarr-tv
             - mountPath: /downloads
               name: sonarr-downloads
       volumes:
-        - name: sonarr-data
+        - name: sonarr-device
+          persistentVolumeClaim:
+            claimName: data-pvc
+        - name: sonarr-filesystem
           persistentVolumeClaim:
             claimName: data-pvc
         - name: sonarr-tv
