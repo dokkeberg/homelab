@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sonarr
+  namespace: sonarr
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+  serviceName: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+        app.kubernetes.io/instance: sonarr
+        app.kubernetes.io/name: sonarr
+        
+    spec:
+      initContainers:
+        - name: format-config
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y e2fsprogs mount && \
+              mkfs.ext4 /dev/sonarr-config || true && \
+              mkdir -p /mnt/config && \
+              mount /dev/sonarr-config /mnt/config
+          volumeDevices:
+            - name: sonarr-config
+              devicePath: /dev/sonarr-config
+          volumeMounts:
+            - name: config-mount
+              mountPath: /mnt/config
+      containers:
+        - env:
+            - name: ADVERTISE_IP
+              value: https://{{ .Values.sonarr.host }}:443
+          image: index.docker.io/sonarrinc/sonarr-docker:1.41.6.9685-d301f511a
+          imagePullPolicy: IfNotPresent
+          name: sonarr-media-server-sonarr
+          ports:
+            - containerPort: 32400
+              name: sonarr
+          volumeMounts:
+            - mountPath: /config
+              name: config-mount
+            - mountPath: /transcode
+              name: sonarr-transcode
+            - mountPath: /data/tv
+              name: sonarr-tv
+              readOnly: true
+            - mountPath: /data/movies
+              name: sonarr-movies
+              readOnly: true
+      serviceAccountName: sonarr-media-server
+      terminationGracePeriodSeconds: 120
+      volumes:
+        - name: sonarr-config
+          persistentVolumeClaim:
+            claimName: config-pvc
+        - name: config-mount
+          emptyDir: {}
+
+        - name: sonarr-tv
+          persistentVolumeClaim:
+            claimName: tv-pvc
+        - name: sonarr-movies
+          persistentVolumeClaim:
+            claimName: movies-pvc

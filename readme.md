@@ -60,3 +60,10 @@ Patch PersistentVolume to be able to be reclaimed
 ```
 kubectl patch pv plex-movies-pv -p '{"spec":{"claimRef": null}}'
 ```
+
+Run commands inside container
+```
+kubectl exec -n plex -it pod/plex-media-server-0 -- /bin/sh
+# or if it's a Debian/Ubuntu-based image
+kubectl exec -n plex -it pod/plex-media-server-0 -- bash
+```

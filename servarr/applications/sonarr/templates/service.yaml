@@ -13,17 +13,3 @@ spec:
     app.kubernetes.io/instance: plex
     app.kubernetes.io/name: plex-media-server
   type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: plex-local
-spec:
-  type: NodePort
-  ports:
-    - name: web
-      port: 32400
-      targetPort: 32400
-      nodePort: 32400
-  selector:
-    app: plex-media-server
