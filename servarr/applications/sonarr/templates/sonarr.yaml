@@ -65,8 +65,7 @@ spec:
           persistentVolumeClaim:
             claimName: data-pvc
         - name: sonarr-filesystem
-          persistentVolumeClaim:
-            claimName: data-pvc
+          emptyDir: {}
         - name: sonarr-tv
           persistentVolumeClaim:
             claimName: tv-pvc
