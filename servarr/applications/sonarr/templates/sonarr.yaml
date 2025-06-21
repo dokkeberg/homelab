@@ -33,20 +33,18 @@ spec:
                 echo "/dev/sonarr-data already formatted"; \
               fi && \
               mkdir -p /mnt/data && \
-              mount /dev/sonarr-data /mnt/data
+              mount /dev/sonarr-data /mnt/data && \
+              chown -R 1000:1000 /mnt/data
           volumeDevices:
             - name: sonarr-data
               devicePath: /dev/sonarr-data
           volumeMounts:
             - name: data-mount
               mountPath: /mnt/data
+
       containers:
-        - image: lscr.io/linuxserver/sonarr:latest
-          imagePullPolicy: IfNotPresent
-          name: sonarr
-          ports:
-            - containerPort: 8989
-              name: sonarr
+        - name: sonarr
+          image: lscr.io/linuxserver/sonarr:latest
           env:
             - name: PUID
               value: "1000"
@@ -60,19 +58,18 @@ spec:
             - mountPath: /tv
               name: sonarr-tv
             - mountPath: /downloads
-              name: sonarr-tv
+              name: sonarr-downloads
       serviceAccountName: sonarr
       terminationGracePeriodSeconds: 120
       volumes:
-        - name: sonarr-data
-          persistentVolumeClaim:
-            claimName: data-pvc
-        - name: data-mount
-          emptyDir: {}
-
-        - name: sonarr-tv
-          persistentVolumeClaim:
-            claimName: tv-pvc
-        - name: sonarr-downloads
-          persistentVolumeClaim:
-            claimName: downloads-pvc
+      - name: sonarr-data
+        persistentVolumeClaim:
+          claimName: data-pvc
+      - name: data-mount
+        emptyDir: {}
+      - name: sonarr-tv
+        persistentVolumeClaim:
+          claimName: tv-pvc
+      - name: sonarr-downloads
+        persistentVolumeClaim:
+          claimName: downloads-pvc
