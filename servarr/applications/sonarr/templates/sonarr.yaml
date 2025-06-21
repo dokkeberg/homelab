@@ -25,27 +25,22 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              apt update && apt install -y e2fsprogs mount && \
+              apt update && apt install -y e2fsprogs && \
               if ! blkid /dev/sonarr-data; then \
                 echo "Formatting /dev/sonarr-data"; \
                 mkfs.ext4 /dev/sonarr-data; \
               else \
                 echo "/dev/sonarr-data already formatted"; \
-              fi && \
-              mkdir -p /mnt/data && \
-              mount /dev/sonarr-data /mnt/data && \
-              chown -R 1000:1000 /mnt/data && \
-              umount /mnt/data
+              fi
           volumeDevices:
             - name: sonarr-device
               devicePath: /dev/sonarr-data
-          volumeMounts:
-            - name: sonarr-filesystem
-              mountPath: /mnt/data
 
       containers:
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:latest
+          securityContext:
+            privileged: true    # or at least allow mount capability
           env:
             - name: PUID
               value: "1000"
@@ -53,19 +48,25 @@ spec:
               value: "1000"
             - name: TZ
               value: "Europe/Oslo"
+          volumeDevices:
+            - name: sonarr-device
+              devicePath: /dev/sonarr-data
           volumeMounts:
-            - mountPath: /config
-              name: sonarr-filesystem
             - mountPath: /tv
               name: sonarr-tv
             - mountPath: /downloads
               name: sonarr-downloads
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /config && \
+              mount /dev/sonarr-data /config && \
+              chown -R 1000:1000 /config && \
+              exec /init
       volumes:
         - name: sonarr-device
           persistentVolumeClaim:
             claimName: data-pvc
-        - name: sonarr-filesystem
-          emptyDir: {}
         - name: sonarr-tv
           persistentVolumeClaim:
             claimName: tv-pvc
