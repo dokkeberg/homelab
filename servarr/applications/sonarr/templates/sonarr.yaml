@@ -50,13 +50,14 @@ spec:
             - name: TZ
               value: "Europe/Oslo"
           volumeMounts:
-            - mountPath: /config
-              name: sonarr-config
+            - mountPath: /data
+              name: data-mount
             - mountPath: /tv
               name: sonarr-tv
               readOnly: true
             - mountPath: /downloads
-              name: sonarr-downloads
+              name: sonarr-tv
+              readOnly: true
       serviceAccountName: sonarr
       terminationGracePeriodSeconds: 120
       volumes:
