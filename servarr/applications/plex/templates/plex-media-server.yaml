@@ -18,23 +18,29 @@ spec:
         
     spec:
       initContainers:
-        - name: format-config
+        - name: format-and-mount
           image: ubuntu
           securityContext:
             privileged: true
           command: ["/bin/sh", "-c"]
           args:
             - |
-              apt update && apt install -y e2fsprogs && \
+              apt update && apt install -y e2fsprogs mount && \
               if ! blkid /dev/plex-data; then \
                 echo "Formatting /dev/plex-data"; \
                 mkfs.ext4 /dev/plex-data; \
-              else \
-                echo "/dev/plex-data already formatted"; \
-              fi
+              fi && \
+              mkdir -p /mnt/config && \
+              mount /dev/plex-data /mnt/config && \
+              chown -R 1000:1000 /mnt/config && \
+              cp -a /mnt/config/. /emptydir/ && \
+              umount /mnt/config
           volumeDevices:
             - name: plex-device
               devicePath: /dev/plex-data
+          volumeMounts:
+            - name: plex-filesystem
+              mountPath: /emptydir
 
       containers:
         - env:
@@ -52,10 +58,9 @@ spec:
           ports:
             - containerPort: 32400
               name: pms
-          volumeDevices:
-            - name: plex-device
-              devicePath: /dev/plex-data
           volumeMounts:
+            - name: plex-filesystem
+              mountPath: /config
             - mountPath: /transcode
               name: pms-transcode
             - mountPath: /data/tv
@@ -64,19 +69,14 @@ spec:
             - mountPath: /data/movies
               name: plex-movies
               readOnly: true
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              mkdir -p /config && \
-              mount /dev/plex-data /config && \
-              chown -R 1000:1000 /config && \
-              exec /init
       serviceAccountName: plex-media-server
       terminationGracePeriodSeconds: 120
       volumes:
         - name: plex-device
           persistentVolumeClaim:
             claimName: config-pvc
+        - name: plex-filesystem
+          emptyDir: {}
 
         - name: pms-transcode
           emptyDir: {}
