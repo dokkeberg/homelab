@@ -35,7 +35,7 @@ spec:
               hosts:
                 - {{ .Values.spec.plex.host }}
           ingressClassName: traefik
-          url: "https://{{ .Values.spec.plex.host }}""
+          url: "https://{{ .Values.spec.plex.host }}"
         
         extraVolumeMounts:
           - name: plex-tv
