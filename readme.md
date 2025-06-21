@@ -52,3 +52,11 @@ Add local DNS entries
 * Login with user:\<adminpw\>
 * Create a new permanent adminuser as soon as possible, and delete the "user" user
 * Login to the home realm with your new user https://keycloak.k3s.home/realms/home/account and change from initialpassword
+
+
+## Nice to have commands
+
+Patch PersistentVolume to be able to be reclaimed
+```
+kubectl patch pv plex-movies-pv -p '{"spec":{"claimRef": null}}'
+```

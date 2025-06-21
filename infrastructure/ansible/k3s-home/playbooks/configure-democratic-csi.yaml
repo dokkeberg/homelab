@@ -29,12 +29,25 @@
         src: ../files/democratic-csi/democratic-csi-secret.yaml.j2
         dest: /tmp/democratic-csi-secret.yaml
       vars:
-        # Pass any variables needed by your template here, e.g.
+        namespace: default
+        private_key_content: "{{ hostvars['proxmox']['private_key_for_newvm'] }}"
+    
+    - name: Render democratic-csi-nfs secret manifest to a file
+      ansible.builtin.template:
+        src: ../files/democratic-csi/democratic-csi-nfs-secret.yaml.j2
+        dest: /tmp/democratic-csi-nfs-secret.yaml
+      vars:
         namespace: default
         private_key_content: "{{ hostvars['proxmox']['private_key_for_newvm'] }}"
 
     - name: Apply the democratic-csi secret manifest using kubectl
       ansible.builtin.shell: | 
         kubectl apply -f /tmp/democratic-csi-secret.yaml
+      args:
+        executable: /bin/bash
+
+    - name: Apply the democratic-csi-nfs secret manifest using kubectl
+      ansible.builtin.shell: | 
+        kubectl apply -f /tmp/democratic-csi-nfs-secret.yaml
       args:
         executable: /bin/bash
