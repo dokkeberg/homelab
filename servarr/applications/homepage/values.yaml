@@ -2,3 +2,7 @@ nas:
   host: nas.home
 homepage:
   host: homepage.k3s.home
+  services:
+    radarr:
+      key: ""
+      host: https://radarr.k3s.home

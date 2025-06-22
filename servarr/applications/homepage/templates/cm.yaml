@@ -16,20 +16,17 @@ data:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
-
-    - My Second Group:
-        - My Second Service:
-            href: http://localhost/
-            description: Homepage is the best
-
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 😎
+    - Media:
+        - Radarr:
+          icon: radarr.png
+          href: {{ .Values.homepage.services.radarr.host }}
+          description: Movies tracker
+          namespace: radarr
+          app: radarr
+          widget:
+            type: radarr
+            url: {{ .Values.homepage.services.radarr.host }}
+            key: {{ .Values.homepage.services.radarr.key }}
   widgets.yaml: |
     - kubernetes:
         cluster:
