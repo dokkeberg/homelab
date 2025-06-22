@@ -58,7 +58,7 @@ data:
               type: sonarr
               url: {{ .Values.homepage.services.sonarr.host }}
               key: {{ .Values.homepage.services.sonarr.key }}
-    - Downloads
+    - Downloads:
         - SABnzbd:
             icon: sabnzbd.png
             href: {{ .Values.homepage.services.sabnzbd.host }}
