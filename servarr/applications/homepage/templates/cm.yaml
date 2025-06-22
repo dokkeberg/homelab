@@ -18,7 +18,7 @@ data:
   services.yaml: |
     - Infrastructure:
         - ArgoCD:
-            icon: argocd.png
+            icon: argo-cd.png
             href: {{ .Values.homepage.services.argocd.host }}
             description: GitOps CI/CD
             namespace: argocd
