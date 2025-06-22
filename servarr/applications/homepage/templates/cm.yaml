@@ -18,15 +18,15 @@ data:
   services.yaml: |
     - Media:
         - Radarr:
-          icon: radarr.png
-          href: {{ .Values.homepage.services.radarr.host }}
-          description: Movies tracker
-          namespace: radarr
-          app: radarr
-          widget:
-            type: radarr
-            url: {{ .Values.homepage.services.radarr.host }}
-            key: {{ .Values.homepage.services.radarr.key }}
+            icon: radarr.png
+            href: {{ .Values.homepage.services.radarr.host }}
+            description: Movies tracker
+            namespace: radarr
+            app: radarr
+            widget:
+              type: radarr
+              url: {{ .Values.homepage.services.radarr.host }}
+              key: {{ .Values.homepage.services.radarr.key }}
   widgets.yaml: |
     - kubernetes:
         cluster:
