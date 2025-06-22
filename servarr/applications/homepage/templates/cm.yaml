@@ -27,6 +27,26 @@ data:
               type: radarr
               url: {{ .Values.homepage.services.radarr.host }}
               key: {{ .Values.homepage.services.radarr.key }}
+        - Sonarr:
+            icon: sonarr.png
+            href: {{ .Values.homepage.services.sonarr.host }}
+            description: TV tracker
+            namespace: sonarr
+            app: sonarr
+            widget:
+              type: sonarr
+              url: {{ .Values.homepage.services.sonarr.host }}
+              key: {{ .Values.homepage.services.sonarr.key }}
+        - SABnzbd:
+            icon: sabnzbd.png
+            href: {{ .Values.homepage.services.sabnzbd.host }}
+            description: TV tracker
+            namespace: sabnzbd
+            app: sabnzbd
+            widget:
+              type: sabnzbd
+              url: {{ .Values.homepage.services.sabnzbd.host }}
+              key: {{ .Values.homepage.services.sabnzbd.key }}
   widgets.yaml: |
     - kubernetes:
         cluster:

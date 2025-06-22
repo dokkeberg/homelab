@@ -6,3 +6,12 @@ homepage:
     radarr:
       key: ""
       host: https://radarr.k3s.home
+    sonarr:
+      key: ""
+      host: https://sonarr.k3s.home
+    sabnzbd:
+      key: ""
+      host: https://sabnzbd.k3s.home
+    argocd:
+      key: ""
+      host: https://argocd.k3s.home
