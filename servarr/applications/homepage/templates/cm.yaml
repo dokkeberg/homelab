@@ -33,21 +33,11 @@ data:
             href: {{ .Values.homepage.services.plex.host }}
             description: Media streaming
             namespace: plex
-            app: plex
+            app: plex-media-server
             widget:
               type: plex
               url: {{ .Values.homepage.services.plex.host }}
               key: {{ .Values.homepage.services.plex.key }}
-        - Prowlarr:
-            icon: prowlarr.png
-            href: {{ .Values.homepage.services.prowlarr.host }}
-            description: Usenet indexer
-            namespace: prowlarr
-            app: prowlarr
-            widget:
-              type: prowlarr
-              url: {{ .Values.homepage.services.prowlarr.host }}
-              key: {{ .Values.homepage.services.prowlarr.key }}
         - Radarr:
             icon: radarr.png
             href: {{ .Values.homepage.services.radarr.host }}
@@ -68,6 +58,7 @@ data:
               type: sonarr
               url: {{ .Values.homepage.services.sonarr.host }}
               key: {{ .Values.homepage.services.sonarr.key }}
+    - Downloads
         - SABnzbd:
             icon: sabnzbd.png
             href: {{ .Values.homepage.services.sabnzbd.host }}
@@ -78,6 +69,16 @@ data:
               type: sabnzbd
               url: {{ .Values.homepage.services.sabnzbd.host }}
               key: {{ .Values.homepage.services.sabnzbd.key }}
+        - Prowlarr:
+            icon: prowlarr.png
+            href: {{ .Values.homepage.services.prowlarr.host }}
+            description: Usenet indexer
+            namespace: prowlarr
+            app: prowlarr
+            widget:
+              type: prowlarr
+              url: {{ .Values.homepage.services.prowlarr.host }}
+              key: {{ .Values.homepage.services.prowlarr.key }}
   widgets.yaml: |
     - kubernetes:
         cluster:
