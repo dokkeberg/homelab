@@ -22,12 +22,32 @@ data:
             href: {{ .Values.homepage.services.argocd.host }}
             description: GitOps CI/CD
             namespace: argocd
-            app: argocd
+            app: argocd-server
             widget:
               type: argocd
               url: {{ .Values.homepage.services.argocd.host }}
               key: {{ .Values.homepage.services.argocd.key }}
     - Media:
+        - Plex:
+            icon: plex.png
+            href: {{ .Values.homepage.services.plex.host }}
+            description: Media streaming
+            namespace: plex
+            app: plex
+            widget:
+              type: plex
+              url: {{ .Values.homepage.services.plex.host }}
+              key: {{ .Values.homepage.services.plex.key }}
+        - Prowlarr:
+            icon: prowlarr.png
+            href: {{ .Values.homepage.services.prowlarr.host }}
+            description: Usenet indexer
+            namespace: prowlarr
+            app: prowlarr
+            widget:
+              type: prowlarr
+              url: {{ .Values.homepage.services.prowlarr.host }}
+              key: {{ .Values.homepage.services.prowlarr.key }}
         - Radarr:
             icon: radarr.png
             href: {{ .Values.homepage.services.radarr.host }}
