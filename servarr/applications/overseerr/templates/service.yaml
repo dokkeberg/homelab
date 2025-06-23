@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: overseerr
+  namespace: overseerr
+spec:
+  ports:
+    - name: overseerr
+      port: 5055
+      protocol: TCP
+      targetPort: 5055
+  selector:
+    app.kubernetes.io/instance: overseerr
+    app.kubernetes.io/name: overseerr
+  type: ClusterIP

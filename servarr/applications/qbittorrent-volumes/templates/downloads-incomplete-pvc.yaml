@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: downloads-incomplete-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: qbittorrent-downloads-incomplete-pv
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Ti

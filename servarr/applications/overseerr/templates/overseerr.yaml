@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: overseerr
+  namespace: overseerr
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: overseerr
+      app.kubernetes.io/name: overseerr
+  serviceName: overseerr
+  template:
+    metadata:
+      labels:
+        app: overseerr
+        app.kubernetes.io/instance: overseerr
+        app.kubernetes.io/name: overseerr
+        
+    spec:
+      initContainers:
+        - name: format-data
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y e2fsprogs && \
+              if ! blkid /dev/overseerr-data; then \
+                echo "Formatting /dev/overseerr-data"; \
+                mkfs.ext4 /dev/overseerr-data; \
+              else \
+                echo "/dev/overseerr-data already formatted"; \
+              fi
+          volumeDevices:
+            - name: overseerr-device
+              devicePath: /dev/overseerr-data
+
+      containers:
+        - name: overseerr
+          image: sctx/overseerr
+          securityContext:
+            privileged: true    # or at least allow mount capability
+          env:
+            - name: TZ
+              value: "Europe/Oslo"
+          volumeDevices:
+            - name: overseerr-device
+              devicePath: /dev/overseerr-data
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /app/config && \
+              mount /dev/overseerr-data /app/config && \
+              chown -R 1000:1000 /app/config && \
+              exec /init
+      volumes:
+        - name: overseerr-device
+          persistentVolumeClaim:
+            claimName: data-pvc

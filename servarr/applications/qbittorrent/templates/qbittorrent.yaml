@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: qbittorrent
+  namespace: qbittorrent
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: qbittorrent
+      app.kubernetes.io/name: qbittorrent
+  serviceName: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+        app.kubernetes.io/instance: qbittorrent
+        app.kubernetes.io/name: qbittorrent
+        
+    spec:
+      initContainers:
+        - name: format-data
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y e2fsprogs && \
+              if ! blkid /dev/qbittorrent-data; then \
+                echo "Formatting /dev/qbittorrent-data"; \
+                mkfs.ext4 /dev/qbittorrent-data; \
+              else \
+                echo "/dev/qbittorrent-data already formatted"; \
+              fi
+          volumeDevices:
+            - name: qbittorrent-device
+              devicePath: /dev/qbittorrent-data
+      containers:
+        - name: qbittorrent
+          image: lscr.io/linuxserver/qbittorrent:latest
+          securityContext:
+            privileged: true    # or at least allow mount capability
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Oslo"
+          volumeDevices:
+            - name: qbittorrent-device
+              devicePath: /dev/qbittorrent-data
+          volumeMounts:
+            - mountPath: /downloads-incomplete
+              name: qbittorrent-downloads-incomplete
+            - mountPath: /downloads
+              name: qbittorrent-downloads
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /config && \
+              mount /dev/qbittorrent-data /config && \
+              chown -R 1000:1000 /config && \
+              exec /init
+      volumes:
+        - name: qbittorrent-device
+          persistentVolumeClaim:
+            claimName: data-pvc
+        - name: qbittorrent-downloads-incomplete
+          persistentVolumeClaim:
+            claimName: downloads-incomplete-pvc
+        - name: qbittorrent-downloads
+          persistentVolumeClaim:
+            claimName: downloads-pvc
