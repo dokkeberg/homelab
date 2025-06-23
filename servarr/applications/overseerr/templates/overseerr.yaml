@@ -53,7 +53,7 @@ spec:
               mkdir -p /app/config && \
               mount /dev/overseerr-data /app/config && \
               chown -R 1000:1000 /app/config && \
-              exec /init
+              exec /sbin/tini -- yarn start
       volumes:
         - name: overseerr-device
           persistentVolumeClaim:
