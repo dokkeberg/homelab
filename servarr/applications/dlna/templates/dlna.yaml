@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: dlna
-          image: https://hub.docker.com/r/vladgh/minidlna
+          image: docker.io/vladgh/minidlna
           ports:
             - containerPort: 8200
           env:
@@ -38,6 +38,9 @@ spec:
           volumeMounts:
             - mountPath: /media
               name: dlna-downloads
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
       volumes:
         - name: dlna-downloads
           persistentVolumeClaim:
