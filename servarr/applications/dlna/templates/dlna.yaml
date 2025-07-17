@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: dlna
   namespace: dlna
@@ -21,7 +21,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: dlna
-          image: vladgh/minidlna
+          image: https://hub.docker.com/r/vladgh/minidlna
           ports:
             - containerPort: 8200
           env:
