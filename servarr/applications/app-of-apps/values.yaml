@@ -20,6 +20,8 @@ spec:
     overseerrVolumesPath: servarr/applications/overseerr-volumes
     qbittorrentPath: servarr/applications/qbittorrent
     qbittorrentVolumesPath: servarr/applications/qbittorrent-volumes
+    dlnaPath: servarr/applications/dlna
+    dlnaVolumesPath: servarr/applications/dlna-volumes
   plex:
     repoUrl: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
     targetRevision: 1.0.2

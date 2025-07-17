@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dlna
+  namespace: argocd     
+spec:
+  project: default
+  destination:
+    namespace: dlna
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: {{ .Values.spec.source.repoUrl }}
+    path: {{ .Values.spec.source.dlnaPath }}
+    targetRevision: HEAD
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true

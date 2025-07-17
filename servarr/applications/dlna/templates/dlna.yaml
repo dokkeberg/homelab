@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dlna
+  namespace: dlna
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dlna
+      app.kubernetes.io/name: dlna
+  serviceName: dlna
+  template:
+    metadata:
+      labels:
+        app: dlna
+        app.kubernetes.io/instance: dlna
+        app.kubernetes.io/name: dlna
+        
+    spec:
+      hostNetwork: true  
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: dlna
+          image: vladgh/minidlna
+          ports:
+            - containerPort: 8200
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: MINIDLNA_MEDIA_DIR
+              value: /media
+            - name: MINIDLNA_FRIENDLY_NAME
+              value: MediaLibrary
+          volumeMounts:
+            - mountPath: /media
+              name: dlna-downloads
+      volumes:
+        - name: dlna-downloads
+          persistentVolumeClaim:
+            claimName: downloads-pvc
