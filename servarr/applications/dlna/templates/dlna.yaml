@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: dlna
-          image: docker.io/vladgh/minidlna
+          image: vladgh/minidlna
           ports:
             - containerPort: 8200
           env:
