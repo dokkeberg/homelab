@@ -23,6 +23,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: dlna
+          imagePullPolicy: IfNotPresent
           image: vladgh/minidlna
           ports:
             - containerPort: 8200
@@ -38,9 +39,6 @@ spec:
           volumeMounts:
             - mountPath: /media
               name: dlna-downloads
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
       volumes:
         - name: dlna-downloads
           persistentVolumeClaim:
