@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seed-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: qbittorrent-seed-pv
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Ti

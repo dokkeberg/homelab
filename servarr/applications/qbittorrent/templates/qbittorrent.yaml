@@ -55,6 +55,8 @@ spec:
               name: qbittorrent-downloads-incomplete
             - mountPath: /downloads
               name: qbittorrent-downloads
+            - mountPath: /seed
+              name: qbittorrent-seed
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -72,3 +74,6 @@ spec:
         - name: qbittorrent-downloads
           persistentVolumeClaim:
             claimName: downloads-pvc
+        - name: qbittorrent-seed
+          persistentVolumeClaim:
+            claimName: seed-pvc
