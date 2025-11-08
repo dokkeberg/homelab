@@ -1,0 +1,79 @@
+keycloakConfigCli:
+  enabled: true
+  configuration:
+    home.json: |
+      {
+        "realm": "home",
+        "enabled": true,
+        "registrationAllowed": true,
+        "users": [
+          {
+            "username": cad,
+            "enabled": true,
+            "email": "christopher.dokkeberg@gmail.com",
+            "firstName": "Christopher",
+            "lastName": "Dokkeberg",
+            "credentials": [
+              {
+                "type": "password",
+                "value": "ChangeMe123!"
+              }
+            ]
+          }
+        ],
+        "clientScopes": [
+          {
+            "name": "groups",
+            "protocol": "openid-connect"
+          }
+        ],
+        "clients": [
+          {
+            "clientId": "minecraft",
+            "name": "minecraft-sso",
+            "rootUrl": "http://localhost:3000/",
+            "baseUrl": "http://localhost:3000/",
+            "enabled": true,
+            "clientAuthenticatorType": "client-secret",
+            "secret": "minecraft-secret",
+            "redirectUris": [
+              "http://localhost:3000/api/auth/callback/*"
+            ],
+            "webOrigins": [
+              "http://localhost:3000/"
+            ],
+            "standardFlowEnabled": true,
+            "frontchannelLogout": true,
+            "protocol": "openid-connect",
+            "attributes": {
+              "backchannel.logout.session.required": "true",
+              "oauth2.device.authorization.grant.enabled": "true"
+            },
+            "fullScopeAllowed": true
+          }
+        ]
+      }
+global:
+  postgresql:
+    auth:
+      username: bn_keycloak
+      password: bn_keycloak
+      database: bitnami_keycloak
+extraEnvVars:
+  - name: KEYCLOAK_LOG_LEVEL
+    value: DEBUG
+
+persistence:
+  enabled: true
+
+auth:
+  createAdminUser: true
+  adminUser: admin
+  adminPassword: "ChangeMe123!"
+
+postgresql:
+  enabled: true
+  auth:
+    username: bn_keycloak
+    password: bn_keycloak
+    database: bitnami_keycloak
