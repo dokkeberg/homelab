@@ -1,0 +1,17 @@
+# cnpg cluster with democratic-csi 
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cnpg-cluster
+  namespace: cloudnative-pg
+spec:
+  instances: 1
+  storage:
+    pvcTemplate:
+      accessModes:
+        - ReadWriteMany
+      storageClassName: truenas-iscsi-nonroot
+      volumeMode: Block
+      resources:
+        requests:
+          storage: 0Gi

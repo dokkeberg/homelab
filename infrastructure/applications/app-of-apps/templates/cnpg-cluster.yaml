@@ -1,21 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cnpg
+  name: cnpg-cluster
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
   destination:
-    namespace: cnpg-system
+    namespace: cnpg
     server: {{ .Values.spec.destination.server }}
   sources:
-  - repoURL: {{ .Values.spec.cnpg.repoUrl }}
-    chart: cloudnative-pg
-    targetRevision: {{ .Values.spec.cnpg.targetRevision }}
-    helm:
-      releaseName: cnpg
+  - repoURL: {{ .Values.spec.source.repoURL }}
+    path: {{ .Values.spec.source.cnpgPath }}
+    targetRevision: HEAD
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

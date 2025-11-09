@@ -9,6 +9,7 @@ spec:
     portainerPatchPath: infrastructure/applications/portainer-kustomize/overlays/prod
     certManagerPath: infrastructure/applications/cert-manager
     semaphorePath: infrastructure/applications/semaphore
+    cnpgPath: infrastructure/applications/cnpg
   argoCd:
     repoUrl: https://argoproj.github.io/argo-helm
     url: https://argocd.k3s.home
