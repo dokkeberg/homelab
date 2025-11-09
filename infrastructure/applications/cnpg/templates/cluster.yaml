@@ -3,7 +3,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: cnpg-cluster
-  namespace: cloudnative-pg
+  namespace: cnpg
 spec:
   instances: 1
   storage:
@@ -14,4 +14,4 @@ spec:
       volumeMode: Block
       resources:
         requests:
-          storage: 0Gi
+          storage: 10Gi
