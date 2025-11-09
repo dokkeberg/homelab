@@ -5,6 +5,14 @@ metadata:
   namespace: cnpg
 spec:
   instances: 1
+  managed:
+    roles:
+    - name: app
+      ensure: present
+      login: true
+      superuser: false
+      passwordSecret:
+        name: cnpg-cluster-password
   storage:
     pvcTemplate:
       accessModes:
