@@ -10,6 +10,7 @@ spec:
     certManagerPath: infrastructure/applications/cert-manager
     semaphorePath: infrastructure/applications/semaphore
     cnpgPath: infrastructure/applications/cnpg
+    keycloakPath: infrastructure/applications/keycloak
   argoCd:
     repoUrl: https://argoproj.github.io/argo-helm
     url: https://argocd.k3s.home

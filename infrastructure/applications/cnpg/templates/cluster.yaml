@@ -5,17 +5,15 @@ metadata:
   namespace: cnpg
 spec:
   instances: 1
+  bootstrap:
+    initdb:
+      database: app
+      owner: app
+      secret:
+        name: cnpg-cluster-password
   certificates:
     serverTLSSecret: cnpg-server-cert
     serverCASecret: cnpg-server-cert
-  managed:
-    roles:
-    - name: app
-      ensure: present
-      login: true
-      superuser: false
-      passwordSecret:
-        name: cnpg-cluster-password
   storage:
     pvcTemplate:
       accessModes:

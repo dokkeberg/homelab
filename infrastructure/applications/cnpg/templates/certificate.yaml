@@ -16,15 +16,15 @@ spec:
     - server auth
   dnsNames:
     - postgres.k3s.home
-    - cnpg-rw
-    - cnpg-rw.cnpg
-    - cnpg-rw.cnpg.svc
-    - cnpg-r
-    - cnpg-r.cnpg
-    - cnpg-r.cnpg.svc
-    - cnpg-ro
-    - cnpg-ro.cnpg
-    - cnpg-ro.cnpg.svc
+    - cnpg-cluster-rw
+    - cnpg-cluster-rw.cnpg
+    - cnpg-cluster-rw.cnpg.svc
+    - cnpg-cluster-r
+    - cnpg-cluster-r.cnpg
+    - cnpg-cluster-r.cnpg.svc
+    - cnpg-cluster-ro
+    - cnpg-cluster-ro.cnpg
+    - cnpg-cluster-ro.cnpg.svc
   issuerRef:
     name: home-intermediate-ca-issuer
     kind: ClusterIssuer

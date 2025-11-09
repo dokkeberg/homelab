@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-tls-cert
+  labels:
+    cnpg.io/reload: ""
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keycloak-tls-cert
+  namespace: keycloak-operator
+spec:
+  secretName: keycloak-tls-cert
+  usages:
+    - server auth
+  dnsNames:
+    - keycloak.k3s.home
+    - keycloak.keycloak-operator
+    - keycloak.keycloak-operator.svc
+  issuerRef:
+    name: home-intermediate-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

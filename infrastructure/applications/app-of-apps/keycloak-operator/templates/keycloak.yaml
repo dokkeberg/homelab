@@ -1,0 +1,23 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+  namespace: keycloak-operator
+spec:
+  instances: 1
+  db:
+    vendor: postgres
+    host: cnpg-cluster-rw.cnpg.svc
+    database: app
+    usernameSecret:
+      name: cnpg-cluster-password
+      key: username
+    passwordSecret:
+      name: cnpg-cluster-password
+      key: password
+  http:
+    tlsSecret: keycloak-tls-cert
+  hostname:
+    hostname: keycloak-v2.k3s.home
+  proxy:
+    headers: xforwarded

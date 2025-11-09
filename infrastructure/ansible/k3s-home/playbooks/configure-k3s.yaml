@@ -85,9 +85,9 @@
       args:
         executable: /bin/bash
     
-    - name: Ensure keycloak namespace exists using kubectl
+    - name: Ensure keycloak-operator namespace exists using kubectl
       ansible.builtin.shell: |
-        kubectl get namespace keycloak || kubectl create namespace keycloak
+        kubectl get namespace keycloak-operator || kubectl create namespace keycloak-operator
       args:
         executable: /bin/bash
 
@@ -107,11 +107,11 @@
 
     - name: Create keycloak secret with username app, and password
       ansible.builtin.shell: |
-        kubectl get secret cnpg-cluster-password -n keycloak || \
+        kubectl get secret cnpg-cluster-password -n keycloak-operator || \
         kubectl create secret generic cnpg-cluster-password \
           --from-literal=username=app \
           --from-literal=password={{ cnpg_password.stdout }} \
-          --namespace=keycloak
+          --namespace=keycloak-operator
       args:
         executable: /bin/bash
 
