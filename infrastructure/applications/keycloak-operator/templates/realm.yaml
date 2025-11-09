@@ -1,0 +1,99 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: KeycloakRealmImport
+metadata:
+  name: home-realm-kc
+spec:
+  keycloakCRName: keycloak
+  realm:
+    realm: home
+    enabled: true
+    registrationAllowed: true
+    users:
+      - username: '{{ .Values.spec.keycloak.username }}'
+        enabled: true
+        email: christopher.dokkeberg@gmail.com
+        firstName: Christopher
+        lastName: Dokkeberg
+        credentials:
+          - type: password
+            value: ChangeMe123!
+    clientScopes:
+      - name: groups
+        protocol: openid-connect
+    clients:
+      - clientId: portainer
+        name: portainer-sso
+        rootUrl: 'https://portainer.k3s.home/'
+        baseUrl: 'https://portainer.k3s.home/'
+        adminUrl: 'https://portainer.k3s.home/'
+        enabled: true
+        clientAuthenticatorType: client-secret
+        secret: '{{ .Values.spec.keycloak.clients.portainer.clientSecret }}'
+        redirectUris:
+          - 'https://portainer.k3s.home/'
+        webOrigins:
+          - 'https://portainer.k3s.home/#!/'
+        standardFlowEnabled: true
+        frontchannelLogout: true
+        protocol: openid-connect
+        attributes:
+          backchannel.logout.session.required: 'true'
+          post.logout.redirect.uris: 'https://portainer.k3s.home/#!/logout'
+          oauth2.device.authorization.grant.enabled: 'true'
+        fullScopeAllowed: true
+      - clientId: argocd
+        name: argocd-sso
+        rootUrl: 'https://argocd.k3s.home/'
+        baseUrl: 'https://argocd.k3s.home/'
+        adminUrl: 'https://argocd.k3s.home/'
+        enabled: true
+        clientAuthenticatorType: client-secret
+        secret: '{{ .Values.spec.keycloak.clients.argocd.clientSecret }}'
+        redirectUris:
+          - 'https://argocd.k3s.home/auth/callback'
+        webOrigins:
+          - 'https://argocd.k3s.home/#!/'
+        standardFlowEnabled: true
+        frontchannelLogout: true
+        protocol: openid-connect
+        attributes:
+          backchannel.logout.session.required: 'true'
+          post.logout.redirect.uris: 'https://argocd.k3s.home/applications'
+          oauth2.device.authorization.grant.enabled: 'true'
+        fullScopeAllowed: true
+        defaultClientScopes:
+          - web-origins
+          - acr
+          - roles
+          - profile
+          - groups
+          - basic
+          - email
+      - clientId: semaphore
+        name: semaphore-sso
+        rootUrl: 'https://semaphore.k3s.home/'
+        baseUrl: 'https://semaphore.k3s.home/'
+        adminUrl: 'https://semaphore.k3s.home/'
+        enabled: true
+        clientAuthenticatorType: client-secret
+        secret: '{{ .Values.spec.keycloak.clients.semaphore.clientSecret }}'
+        redirectUris:
+          - 'https://semaphore.k3s.home/api/auth/oidc/keycloak/redirect'
+        webOrigins:
+          - 'https://semaphore.k3s.home/'
+        standardFlowEnabled: true
+        frontchannelLogout: true
+        protocol: openid-connect
+        attributes:
+          backchannel.logout.session.required: 'true'
+          post.logout.redirect.uris: 'https://semaphore.k3s.home'
+          oauth2.device.authorization.grant.enabled: 'true'
+        fullScopeAllowed: true
+        defaultClientScopes:
+          - web-origins
+          - acr
+          - roles
+          - profile
+          - groups
+          - basic
+          - email

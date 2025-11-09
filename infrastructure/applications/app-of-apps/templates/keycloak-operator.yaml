@@ -14,6 +14,18 @@ spec:
   - repoURL: {{ .Values.spec.source.repoURL }}
     path: {{ .Values.spec.source.keycloakPath }}
     targetRevision: HEAD
+    helm:
+      values: |
+        spec:
+          keycloak:
+            username: {{ .Values.spec.keycloak.username }}
+            clients:
+              portainer:
+                clientSecret: {{ .Values.spec.keycloak.clients.portainer.clientSecret }}
+              argocd:
+                clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
+              semaphore:
+                clientSecret: {{ .Values.spec.keycloak.clients.semaphore.clientSecret }}
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

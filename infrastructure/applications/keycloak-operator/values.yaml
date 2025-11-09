@@ -1,2 +1,12 @@
 ingress:
   host: keycloak-v2.k3s.home
+spec:
+  keycloak:
+    username: ""
+    clients:
+      portainer:
+        clientSecret: ""
+      argocd:
+        clientSecret: ""
+      semaphore:
+        clientSecret: ""
