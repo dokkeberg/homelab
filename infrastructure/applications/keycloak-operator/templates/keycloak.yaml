@@ -15,9 +15,5 @@ spec:
     passwordSecret:
       name: cnpg-cluster-password
       key: password
-  http:
-    tlsSecret: keycloak-tls-cert
-  hostname:
-    hostname: keycloak-v2.k3s.home
-  proxy:
-    headers: xforwarded
+  ingress:
+    enabled: false

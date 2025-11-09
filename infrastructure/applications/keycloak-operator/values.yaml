@@ -1,0 +1,2 @@
+ingress:
+  host: keycloak-v2.k3s.home

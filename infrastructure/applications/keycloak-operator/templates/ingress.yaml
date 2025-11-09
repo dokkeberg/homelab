@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-ingress
+  namespace: keycloak-operator
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: home-intermediate-ca-issuer
+    cert-manager.io/common-name: "{{ .Values.ingress.host }}"
+spec:
+  rules:
+    - host: "{{ .Values.ingress.host }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak-service
+                port:
+                  number: 8443
+  tls:
+  - hosts:
+    - "{{ .Values.ingress.host }}"
+    secretName: keycloak-cert-tls
