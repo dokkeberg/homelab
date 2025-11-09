@@ -11,9 +11,12 @@ spec:
     users:
       - username: '{{ .Values.spec.keycloak.username }}'
         enabled: true
+        createdTimestamp: 1.7592768e+12
         email: christopher.dokkeberg@gmail.com
         firstName: Christopher
         lastName: Dokkeberg
+        realmRoles: 
+          - default-roles-home
         credentials:
           - type: password
             value: ChangeMe123!
