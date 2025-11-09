@@ -1,4 +1,3 @@
-# cnpg cluster with democratic-csi 
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
