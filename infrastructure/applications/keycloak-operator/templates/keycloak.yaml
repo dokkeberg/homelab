@@ -15,5 +15,11 @@ spec:
     passwordSecret:
       name: cnpg-cluster-password
       key: password
+  http:
+    httpEnabled: true
+  hostname: 
+    hostname: keycloak-v2.k3s.home
   ingress:
     enabled: false
+  proxy:
+    headers: xforwarded
