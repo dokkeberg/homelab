@@ -73,6 +73,12 @@
       args:
         executable: /bin/bash
 
+    - name: Ensure cnpg-system namespace exists using kubectl
+      ansible.builtin.shell: |
+        kubectl get namespace cnpg-system || kubectl create namespace cnpg-system
+      args:
+        executable: /bin/bash
+
     - name: Read root CA cert
       ansible.builtin.slurp:
         src: "{{ lookup('env', 'HOME') }}/ansible-secrets/home-root-ca.crt"

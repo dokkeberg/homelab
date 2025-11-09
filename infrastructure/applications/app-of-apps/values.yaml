@@ -17,6 +17,9 @@ spec:
       clientID: argocd
     targetRevision: 8.0.10
     caCert: ""
+  cnpg:
+    repoUrl: https://cloudnative-pg.github.io/charts
+    targetRevision: 0.26.1
   portainer:
     repoUrl: https://portainer.github.io/k8s/
     targetRevision: 1.0.66
