@@ -5,6 +5,9 @@ metadata:
   namespace: cnpg
 spec:
   instances: 1
+  certificates:
+    serverTLSSecret: cnpg-server-cert
+    serverCASecret: cnpg-server-cert
   managed:
     roles:
     - name: app

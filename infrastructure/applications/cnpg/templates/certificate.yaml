@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cnpg-server-cert
+  labels:
+    cnpg.io/reload: ""
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cnpg-server-cert
+  namespace: cnpg
+spec:
+  secretName: cnpg-server-cert
+  usages:
+    - server auth
+  dnsNames:
+    - postgres.k3s.home
+    - cnpg-rw
+    - cnpg-rw.cnpg
+    - cnpg-rw.cnpg.svc
+    - cnpg-r
+    - cnpg-r.cnpg
+    - cnpg-r.cnpg.svc
+    - cnpg-ro
+    - cnpg-ro.cnpg
+    - cnpg-ro.cnpg.svc
+  issuerRef:
+    name: home-intermediate-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
