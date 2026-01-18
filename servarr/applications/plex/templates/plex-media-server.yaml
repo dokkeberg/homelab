@@ -45,7 +45,7 @@ spec:
               exec /init
           env:
             - name: ADVERTISE_IP
-              value: https://{{ .Values.plex.host }}:443
+              value: https://{{ .Values.plex.host }}:443,http://k3s.home:32400,http://192.168.1.100:32400
             - name: PUID
               value: "1000"
             - name: PGID
