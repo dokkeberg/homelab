@@ -1,7 +1,7 @@
 'use client'
 
+import IconButton from '@/app/components/icon-button'
 import { StopCircleIcon } from '@heroicons/react/24/solid'
-import React from "react";
 
 export default function StopServerButton() {
 
@@ -11,13 +11,8 @@ export default function StopServerButton() {
     }
 
     return (
-        <button
-            type="button"
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition text-2xl"
-            aria-label="Stop server"
-            onClick={handleClick}
-        >
+        <IconButton onClick={handleClick} label="Stop server">
             <StopCircleIcon className="h-4 w-4 text-red-500" />
-        </button>
+        </IconButton>
     )
 }

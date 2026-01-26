@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/minecraft/">
+    <Project Path="minecraft/mc-backend/mc-backend.csproj" />
+  </Folder>
+</Solution>

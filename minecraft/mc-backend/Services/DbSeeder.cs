@@ -6,7 +6,6 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(DbContext db, CancellationToken ct = default)
     {
-        // Seed users (ExternalId typically maps to Keycloak "sub")
         var users = new List<User>
         {
             new User { Id = 1, ExternalId = "52ccc561-ee7f-4dcb-aef1-a18021695ac5" },
@@ -15,10 +14,8 @@ public static class DbSeeder
         await db.Set<User>().AddRangeAsync(users, ct);
         await db.SaveChangesAsync(ct);
 
-        // Seed images used by servers
         var images = new List<Image>
         {
-            // Use picture URLs (not container images)
             new Image { Id = 1, Url = "https://picsum.photos/seed/mc-overworld/800/450" },
             new Image { Id = 2, Url = "https://picsum.photos/seed/mc-nether/800/450" },
             new Image { Id = 3, Url = "https://picsum.photos/seed/mc-creative/800/450" }
@@ -26,7 +23,6 @@ public static class DbSeeder
         await db.Set<Image>().AddRangeAsync(images, ct);
         await db.SaveChangesAsync(ct);
 
-        // Seed servers with ownership and image references
         var servers = new List<Server>
         {
             new Server { Id = 1, Status = ServerStatus.Running, Name = "Overworld Alpha", Description = "Primary survival world server.", OwnerId = users[0].Id, ImageId = images[0].Id },
@@ -42,11 +38,9 @@ public static class DbSeeder
 
     public static void Seed(DbContext context)
     {
-        // If any data exist, skip
         if (context.Set<User>().Any() || context.Set<Server>().Any())
             return;
 
-        // Seed users (ExternalId typically maps to Keycloak "sub")
         var users = new List<User>
         {
             new User { Id = 1, ExternalId = "52ccc561-ee7f-4dcb-aef1-a18021695ac5" },
@@ -55,10 +49,8 @@ public static class DbSeeder
         context.Set<User>().AddRange(users);
         context.SaveChanges();
 
-        // Seed images used by servers
         var images = new List<Image>
         {
-            // Use picture URLs (not container images)
             new Image { Id = 1, Url = "https://picsum.photos/seed/mc-overworld/800/450" },
             new Image { Id = 2, Url = "https://picsum.photos/seed/mc-nether/800/450" },
             new Image { Id = 3, Url = "https://picsum.photos/seed/mc-creative/800/450" }
@@ -66,7 +58,6 @@ public static class DbSeeder
         context.Set<Image>().AddRange(images);
         context.SaveChanges();
 
-        // Seed servers with ownership and image references
         var servers = new List<Server>
         {
             new Server { Id = 1, Status = ServerStatus.Running, Name = "Overworld Alpha", Description = "Primary survival world server.", OwnerId = users[0].Id, ImageId = images[0].Id },

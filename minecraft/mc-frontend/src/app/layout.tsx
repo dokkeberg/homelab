@@ -4,8 +4,8 @@ import Sidebar from "@/components/sidebar"
 import type { ReactNode } from "react"
 
 export const metadata = {
-    title: "My App",
-    description: "With shared layout",
+    title: "Minecraft Provisioning",
+    description: "A Minecraft server provisioning tool",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

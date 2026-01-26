@@ -1,85 +1,70 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using mc_backend;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
 
 builder.Services.AddDbContext<McDbContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opts =>
     {
-        opts.MetadataAddress = builder.Configuration.GetValue<string>("Oidc:Issuer") + "/.well-known/openid-configuration";
-    	opts.RequireHttpsMetadata = builder.Configuration.GetValue<bool>("Oidc:RequireHttpsMetadata");
+        opts.MetadataAddress = builder.Configuration.GetValue<string>("Oidc:Issuer") + ".well-known/openid-configuration";
+    	opts.RequireHttpsMetadata = true;
         opts.TokenValidationParameters = new TokenValidationParameters()
         {
             NameClaimType = "name",
             RoleClaimType = "role",
-            ValidAudience = builder.Configuration.GetValue<string>("Oidc:Audience")
+            ValidAudience = builder.Configuration.GetValue<string>("Oidc:Audience"),
+            ValidIssuer = builder.Configuration.GetValue<string>("Oidc:Issuer")
         };
+
+        if(builder.Environment.IsDevelopment())
+        {
+            opts.BackchannelHttpHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+        }
     });
 builder.Services.AddAuthorization();
 
-// Serialize enums as strings in camelCase for JSON responses
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<McDbContext>();
+    dbContext.Database.Migrate();
+}
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // Serve OpenAPI document at /openapi/v1.json (built-in)
     app.MapOpenApi();
-
-    // Serve Swagger UI at /swagger
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapScalarApiReference();
 }
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
 
-var servers = app.MapGroup("servers");
+var api = app.MapGroup("api");
+
+var servers = api.MapGroup("servers");
 servers.RequireAuthorization();
 servers.MapGet("/", (ClaimsPrincipal user, McDbContext db, int? id) =>
     {
@@ -119,12 +104,21 @@ servers.MapPost("/", async (ClaimsPrincipal user, McDbContext db, CreateServerDt
             .Select(u => u.Id)
             .FirstOrDefaultAsync();
         
+        if(ownerId == 0)
+        {
+            var newUser = new User { ExternalId = userId };
+            await db.Users.AddAsync(newUser);
+            await db.SaveChangesAsync();
+            ownerId = newUser.Id;
+        }
+
         var server = new Server
         {
             Name = serverDto.Name,
             Description = serverDto.Description,
             ImageId = serverDto.ImageId,
-            OwnerId = ownerId
+            OwnerId = ownerId,
+            Status = ServerStatus.Stopped
         };
         
         await db.Servers.AddAsync(server);

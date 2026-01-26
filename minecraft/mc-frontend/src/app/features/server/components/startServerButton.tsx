@@ -1,5 +1,6 @@
 'use client'
 
+import IconButton from '@/app/components/icon-button'
 import { RocketLaunchIcon } from '@heroicons/react/24/solid'
 
 export default function StartServerButton() {
@@ -10,13 +11,8 @@ export default function StartServerButton() {
     }
 
     return (
-        <button
-            type="button"
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition text-2xl"
-            aria-label="Stop server"
-            onClick={handleClick}
-        >
+        <IconButton onClick={handleClick} label="Start server">
             <RocketLaunchIcon className="h-4 w-4 text-green-500" />
-        </button>
+        </IconButton>
     )
 }

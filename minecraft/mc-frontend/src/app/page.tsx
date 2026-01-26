@@ -1,5 +1,5 @@
 
-export default async function ProtectedPage() {
+export default async function MainPage() {
     return (
         <main>
 
