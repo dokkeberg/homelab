@@ -1,0 +1,4 @@
+config:
+  proxmoxve:endpoint: https://cad-server.home:8006/api2/json
+  proxmoxve:apiToken:
+    secure: AAABAJxtf6yrNqWuGWPMQADHJhzh/Rci+QZjHruAfrPSJK0vlwtGnI/z4d6HjPQCTpnJQdS9FZbm9Or6UDtFTd+gJ6oIBaQlyTv1+iEhbLBO0ih5

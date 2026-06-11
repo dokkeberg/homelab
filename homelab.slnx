@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/infrastructure/" />
+  <Folder Name="/infrastructure/pulumi/">
+    <Project Path="infrastructure/pulumi/homelab.infrastructure.csproj" />
+  </Folder>
   <Folder Name="/minecraft/">
     <Project Path="minecraft/mc-backend/mc-backend.csproj" />
   </Folder>

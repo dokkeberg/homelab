@@ -1,0 +1,3 @@
+name: homelab.infrastructure
+runtime: dotnet
+description: A simple Pulumi YAML project
