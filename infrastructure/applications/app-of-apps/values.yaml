@@ -54,7 +54,7 @@ spec:
       issuer: https://keycloak.k3s.home/realms/home
   democraticcsi:
     repoUrl: https://democratic-csi.github.io/charts/
-    targetRevision: 0.15.0
+    targetRevision: 0.15.1
     username: ""
     apiKey: ""
     host: nas.home
