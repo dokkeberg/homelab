@@ -3,6 +3,19 @@ resource "random_password" "argocd_oidc_client_secret" {
   special = false
 }
 
+resource "kubernetes_namespace_v1" "democratic_csi" {
+  provider = kubernetes.bootstrap
+  metadata {
+    name = "democratic-csi"
+
+    labels = {
+      "pod-security.kubernetes.io/enforce" = "privileged"
+      "pod-security.kubernetes.io/audit"   = "privileged"
+      "pod-security.kubernetes.io/warn"    = "privileged"
+    }
+  }
+}
+
 resource "kubernetes_manifest" "infrastructure_app" {
   provider = kubernetes.bootstrap
   manifest = {

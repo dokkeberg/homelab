@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   destination:
-    namespace: default
+    namespace: democratic-csi
     server: {{ .Values.spec.destination.server }}
   sources:
   - repoURL: {{ .Values.spec.democraticcsi.repoUrl }}
@@ -39,7 +39,7 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
+      - CreateNamespace=false
       - PrunePropagationPolicy=background
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
