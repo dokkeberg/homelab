@@ -18,7 +18,7 @@ spec:
     pvcTemplate:
       accessModes:
         - ReadWriteOnce
-      storageClassName: truenas-iscsi-nonroot
+      storageClassName: truenas-nfs-nonroot
       resources:
         requests:
           storage: 10Gi
