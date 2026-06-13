@@ -1,0 +1,7 @@
+resources: []
+patches:
+  - path: coredns-configmap-patch.yaml
+    target:
+      kind: ConfigMap
+      name: coredns
+      namespace: kube-system

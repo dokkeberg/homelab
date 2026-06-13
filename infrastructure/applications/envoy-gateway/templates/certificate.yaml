@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-talos-home
+  namespace: envoy-gateway-system
+spec:
+  secretName: wildcard-talos-home
+  issuerRef:
+    name: intermediate-ca-clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.talos.home"

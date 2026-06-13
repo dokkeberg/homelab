@@ -20,12 +20,14 @@ spec:
           keycloak:
             username: {{ .Values.spec.keycloak.username }}
             clients:
-              portainer:
-                clientSecret: {{ .Values.spec.keycloak.clients.portainer.clientSecret }}
               argocd:
                 clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
-              semaphore:
-                clientSecret: {{ .Values.spec.keycloak.clients.semaphore.clientSecret }}
+  - repoURL: {{ .Values.spec.keycloak.repoUrl }}
+    targetRevision: {{ .Values.spec.keycloak.targetRevision }}
+    path: kubernetes
+    directory:
+      recurse: false
+      include: '{keycloaks.k8s.keycloak.org-v1.yml,keycloakrealmimports.k8s.keycloak.org-v1.yml,kubernetes.yml}'
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

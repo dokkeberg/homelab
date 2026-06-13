@@ -1,0 +1,25 @@
+# argocd-bootstrap-values.yaml
+configs:
+  cm:
+    # Disable admin password (ArgoCD will regenerate)
+    admin.enabled: true
+
+server:
+  # Disable ingress during bootstrap
+  ingress:
+    enabled: false
+
+dex:
+  enabled: false
+
+redis:
+  enabled: true
+
+controller:
+  replicas: 1
+
+repoServer:
+  replicas: 1
+
+applicationSet:
+  enabled: true

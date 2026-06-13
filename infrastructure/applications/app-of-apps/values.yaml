@@ -5,58 +5,39 @@ spec:
     repoURL: https://github.com/dokkeberg/homelab
     targetRevision: HEAD
     argocdPath: infrastructure/applications/argocd
-    portainerPath: infrastructure/applications/portainer
-    portainerPatchPath: infrastructure/applications/portainer-kustomize/overlays/prod
     certManagerPath: infrastructure/applications/cert-manager
-    semaphorePath: infrastructure/applications/semaphore
     cnpgPath: infrastructure/applications/cnpg
     keycloakPath: infrastructure/applications/keycloak-operator
+    corednsPath: infrastructure/applications/coredns
+    envoyGatewayPath: infrastructure/applications/envoy-gateway
   argoCd:
     repoUrl: https://argoproj.github.io/argo-helm
-    url: https://argocd.k3s.home
+    url: https://argocd.talos.home
     oidc:
-      issuer: https://keycloak.k3s.home/realms/home
+      issuer: https://keycloak.talos.home/realms/home
       clientID: argocd
-    targetRevision: 8.0.10
+    targetRevision: 9.5.21
     caCert: ""
   cnpg:
     repoUrl: https://cloudnative-pg.github.io/charts
-    targetRevision: 0.26.1
-  portainer:
-    repoUrl: https://portainer.github.io/k8s/
-    targetRevision: 1.0.66
-    enterprise: true
+    targetRevision: 0.28.3
   certManager:
     repoUrl: https://charts.jetstack.io
-    targetRevision: 1.17.2
+    targetRevision: 1.20.2
   keycloak:
-    repoUrl: https://charts.bitnami.com/bitnami
-    targetRevision: 24.6.7
-    host: keycloak.k3s.home
+    repoUrl: https://github.com/keycloak/keycloak-k8s-resources.git
+    targetRevision: 26.6.3
+    host: keycloak.talos.home
     username: cad
     clients:
-      portainer:
-        clientSecret: "foo"
       argocd:
         clientSecret: "foo"
-      semaphore:
-        clientSecret: "foo"
-  codeserver:
-    repoUrl: https://github.com/coder/code-server
-    path: ci/helm-chart
-    host: codeserver.k3s.home
-  semaphore:
-    repoUrl: https://github.com/dokkeberg/semaphoreui-charts
-    targetRevision: bug/oidc-trailing-comma
-    host: semaphore.k3s.home
-    path: stable/semaphore
-    oidc:
-      issuer: https://keycloak.k3s.home/realms/home
   democraticcsi:
     repoUrl: https://democratic-csi.github.io/charts/
     targetRevision: 0.15.1
     username: ""
     apiKey: ""
     host: nas.home
-    iscsi:
-      targetPortal: "nas.home:3260"
+  envoyGateway:
+    repoUrl: https://github.com/envoyproxy/gateway
+    targetRevision: 1.8.1

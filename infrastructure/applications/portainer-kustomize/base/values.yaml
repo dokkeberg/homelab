@@ -1,4 +1,0 @@
-service:
-  type: LoadBalancer
-enterpriseEdition:
-  enabled: true

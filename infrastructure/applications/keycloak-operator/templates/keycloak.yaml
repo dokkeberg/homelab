@@ -18,7 +18,7 @@ spec:
   http:
     httpEnabled: true
   hostname: 
-    hostname: keycloak-v2.k3s.home
+    hostname: keycloak.talos.home
   ingress:
     enabled: false
   proxy:

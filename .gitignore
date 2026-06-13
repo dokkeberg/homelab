@@ -3,6 +3,13 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# terraform files
+*.tfstate
+*.tfstate.backup
+*.terraform/
+*.terraform*
+**/kubeconfig
+
 # dotenv files
 .env
 
