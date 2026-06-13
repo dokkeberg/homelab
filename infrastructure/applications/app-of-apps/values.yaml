@@ -39,5 +39,5 @@ spec:
     apiKey: ""
     host: nas.home
   envoyGateway:
-    repoUrl: https://github.com/envoyproxy/gateway
+    repoUrl: oci://ghcr.io/envoyproxy/gateway-helm
     targetRevision: 1.8.1
