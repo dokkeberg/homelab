@@ -33,4 +33,13 @@ spec:
         driver:
           existingConfigSecret: democratic-csi-nfs-secret
           config:
-            driver: freenas-nfs            
+            driver: freenas-nfs        
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true

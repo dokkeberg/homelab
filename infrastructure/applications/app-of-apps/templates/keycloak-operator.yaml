@@ -29,8 +29,11 @@ spec:
       recurse: false
       include: '{keycloaks.k8s.keycloak.org-v1.yml,keycloakrealmimports.k8s.keycloak.org-v1.yml,kubernetes.yml}'
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - PrunePropagationPolicy=background 
+      - PrunePropagationPolicy=background
       - ServerSideApply=true
       - RespectIgnoreDifferences=true

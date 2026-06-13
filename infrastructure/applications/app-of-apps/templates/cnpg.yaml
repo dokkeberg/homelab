@@ -17,6 +17,9 @@ spec:
     helm:
       releaseName: cnpg
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=background 

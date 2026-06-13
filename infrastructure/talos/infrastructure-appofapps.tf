@@ -3,12 +3,8 @@ resource "random_password" "argocd_oidc_client_secret" {
   special = false
 }
 
-resource "random_password" "argocd_oidc_client_secret" {
-  length  = 32
-  special = false
-}
-
 resource "kubernetes_manifest" "infrastructure_app" {
+  provider = kubernetes.bootstrap
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
