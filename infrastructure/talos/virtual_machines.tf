@@ -57,7 +57,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
     }
 
     memory {
-        dedicated = 4096
+        dedicated = 16384
     }
 
     agent {

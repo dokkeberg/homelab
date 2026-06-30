@@ -100,7 +100,10 @@ resource "kubernetes_secret_v1" "home_root_ca" {
   
   lifecycle {
     ignore_changes = [
-      data
+      metadata[0].annotations,
+      metadata[0].labels,
+      data,
+      type
     ]
   }
 }
@@ -136,8 +139,8 @@ resource "kubernetes_secret_v1" "cnpg_cluster_password" {
   }
 
   data = {
-    username = base64encode("app")
-    password = base64encode(random_password.cnpg_password.result)
+    username = "app"
+    password = random_password.cnpg_password.result
   }
 
   type = "Opaque"
@@ -154,8 +157,8 @@ resource "kubernetes_secret_v1" "keycloak_cluster_password" {
   }
 
   data = {
-    username = base64encode("app")
-    password = base64encode(random_password.cnpg_password.result)
+    username = "app"
+    password = random_password.cnpg_password.result
   }
 
   type = "Opaque"
