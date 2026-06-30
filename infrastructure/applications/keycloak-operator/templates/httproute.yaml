@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: keycloak
+  namespace: keycloak-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  parentRefs:
+    - name: homelab-gateway
+      namespace: envoy-gateway-system
+  hostnames:
+    - "{{ .Values.ingress.host }}"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: keycloak-service
+          port: 8080
