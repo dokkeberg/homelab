@@ -4,8 +4,6 @@ metadata:
   name: cnpg-cluster
   namespace: cnpg
 spec:
-  postgresUID: 3001
-  postgresGID: 3001
   instances: 1
   bootstrap:
     initdb:
@@ -20,7 +18,8 @@ spec:
     pvcTemplate:
       accessModes:
         - ReadWriteOnce
-      storageClassName: truenas-nfs-nonroot
+      storageClassName: ""
+      volumeName: cnpg-pv
       resources:
         requests:
           storage: 10Gi
