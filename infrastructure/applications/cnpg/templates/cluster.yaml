@@ -4,6 +4,8 @@ metadata:
   name: cnpg-cluster
   namespace: cnpg
 spec:
+  postgresUID: 3001
+  postgresGID: 3001
   instances: 1
   bootstrap:
     initdb:

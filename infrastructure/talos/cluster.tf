@@ -97,6 +97,12 @@ resource "kubernetes_secret_v1" "home_root_ca" {
   }
 
   type = "kubernetes.io/tls"
+  
+  lifecycle {
+    ignore_changes = [
+      data
+    ]
+  }
 }
 
 resource "random_password" "cnpg_password" {
@@ -167,7 +173,7 @@ locals {
   })
 
   democratic_csi_nfs_yaml = replace(local.democratic_csi_nfs_yaml_raw, "\r\n", "\n")
-  democratic_csi_nfs_b64 = base64encode(local.democratic_csi_nfs_yaml)
+  democratic_csi_nfs_b64 = local.democratic_csi_nfs_yaml
 }
 
 resource "kubernetes_secret_v1" "democratic_csi_nfs" {
@@ -175,7 +181,7 @@ resource "kubernetes_secret_v1" "democratic_csi_nfs" {
 
   metadata {
     name      = "democratic-csi-nfs-secret"
-    namespace = "default"
+    namespace = "democratic-csi"
   }
 
   data = {
