@@ -40,7 +40,7 @@ spec:
     host: nas.home
   envoyGateway:
     repoUrl: oci://docker.io/envoyproxy/gateway-helm
-    targetRevision: 1.8.1
+    targetRevision: 1.8.2
   gatewayApi:
     repoUrl: https://github.com/kubernetes-sigs/gateway-api.git
     targetRevision: v1.6.0
