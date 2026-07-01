@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: wildcard-talos-home
   issuerRef:
-    name: intermediate-ca-clusterissuer
+    name: home-intermediate-ca-issuer
     kind: ClusterIssuer
   dnsNames:
     - "*.talos.home"
