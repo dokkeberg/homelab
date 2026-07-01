@@ -92,8 +92,8 @@ resource "kubernetes_secret_v1" "home_root_ca" {
   }
 
   data = {
-    "tls.crt" = base64encode(var.root_ca_crt)
-    "tls.key" = base64encode(var.root_ca_key)
+    "tls.crt" = var.root_ca_crt
+    "tls.key" = var.root_ca_key
   }
 
   type = "kubernetes.io/tls"
@@ -102,7 +102,6 @@ resource "kubernetes_secret_v1" "home_root_ca" {
     ignore_changes = [
       metadata[0].annotations,
       metadata[0].labels,
-      data,
       type
     ]
   }
