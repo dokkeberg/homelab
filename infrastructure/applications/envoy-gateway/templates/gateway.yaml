@@ -16,3 +16,6 @@ spec:
           - name: wildcard-talos-home
             kind: Secret
             group: ""
+      allowedRoutes:
+        namespaces:
+          from: All
