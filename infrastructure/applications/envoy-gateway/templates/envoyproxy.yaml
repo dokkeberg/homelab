@@ -1,0 +1,15 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-default
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    type: Kubernetes
+  proxy:
+    listeners:
+      - name: https
+        port: 443
+        protocol: HTTPS
+    service:
+      type: LoadBalancer
