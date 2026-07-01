@@ -16,6 +16,7 @@ spec:
       targetRevision: {{ .Values.spec.envoyGateway.targetRevision }}
       helm:
         releaseName: envoy-gateway
+        skipCRDs: true
         values: |
           envoyGateway:
             provider:
@@ -28,3 +29,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
