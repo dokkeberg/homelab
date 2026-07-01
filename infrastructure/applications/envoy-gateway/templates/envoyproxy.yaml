@@ -6,10 +6,3 @@ metadata:
 spec:
   provider:
     type: Kubernetes
-  proxy:
-    listeners:
-      - name: https
-        port: 443
-        protocol: HTTPS
-    service:
-      type: LoadBalancer
