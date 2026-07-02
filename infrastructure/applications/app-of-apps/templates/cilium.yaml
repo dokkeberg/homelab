@@ -16,9 +16,6 @@ spec:
         l2announcements:
           enabled: true
 
-        loadBalancer:
-          mode: l2
-
         ipam:
           mode: cluster-pool
           operator:
