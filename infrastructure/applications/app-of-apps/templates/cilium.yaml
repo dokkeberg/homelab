@@ -11,7 +11,7 @@ spec:
     chart: cilium
     helm:
       values: |
-        kubeProxyReplacement: strict
+        kubeProxyReplacement: true
 
         l2announcements:
           enabled: true
