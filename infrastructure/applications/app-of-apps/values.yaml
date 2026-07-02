@@ -45,3 +45,6 @@ spec:
     repoUrl: https://github.com/kubernetes-sigs/gateway-api.git
     targetRevision: v1.6.0
     path: config/crd
+  cilium:
+    repoUrl: https://helm.cilium.io/
+    targetRevision: 1.19.5

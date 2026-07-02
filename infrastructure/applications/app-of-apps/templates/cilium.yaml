@@ -1,36 +1,67 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: cilium
-#   namespace: argocd
-# spec:
-#   project: default
-#   source:
-#     repoURL: {{ .Values.spec.cilium.repoUrl }}
-#     chart: cilium
-#     targetRevision: {{ .Values.spec.cilium.targetRevision }}
-#     helm:
-#       values: |
-#         kubeProxyReplacement: strict
-#         l2announcements:
-#           enabled: true
-#         loadBalancer:
-#           mode: l2
-#         ipam:
-#           mode: cluster-pool
-#           operator:
-#             clusterPoolIPv4PodCIDR: 10.244.0.0/16
-#             clusterPoolIPv4MaskSize: 24
-#         hubble:
-#           enabled: false
-#         hubbleRelay:
-#           enabled: false
-#         hubbleUI:
-#           enabled: false
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: kube-system
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: {{ .Values.spec.cilium.repoUrl }}
+    targetRevision: {{ .Values.spec.cilium.targetRevision }}
+    chart: cilium
+    helm:
+      values: |
+        kubeProxyReplacement: strict
+
+        l2announcements:
+          enabled: true
+
+        loadBalancer:
+          mode: l2
+
+        ipam:
+          mode: cluster-pool
+          operator:
+            clusterPoolIPv4PodCIDR: 10.244.0.0/16
+            clusterPoolIPv4MaskSize: 24
+
+        hubble:
+          enabled: false
+        hubbleRelay:
+          enabled: false
+        hubbleUI:
+          enabled: false
+
+        securityContext:
+          capabilities:
+            ciliumAgent:
+              - CHOWN
+              - KILL
+              - NET_ADMIN
+              - NET_RAW
+              - IPC_LOCK
+              - SYS_ADMIN
+              - SYS_RESOURCE
+              - DAC_OVERRIDE
+              - FOWNER
+              - SETGID
+              - SETUID
+            cleanCiliumState:
+              - NET_ADMIN
+              - SYS_ADMIN
+              - SYS_RESOURCE
+
+        cgroup:
+          autoMount:
+            enabled: false
+          hostRoot: /sys/fs/cgroup
+
+        k8sServiceHost: localhost
+        k8sServicePort: 7445
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

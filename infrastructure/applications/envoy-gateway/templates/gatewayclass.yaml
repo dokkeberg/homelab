@@ -4,7 +4,3 @@ metadata:
   name: envoy
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
-  parametersRef:
-    group: gateway.envoyproxy.io
-    kind: GatewayClassConfig
-    name: homelab-gateway-config
