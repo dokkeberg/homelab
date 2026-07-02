@@ -10,6 +10,7 @@ spec:
     keycloakPath: infrastructure/applications/keycloak-operator
     corednsPath: infrastructure/applications/coredns
     envoyGatewayPath: infrastructure/applications/envoy-gateway
+    ciliumPath: infrastructure/applications/cilium
   argoCd:
     repoUrl: https://argoproj.github.io/argo-helm
     url: https://argocd.talos.home
