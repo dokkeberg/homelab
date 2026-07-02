@@ -8,6 +8,24 @@ resource "kubernetes_namespace_v1" "argocd" {
   depends_on = [local_file.kubeconfig]
 }
 
+resource "helm_release" "cilium" {
+  provider = helm.bootstrap
+  name       = "cilium"
+  namespace  = "kube-system"
+  repository = "https://helm.cilium.io/"
+  chart      = "cilium"
+  version    = "1.19.5"
+
+  create_namespace = true
+
+  values = [
+    file("${path.module}/cilium-values.yaml")
+  ]
+
+  depends_on = [local_file.kubeconfig]
+}
+
+
 resource "helm_release" "argocd" {
   provider = helm.bootstrap
 
