@@ -4,4 +4,4 @@ metadata:
   name: homelab-pool
 spec:
   cidrs:
-    - cidr: 10.0.0.200/29
+    - cidr: 10.0.1.200/29
