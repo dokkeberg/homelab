@@ -25,6 +25,43 @@ resource "helm_release" "cilium" {
   depends_on = [local_file.kubeconfig]
 }
 
+resource "kubernetes_manifest" "cilium_lb_pool" {
+  provider = helm.bootstrap
+  manifest = {
+    apiVersion = "cilium.io/v2alpha1"
+    kind       = "CiliumLoadBalancerIPPool"
+    metadata = {
+      name = "homelab-ip-pool"
+    }
+    spec = {
+      cidrs = [
+        {
+          cidr = "10.0.1.200/29"
+        }
+      ]
+    }
+  }
+  depends_on = [local_file.kubeconfig]
+}
+
+resource "kubernetes_manifest" "cilium_l2_policy" {
+  provider = helm.bootstrap
+  manifest = {
+    apiVersion = "cilium.io/v2alpha1"
+    kind       = "CiliumL2AnnouncementPolicy"
+    metadata = {
+      name = "homelab-l2"
+    }
+    spec = {
+      loadBalancerIPs = true
+      interfaces      = ["eth0"]
+    }
+  }
+  depends_on = [local_file.kubeconfig]
+}
+
+
+
 
 resource "helm_release" "argocd" {
   provider = helm.bootstrap
