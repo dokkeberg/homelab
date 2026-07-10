@@ -9,6 +9,8 @@ spec:
   parentRefs:
     - name: homelab-gateway
       namespace: envoy-gateway-system
+      group: gateway.networking.k8s.io
+      kind: Gateway
   hostnames:
     - "{{ .Values.ingress.host }}"
   rules:
@@ -19,3 +21,6 @@ spec:
       backendRefs:
         - name: keycloak-service
           port: 8080
+          group: ""
+          kind: Service
+          weight: 1

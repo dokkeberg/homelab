@@ -21,6 +21,7 @@ spec:
         skipCRDs: true
         values: |
           crds:
+            enabled: false
             gatewayAPI:
               safeUpgradePolicy:
                 enabled: false
