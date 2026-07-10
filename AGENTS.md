@@ -18,6 +18,7 @@
 
 - Never commit secrets, `.env` files, `*.tfstate`, generated kubeconfigs, private keys, or credentials.
 - OpenTofu commands require environment variables set in the operator's terminal. Do not run OpenTofu commands unless those variables are available and the operator has approved the command.
+- After a fresh destroy, run `tofu apply -target=local_file.kubeconfig`, then `tofu apply '-target=helm_release.argocd'`, before the full `tofu apply`. Provider configuration requires the generated kubeconfig, and `kubernetes_manifest.infrastructure_app` requires Argo CD's `Application` CRD at plan time.
 - Use sensitive OpenTofu variables for bootstrap credentials and avoid printing their values.
 
 ## Validation

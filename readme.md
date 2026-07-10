@@ -22,8 +22,12 @@ Set the required OpenTofu environment variables in your terminal before running 
 ```powershell
 Set-Location infrastructure\talos
 tofu init
+tofu apply -target=local_file.kubeconfig
+tofu apply '-target=helm_release.argocd'
 tofu apply
 ```
+
+The first targeted apply creates the Talos VMs, bootstraps the cluster, and writes the generated kubeconfig. The second installs Cilium and Argo CD, including Argo CD's `Application` CRD. The full apply then creates the infrastructure app-of-apps. Kubernetes, Helm, and kubectl providers require the generated kubeconfig before they can manage cluster resources.
 
 The generated `kubeconfig`, OpenTofu state, `.env` files, and credentials are intentionally ignored by Git.
 
