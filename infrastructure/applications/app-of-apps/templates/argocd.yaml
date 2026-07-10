@@ -30,6 +30,7 @@ spec:
               issuer: {{ .Values.spec.argoCd.oidc.issuer }}
               clientID: {{ .Values.spec.argoCd.oidc.clientID }}
               clientSecret: {{ .Values.spec.keycloak.clients.argocd.clientSecret }}
+              requestedScopes: ["openid"]
           params:
             server.insecure: "true"
           rbac:
