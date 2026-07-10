@@ -1,0 +1,61 @@
+#cloud-config
+package_update: true
+packages:
+  - nftables
+  - openvpn
+  - qemu-guest-agent
+
+write_files:
+  - path: /etc/openvpn/client/expressvpn.conf
+    owner: root:root
+    permissions: "0600"
+    content: |
+      ${indent(6, expressvpn_openvpn_profile)}
+  - path: /etc/openvpn/client/expressvpn.auth
+    owner: root:root
+    permissions: "0600"
+    content: |
+      ${expressvpn_username}
+      ${expressvpn_password}
+  - path: /etc/sysctl.d/99-vpn-gateway.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      net.ipv4.ip_forward = 1
+  - path: /etc/nftables.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      flush ruleset
+
+      table inet filter {
+        chain input {
+          type filter hook input priority filter; policy accept;
+        }
+
+        chain forward {
+          type filter hook forward priority filter; policy drop;
+          ct state established,related accept
+          ip saddr { ${talos_cp_ip_address}, ${talos_worker_ip_address} } oifname "tun0" accept
+        }
+
+        chain output {
+          type filter hook output priority filter; policy accept;
+        }
+      }
+
+      table ip nat {
+        chain postrouting {
+          type nat hook postrouting priority srcnat; policy accept;
+          oifname "tun0" ip saddr { ${talos_cp_ip_address}, ${talos_worker_ip_address} } masquerade
+        }
+      }
+
+runcmd:
+  - |
+    sed -i -E '/^[[:space:]]*(auth-user-pass|redirect-gateway)([[:space:]].*)?$$/d' /etc/openvpn/client/expressvpn.conf
+    printf '%s\n' 'auth-user-pass /etc/openvpn/client/expressvpn.auth' 'redirect-gateway def1' >> /etc/openvpn/client/expressvpn.conf
+  - sysctl --system
+  - systemctl enable --now nftables
+  - systemctl enable --now qemu-guest-agent
+  - systemctl enable --now openvpn-client@expressvpn

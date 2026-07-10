@@ -33,10 +33,13 @@ resource "proxmox_virtual_environment_vm" "talos_cp" {
         ip_config {
             ipv4 {
                 address = "${var.talos_cp_ip_address}/24"
-                gateway = var.default_gateway
+                gateway = local.talos_default_gateway
             }
-            ipv6 {
-                address = "dhcp"
+            dynamic "ipv6" {
+                for_each = var.route_talos_through_vpn ? [] : [1]
+                content {
+                    address = "dhcp"
+                }
             }
         }
     }
@@ -81,10 +84,13 @@ resource "proxmox_virtual_environment_vm" "talos_worker" {
         ip_config {
             ipv4 {
                 address = "${var.talos_worker_ip_address}/24"
-                gateway = var.default_gateway
+                gateway = local.talos_default_gateway
             }
-            ipv6 {
-                address = "dhcp"
+            dynamic "ipv6" {
+                for_each = var.route_talos_through_vpn ? [] : [1]
+                content {
+                    address = "dhcp"
+                }
             }
         }
     }

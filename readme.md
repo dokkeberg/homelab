@@ -9,6 +9,7 @@ The legacy k3s and Ansible configuration remains under `infrastructure/ansible/`
 | Path | Purpose |
 | --- | --- |
 | `infrastructure/talos/` | OpenTofu for Proxmox VMs, Talos bootstrap, Cilium, bootstrap secrets, and Argo CD |
+| `infrastructure/talos/README.md` | Talos OpenTofu and optional VPN gateway operations |
 | `infrastructure/applications/app-of-apps/` | Infrastructure Argo CD app-of-apps |
 | `infrastructure/applications/` | Helm charts and manifests for infrastructure services |
 | `servarr/` | Argo CD application configuration for the Servarr/yarr stack |

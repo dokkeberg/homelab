@@ -12,6 +12,7 @@
 
 # dotenv files
 .env
+*.ovpn
 
 # User-specific files
 *.rsuser

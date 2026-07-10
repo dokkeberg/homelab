@@ -15,12 +15,12 @@ data "talos_machine_configuration" "machineconfig_cp" {
 }
 
 resource "talos_machine_configuration_apply" "cp_config_apply" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_cp ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_cp, proxmox_virtual_environment_vm.vpn_gateway]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
   count                       = 1
   node                        = var.talos_cp_ip_address
-  config_patches              = [
+  config_patches = concat([
     yamlencode({
       cluster = {
         network = {
@@ -32,8 +32,23 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
           disabled = true
         }
       }
-    })
-  ]
+    }),
+  ], var.route_talos_through_vpn ? [
+    yamlencode({
+      machine = {
+        network = {
+          interfaces = [{
+            interface = "eth0"
+            addresses = ["${var.talos_cp_ip_address}/24"]
+            routes = [{
+              network = "0.0.0.0/0"
+              gateway = local.talos_default_gateway
+            }]
+          }]
+        }
+      }
+    }),
+  ] : [])
 }
 
 data "talos_machine_configuration" "machineconfig_worker" {
@@ -45,12 +60,12 @@ data "talos_machine_configuration" "machineconfig_worker" {
 }
 
 resource "talos_machine_configuration_apply" "worker_config_apply" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_worker ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_worker, proxmox_virtual_environment_vm.vpn_gateway]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker.machine_configuration
   count                       = 1
   node                        = var.talos_worker_ip_address
-  config_patches              = [
+  config_patches = concat([
     yamlencode({
       cluster = {
         network = {
@@ -62,8 +77,23 @@ resource "talos_machine_configuration_apply" "worker_config_apply" {
           disabled = true
         }
       }
-    })
-  ]
+    }),
+  ], var.route_talos_through_vpn ? [
+    yamlencode({
+      machine = {
+        network = {
+          interfaces = [{
+            interface = "eth0"
+            addresses = ["${var.talos_worker_ip_address}/24"]
+            routes = [{
+              network = "0.0.0.0/0"
+              gateway = local.talos_default_gateway
+            }]
+          }]
+        }
+      }
+    }),
+  ] : [])
 }
 
 resource "talos_machine_bootstrap" "bootstrap" {
@@ -233,5 +263,3 @@ resource "kubernetes_secret_v1" "democratic_csi_nfs" {
 
   type = "Opaque"
 }
-
-
