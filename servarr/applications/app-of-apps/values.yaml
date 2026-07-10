@@ -26,3 +26,21 @@ spec:
     repoUrl: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
     targetRevision: 1.0.2
     host: plex.k3s.home
+enabledApplications:
+  - dlna
+  - dlna-volumes
+  - homepage
+  - overseerr
+  - overseerr-volumes
+  - plex
+  - plex-volumes
+  - prowlarr
+  - prowlarr-volumes
+  - qbittorrent
+  - qbittorrent-volumes
+  - radarr
+  - radarr-volumes
+  - sabnzbd
+  - sabnzbd-volumes
+  - sonarr
+  - sonarr-volumes

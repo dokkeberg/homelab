@@ -1,3 +1,4 @@
+{{- if has "prowlarr-volumes" .Values.enabledApplications }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -18,3 +19,4 @@ spec:
       - PrunePropagationPolicy=background 
       - ServerSideApply=true
       - RespectIgnoreDifferences=true
+{{- end }}
