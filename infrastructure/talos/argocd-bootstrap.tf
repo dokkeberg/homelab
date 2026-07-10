@@ -22,7 +22,7 @@ resource "helm_release" "cilium" {
     file("${path.module}/cilium-values.yaml")
   ]
 
-  depends_on = [kubernetes_namespace_v1.argocd, helm_release.cilium]
+  depends_on = [local_file.kubeconfig]
 }
 
 resource "kubectl_manifest" "cilium_lb_pool" {
@@ -53,5 +53,5 @@ resource "helm_release" "argocd" {
     file("${path.module}/argocd-bootstrap-values.yaml")
   ]
 
-  depends_on = [local_file.kubeconfig]
+  depends_on = [kubernetes_namespace_v1.argocd, helm_release.cilium]
 }
