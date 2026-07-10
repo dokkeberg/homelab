@@ -35,7 +35,7 @@ The generated `kubeconfig`, OpenTofu state, `.env` files, and credentials are in
 
 Cilium provides kube-proxy replacement, cluster-pool IPAM, LoadBalancer IPAM, and L2 announcements. Pod addresses use `10.244.0.0/16` to avoid overlapping the node networks.
 
-Envoy Gateway exposes HTTPS through a Cilium LoadBalancer Service. Configure the UniFi wildcard DNS record for `*.talos.home` to the Gateway LoadBalancer address, not to a Talos worker IP. The current Cilium pool is `10.0.1.200/29`; confirm the assigned Gateway address after a rebuild before updating DNS.
+Envoy Gateway exposes HTTPS through a Cilium LoadBalancer Service. Configure the UniFi wildcard DNS record for `*.talos.home` to the Gateway LoadBalancer address, not to a Talos worker IP. The Cilium pool reserves `192.168.1.224/32` for the Gateway; reserve that address outside the UniFi DHCP pool.
 
 Gateway API CRDs are managed by the `gateway-api-crds` Argo CD application. Envoy Gateway manages only its own CRDs and controller resources.
 
