@@ -18,7 +18,7 @@ spec:
       targetRevision: {{ .Values.spec.envoyGateway.targetRevision }}
       helm:
         releaseName: envoy-gateway
-        skipCRDs: true
+        skipCrds: true
         values: |
           crds:
             enabled: false
