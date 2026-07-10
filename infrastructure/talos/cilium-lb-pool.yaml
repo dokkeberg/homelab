@@ -1,0 +1,7 @@
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: homelab-ip-pool
+spec:
+  blocks:
+    - cidr: "10.0.1.200/29"

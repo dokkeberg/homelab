@@ -72,16 +72,16 @@ resource "talos_machine_bootstrap" "bootstrap" {
   node                 = var.talos_cp_ip_address
 }
 
-data "talos_cluster_health" "health" {
-  depends_on           = [ talos_machine_configuration_apply.cp_config_apply, talos_machine_configuration_apply.worker_config_apply ]
-  client_configuration = data.talos_client_configuration.talosconfig.client_configuration
-  control_plane_nodes  = [ var.talos_cp_ip_address ]
-  worker_nodes         = [ var.talos_worker_ip_address ]
-  endpoints            = data.talos_client_configuration.talosconfig.endpoints
-}
+  # data "talos_cluster_health" "health" {
+  #   depends_on           = [ talos_machine_configuration_apply.cp_config_apply, talos_machine_configuration_apply.worker_config_apply ]
+  #   client_configuration = data.talos_client_configuration.talosconfig.client_configuration
+  #   control_plane_nodes  = [ var.talos_cp_ip_address ]
+  #   worker_nodes         = [ var.talos_worker_ip_address ]
+  #   endpoints            = data.talos_client_configuration.talosconfig.endpoints
+  # }
 
-data "talos_cluster_kubeconfig" "kubeconfig" {
-  depends_on           = [ talos_machine_bootstrap.bootstrap, data.talos_cluster_health.health ]
+resource "talos_cluster_kubeconfig" "kubeconfig" {
+  depends_on           = [ talos_machine_bootstrap.bootstrap ]
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = var.talos_cp_ip_address
 }
@@ -92,13 +92,13 @@ output "talosconfig" {
 }
 
 output "kubeconfig" {
-  value     = data.talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+  value     = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
   sensitive = true
 }
 
 resource "local_file" "kubeconfig" {
-  depends_on = [data.talos_cluster_kubeconfig.kubeconfig]
-  content    = data.talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+  depends_on = [talos_cluster_kubeconfig.kubeconfig]
+  content    = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
   filename   = "${path.module}/kubeconfig"
 }
 
@@ -108,11 +108,13 @@ resource "kubernetes_namespace_v1" "cert_manager" {
   metadata {
     name = "cert-manager"
   }
+
+  depends_on = [helm_release.cilium]
 }
 
 resource "kubernetes_secret_v1" "home_root_ca" {
   provider = kubernetes.bootstrap
-  depends_on = [local_file.kubeconfig]
+  depends_on = [kubernetes_namespace_v1.cert_manager]
 
   metadata {
     name      = "home-root-ca-secret"
@@ -146,6 +148,8 @@ resource "kubernetes_namespace_v1" "cnpg" {
   metadata {
     name = "cnpg"
   }
+
+  depends_on = [helm_release.cilium]
 }
 
 resource "kubernetes_namespace_v1" "keycloak_operator" {
@@ -154,6 +158,8 @@ resource "kubernetes_namespace_v1" "keycloak_operator" {
   metadata {
     name = "keycloak-operator"
   }
+
+  depends_on = [helm_release.cilium]
 }
 
 resource "kubernetes_secret_v1" "cnpg_cluster_password" {
@@ -209,6 +215,8 @@ locals {
 resource "kubernetes_secret_v1" "democratic_csi_nfs" {
   provider = kubernetes.bootstrap
 
+  depends_on = [kubernetes_namespace_v1.democratic_csi]
+
   metadata {
     name      = "democratic-csi-nfs-secret"
     namespace = "democratic-csi"
@@ -220,9 +228,6 @@ resource "kubernetes_secret_v1" "democratic_csi_nfs" {
 
   type = "Opaque"
 }
-
-
-
 
 
 

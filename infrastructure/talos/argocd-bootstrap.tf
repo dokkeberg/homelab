@@ -5,7 +5,7 @@ resource "kubernetes_namespace_v1" "argocd" {
     name = "argocd"
   }
 
-  depends_on = [local_file.kubeconfig]
+  depends_on = [helm_release.cilium]
 }
 
 resource "helm_release" "cilium" {
@@ -22,42 +22,19 @@ resource "helm_release" "cilium" {
     file("${path.module}/cilium-values.yaml")
   ]
 
-  depends_on = [local_file.kubeconfig]
+  depends_on = [kubernetes_namespace_v1.argocd, helm_release.cilium]
 }
 
-resource "kubernetes_manifest" "cilium_lb_pool" {
-  provider = helm.bootstrap
-  manifest = {
-    apiVersion = "cilium.io/v2alpha1"
-    kind       = "CiliumLoadBalancerIPPool"
-    metadata = {
-      name = "homelab-ip-pool"
-    }
-    spec = {
-      cidrs = [
-        {
-          cidr = "10.0.1.200/29"
-        }
-      ]
-    }
-  }
-  depends_on = [local_file.kubeconfig]
+resource "kubectl_manifest" "cilium_lb_pool" {
+  provider = kubectl.bootstrap
+  yaml_body = file("${path.module}/cilium-lb-pool.yaml")
+  depends_on = [helm_release.cilium]
 }
 
-resource "kubernetes_manifest" "cilium_l2_policy" {
-  provider = helm.bootstrap
-  manifest = {
-    apiVersion = "cilium.io/v2alpha1"
-    kind       = "CiliumL2AnnouncementPolicy"
-    metadata = {
-      name = "homelab-l2"
-    }
-    spec = {
-      loadBalancerIPs = true
-      interfaces      = ["eth0"]
-    }
-  }
-  depends_on = [local_file.kubeconfig]
+resource "kubectl_manifest" "cilium_l2_policy" {
+  provider = kubectl.bootstrap
+  yaml_body = file("${path.module}/cilium-l2-policy.yaml")
+  depends_on = [helm_release.cilium]
 }
 
 

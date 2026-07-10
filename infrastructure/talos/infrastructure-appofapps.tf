@@ -14,6 +14,8 @@ resource "kubernetes_namespace_v1" "democratic_csi" {
       "pod-security.kubernetes.io/warn"    = "privileged"
     }
   }
+
+  depends_on = [helm_release.cilium]
 }
 
 resource "kubernetes_manifest" "infrastructure_app" {
@@ -24,6 +26,9 @@ resource "kubernetes_manifest" "infrastructure_app" {
     metadata = {
       name      = "infrastructure"
       namespace = "argocd"
+      finalizers = [
+        "resources-finalizer.argocd.argoproj.io"
+      ]
     }
     spec = {
       project = "default"
@@ -43,6 +48,18 @@ resource "kubernetes_manifest" "infrastructure_app" {
             }
           ]
         }
+
+        depends_on = [
+          helm_release.argocd,
+          kubernetes_namespace_v1.cert_manager,
+          kubernetes_namespace_v1.cnpg,
+          kubernetes_namespace_v1.democratic_csi,
+          kubernetes_namespace_v1.keycloak_operator,
+          kubernetes_secret_v1.home_root_ca,
+          kubernetes_secret_v1.cnpg_cluster_password,
+          kubernetes_secret_v1.keycloak_cluster_password,
+          kubernetes_secret_v1.democratic_csi_nfs,
+        ]
       }
       syncPolicy = {
         automated = {

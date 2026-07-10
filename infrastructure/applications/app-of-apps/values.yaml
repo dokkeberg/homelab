@@ -42,6 +42,9 @@ spec:
   envoyGateway:
     repoUrl: oci://docker.io/envoyproxy/gateway-helm
     targetRevision: 1.8.2
+  envoyGatewayCrds:
+    repoUrl: oci://docker.io/envoyproxy/gateway-crds-helm
+    targetRevision: 1.8.2
   gatewayApi:
     repoUrl: https://github.com/kubernetes-sigs/gateway-api.git
     targetRevision: v1.6.0

@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: envoy-gateway
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "4"
 spec:
@@ -18,9 +20,14 @@ spec:
         releaseName: envoy-gateway
         skipCRDs: true
         values: |
-          envoyGateway:
-            provider:
-              type: Kubernetes
+          crds:
+            gatewayAPI:
+              safeUpgradePolicy:
+                enabled: false
+          config:
+            envoyGateway:
+              provider:
+                type: Kubernetes
     - repoURL: {{ .Values.spec.source.repoURL }}
       path: {{ .Values.spec.source.envoyGatewayPath }}
   syncPolicy:

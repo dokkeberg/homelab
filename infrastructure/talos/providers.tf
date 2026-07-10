@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "3.2.0"
     }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.19.0"
+    }
   }
 }
 
@@ -30,4 +34,9 @@ provider "helm" {
   kubernetes = {
     config_path = "${path.module}/kubeconfig"
   }
+}
+
+provider "kubectl" {
+  alias       = "bootstrap"
+  config_path = local_file.kubeconfig.filename
 }

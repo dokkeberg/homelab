@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: gateway-api-crds
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
@@ -10,10 +12,20 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: envoy-gateway-system
-  source:
-    repoURL: {{ .Values.spec.gatewayApi.repoUrl }}
-    path: {{ .Values.spec.gatewayApi.path }}
-    targetRevision: {{ .Values.spec.gatewayApi.targetRevision }}
+  sources:
+    - repoURL: {{ .Values.spec.gatewayApi.repoUrl }}
+      path: {{ .Values.spec.gatewayApi.path }}
+      targetRevision: {{ .Values.spec.gatewayApi.targetRevision }}
+    - repoURL: {{ .Values.spec.envoyGatewayCrds.repoUrl }}
+      chart: gateway-crds-helm
+      targetRevision: {{ .Values.spec.envoyGatewayCrds.targetRevision }}
+      helm:
+        values: |
+          crds:
+            gatewayAPI:
+              enabled: false
+            envoyGateway:
+              enabled: true
   syncPolicy:
     automated:
       prune: true

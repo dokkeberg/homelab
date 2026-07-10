@@ -1,69 +1,51 @@
-## Homelab
-This will publish a ready to go homelab setup using cloud init images on a proxmox host. The following applications and features will be installed and ready to use on your *.k3s.home local domain:
-* ArgoCD
-* Cert-manager
-* Portainer
-* SemaphoreUI 
-* Keycloak
+# Homelab
 
-Using traefik and cert-manager, we get https ingress, with automatically self signed certificates using a self signed root CA. 
+This repository defines a Kubernetes homelab running on Talos Linux VMs in Proxmox. OpenTofu bootstraps the cluster and its foundational services; Argo CD continuously reconciles the remaining application manifests from Git.
 
-To be added later:
-* OIDC on all services using keycloak
-* SemaphoreUI preconfigured
+The legacy k3s and Ansible configuration remains under `infrastructure/ansible/` during the migration. New infrastructure work belongs in the Talos and Argo CD configuration.
 
-### proxmox
-A computer with proxmox installed is required. Do the following to deploy:
-* apt install git 
-* apt install ansible
-* Clone this repo
-* Run ansible playbook to create a ubuntu-server cloudinit VM template, and create a VM with k3s installed, and argo/portainer/cert-manager/keycloak/semaphoreui stack deployed
-  ```
-  ansible-playbook -i inventory.ini playbooks/ubuntu-server-cloudinit.yaml --extra-vars "VMID_instance=101"
-  ```
+## Layout
 
-### Router
-Add local DNS entries
-* *.k3s.home (192.168.1.100, or the configured IP of the VM)
+| Path | Purpose |
+| --- | --- |
+| `infrastructure/talos/` | OpenTofu for Proxmox VMs, Talos bootstrap, Cilium, bootstrap secrets, and Argo CD |
+| `infrastructure/applications/app-of-apps/` | Infrastructure Argo CD app-of-apps |
+| `infrastructure/applications/` | Helm charts and manifests for infrastructure services |
+| `servarr/` | Argo CD application configuration for the Servarr/yarr stack |
 
-### ArgoCD
+## Bootstrap
 
-> [!NOTE]  
-> Using traefik ingress requires argocd to be run in insecure mode. This should be safe as traefik terminates https.
+OpenTofu creates the Talos control plane and worker, then installs Cilium, its LoadBalancer IP pool and L2 policy, and Argo CD. The `infrastructure` Argo CD application subsequently reconciles the infrastructure app-of-apps.
 
-* Verify that the following webpages are reachable from your network
-  * https://argocd.k3s.home/
-  * https://portainer.k3s.home/
-* Download the CA cert from your browser, and install in Trusted Root Authorities to get trusted access to all hosted services on *.k3s.home
+Set the required OpenTofu environment variables in your terminal before running commands:
 
-### Portainer
-> [!NOTE]
-> The business edition (BE) is free for the first 3 nodes. Sign up here: https://www.portainer.io/take-3
-
-### Keycloak
-* Get adminuser password
-  ```
-  kubectl get secret keycloak -n keycloak -o jsonpath="{.data.admin-password}" | base64 --decode
-  ```
-* Change the following parameter in the infrastructure chart to the adminpw. This will allow the keyvault cli to create the initial realm and user
-  ```
-  spec.keycloak.adminPassword
-  ```
-* Login with user:\<adminpw\>
-* Create a new permanent adminuser as soon as possible, and delete the "user" user
-* Login to the home realm with your new user https://keycloak.k3s.home/realms/home/account and change from initialpassword
-
-
-## Nice to have commands
-
-Patch PersistentVolume to be able to be reclaimed
-```
-kubectl patch pv plex-movies-pv -p '{"spec":{"claimRef": null}}'
+```powershell
+Set-Location infrastructure\talos
+tofu init
+tofu apply
 ```
 
-Run commands inside container
+The generated `kubeconfig`, OpenTofu state, `.env` files, and credentials are intentionally ignored by Git.
+
+## Networking and DNS
+
+Cilium provides kube-proxy replacement, cluster-pool IPAM, LoadBalancer IPAM, and L2 announcements. Pod addresses use `10.244.0.0/16` to avoid overlapping the node networks.
+
+Envoy Gateway exposes HTTPS through a Cilium LoadBalancer Service. Configure the UniFi wildcard DNS record for `*.talos.home` to the Gateway LoadBalancer address, not to a Talos worker IP. The current Cilium pool is `10.0.1.200/29`; confirm the assigned Gateway address after a rebuild before updating DNS.
+
+Gateway API CRDs are managed by the `gateway-api-crds` Argo CD application. Envoy Gateway manages only its own CRDs and controller resources.
+
+## Teardown
+
+Destroy the cluster from the same terminal that has the required OpenTofu environment variables:
+
+```powershell
+Set-Location infrastructure\talos
+tofu destroy
 ```
-kubectl exec -n plex -it pod/plex-media-server-0 -- /bin/sh
-# or if it's a Debian/Ubuntu-based image
-kubectl exec -n plex -it pod/plex-media-server-0 -- bash
-```
+
+The dependency graph removes Argo CD applications and their managed workloads before namespaces and Cilium. Do not remove Cilium directly while application controllers or namespace finalizers remain.
+
+## Access
+
+Until Gateway routing is available, access Argo CD through a port forward and `argocd login`. Once Envoy Gateway is healthy, use `https://argocd.talos.home`.
