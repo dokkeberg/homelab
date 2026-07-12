@@ -1,5 +1,7 @@
 enabledApplications:
   - plex
   - plex-volumes
+  - prowlarr
+  - prowlarr-volumes
   - qbittorrent
   - qbittorrent-volumes
