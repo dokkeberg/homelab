@@ -26,8 +26,7 @@ spec:
     targetRevision: 1.0.2
     host: plex.k3s.home
   seerr:
-    repoUrl: oci://ghcr.io/seerr-team/seerr
-    chart: seerr-chart
+    repoUrl: oci://ghcr.io/seerr-team/seerr/seerr-chart
     targetRevision: 3.7.0
     host: seerr.talos.home
 enabledApplications:
