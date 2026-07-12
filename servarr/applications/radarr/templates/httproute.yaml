@@ -16,6 +16,9 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      timeouts:
+        request: "180s"
+        backendRequest: "170s"
       backendRefs:
         - name: radarr
           port: 7878
