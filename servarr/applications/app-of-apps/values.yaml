@@ -16,6 +16,7 @@ spec:
     prowlarrPath: servarr/applications/prowlarr
     prowlarrVolumesPath: servarr/applications/prowlarr-volumes
     homepagePath: servarr/applications/homepage
+    recyclarrPath: servarr/applications/recyclarr
     seerrVolumesPath: servarr/applications/seerr-volumes
     qbittorrentPath: servarr/applications/qbittorrent
     qbittorrentVolumesPath: servarr/applications/qbittorrent-volumes
@@ -36,6 +37,7 @@ enabledApplications:
   - homepage
   - seerr
   - seerr-volumes
+  - recyclarr
   - plex
   - plex-volumes
   - prowlarr

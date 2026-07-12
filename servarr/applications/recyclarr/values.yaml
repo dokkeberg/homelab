@@ -1,0 +1,6 @@
+recyclarr:
+  image: ghcr.io/recyclarr/recyclarr:latest
+  schedule: "0 */6 * * *"
+  secretName: recyclarr-keys
+  sonarrUrl: http://sonarr.sonarr.svc.cluster.local:8989
+  radarrUrl: http://radarr.radarr.svc.cluster.local:7878

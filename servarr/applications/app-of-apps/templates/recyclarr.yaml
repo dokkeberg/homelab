@@ -1,0 +1,26 @@
+{{- if has "recyclarr" .Values.enabledApplications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: recyclarr
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "13"
+spec:
+  project: default
+  destination:
+    namespace: recyclarr
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: {{ .Values.spec.source.repoUrl }}
+    path: {{ .Values.spec.source.recyclarrPath }}
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
+{{- end }}

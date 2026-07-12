@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: recyclarr-config
+  namespace: recyclarr
+data:
+  recyclarr.yml: |
+    sonarr:
+      web-2160p-v4:
+        base_url: {{ .Values.recyclarr.sonarrUrl | quote }}
+        api_key: !env_var SONARR_API_KEY
+        include:
+          - template: sonarr-quality-definition-series
+          - template: sonarr-v4-quality-profile-web-2160p
+          - template: sonarr-v4-custom-formats-web-2160p
+        custom_formats:
+          - trash_ids:
+              - 9b27ab6498ec0f31a3353992e19434ca # DV (w/o HDR fallback)
+            assign_scores_to:
+              - name: WEB-2160p
+          - trash_ids:
+              - 2016d1676f5ee13a5b7257ff86ac9a93 # SDR
+            assign_scores_to:
+              - name: WEB-2160p
+
+    radarr:
+      remux-web-2160p:
+        base_url: {{ .Values.recyclarr.radarrUrl | quote }}
+        api_key: !env_var RADARR_API_KEY
+        include:
+          - template: radarr-quality-definition-movie
+          - template: radarr-quality-profile-remux-web-2160p
+          - template: radarr-custom-formats-remux-web-2160p
+        custom_formats:
+          - trash_ids:
+              - 496f355514737f7d83bf7aa4d24f8169 # TrueHD Atmos
+              - 2f22d89048b01681dde8afe203bf2e95 # DTS X
+              - 1af239278386be2919e1bcee0bde047e # DD+ ATMOS
+            assign_scores_to:
+              - name: Remux + WEB 2160p
+          - trash_ids:
+              - 923b6abef9b17f937fab56cfcf89e1f1 # DV (w/o HDR fallback)
+            assign_scores_to:
+              - name: Remux + WEB 2160p
+          - trash_ids:
+              - 9c38ebb7384dada637be8899efa68e6f # SDR
+            assign_scores_to:
+              - name: Remux + WEB 2160p
