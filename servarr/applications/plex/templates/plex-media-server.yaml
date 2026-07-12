@@ -21,7 +21,7 @@ spec:
         - name: plex-media-server-pms
           env:
             - name: ADVERTISE_IP
-              value: https://{{ .Values.plex.host }}:443,http://192.168.1.100:32400
+              value: https://{{ .Values.plex.host }}:443,http://192.168.1.223:32400
             - name: PUID
               value: "1000"
             - name: PGID
