@@ -107,6 +107,29 @@ Most Servarr apps require first-run configuration in the app UI after deployment
 5. Disable SSL for this SAB Download Client entry.
 6. Set SAB API key.
 
+### Seerr
+
+1. Complete initial Seerr onboarding in `https://seerr.talos.home`.
+2. In Seerr settings, add **Sonarr** integration with:
+   - URL/Host: `sonarr.sonarr.svc.cluster.local`
+   - Sonarr API key
+3. In Seerr settings, add **Radarr** integration with:
+   - URL/Host: `radarr.radarr.svc.cluster.local`
+   - Radarr API key
+4. Configure Seerr defaults to use Sonarr for TV requests and Radarr for movie requests.
+
+### Recyclarr (manual sync app)
+
+1. `recyclarr` is intentionally configured as an Argo CD app with **manual sync**.
+2. Get Sonarr API key: `kubectl -n sonarr exec statefulset/sonarr -- sh -c "sed -n '/<ApiKey>/{s:.*<ApiKey>\\(.*\\)<\\/ApiKey>.*:\\1:;p;q}' /config/config.xml"`
+3. Get Radarr API key: `kubectl -n radarr exec statefulset/radarr -- sh -c "sed -n '/<ApiKey>/{s:.*<ApiKey>\\(.*\\)<\\/ApiKey>.*:\\1:;p;q}' /config/config.xml"`
+4. Delete old secret: `kubectl delete secret recyclarr-keys --namespace=recyclarr --ignore-not-found=true`
+5. Create new secret: `kubectl create secret generic recyclarr-keys --namespace=recyclarr --from-literal=SONARR_API_KEY='<sonarr-api-key>' --from-literal=RADARR_API_KEY='<radarr-api-key>'`
+6. In Argo CD, sync `recyclarr` manually after the secret exists.
+7. Recyclarr then syncs TRaSH-based quality/custom formats on schedule:
+   - Sonarr profile: `WEB-2160p`
+   - Radarr profile: `Remux + WEB 2160p` (with Atmos/DTS:X priorities)
+
 ### Plex
 
 1. Generate a temporary claim token from `https://www.plex.tv/claim`.
