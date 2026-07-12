@@ -15,6 +15,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
   sources:
   - repoURL: {{ .Values.spec.seerr.repoUrl }}
+    chart: {{ .Values.spec.seerr.chart }}
     targetRevision: {{ .Values.spec.seerr.targetRevision }}
     helm:
       values: |
