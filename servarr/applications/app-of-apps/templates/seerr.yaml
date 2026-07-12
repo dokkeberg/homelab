@@ -14,9 +14,9 @@ spec:
     namespace: seerr
     server: {{ .Values.spec.destination.server }}
   sources:
-  - repoURL: {{ .Values.seerr.repoUrl }}
-    chart: {{ .Values.seerr.chart }}
-    targetRevision: {{ .Values.seerr.targetRevision }}
+  - repoURL: {{ .Values.spec.seerr.repoUrl }}
+    chart: {{ .Values.spec.seerr.chart }}
+    targetRevision: {{ .Values.spec.seerr.targetRevision }}
     helm:
       values: |
         ingress:
@@ -33,7 +33,7 @@ spec:
                 group: gateway.networking.k8s.io
                 kind: Gateway
             hostnames:
-              - {{ .Values.seerr.host | quote }}
+              - {{ .Values.spec.seerr.host | quote }}
 
   syncPolicy:
     automated:
