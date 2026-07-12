@@ -17,30 +17,9 @@ spec:
         app.kubernetes.io/name: sonarr
         
     spec:
-      initContainers:
-        - name: format-data
-          image: ubuntu
-          securityContext:
-            privileged: true
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              apt update && apt install -y e2fsprogs && \
-              if ! blkid /dev/sonarr-data; then \
-                echo "Formatting /dev/sonarr-data"; \
-                mkfs.ext4 /dev/sonarr-data; \
-              else \
-                echo "/dev/sonarr-data already formatted"; \
-              fi
-          volumeDevices:
-            - name: sonarr-device
-              devicePath: /dev/sonarr-data
-
       containers:
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:latest
-          securityContext:
-            privileged: true    # or at least allow mount capability
           env:
             - name: PUID
               value: "1000"
@@ -48,23 +27,15 @@ spec:
               value: "1000"
             - name: TZ
               value: "Europe/Oslo"
-          volumeDevices:
-            - name: sonarr-device
-              devicePath: /dev/sonarr-data
           volumeMounts:
+            - mountPath: /config
+              name: sonarr-config
             - mountPath: /tv
               name: sonarr-tv
             - mountPath: /downloads
               name: sonarr-downloads
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              mkdir -p /config && \
-              mount /dev/sonarr-data /config && \
-              chown -R 1000:1000 /config && \
-              exec /init
       volumes:
-        - name: sonarr-device
+        - name: sonarr-config
           persistentVolumeClaim:
             claimName: data-pvc
         - name: sonarr-tv

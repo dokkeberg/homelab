@@ -5,5 +5,9 @@ enabledApplications:
   - prowlarr-volumes
   - qbittorrent
   - qbittorrent-volumes
+  - radarr
+  - radarr-volumes
   - sabnzbd
   - sabnzbd-volumes
+  - sonarr
+  - sonarr-volumes
