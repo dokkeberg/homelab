@@ -1,0 +1,47 @@
+{{- if has "seerr" .Values.enabledApplications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: seerr
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "12"
+spec:
+  project: default
+  destination:
+    namespace: seerr
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: {{ .Values.seerr.repoUrl }}
+    chart: {{ .Values.seerr.chart }}
+    targetRevision: {{ .Values.seerr.targetRevision }}
+    helm:
+      values: |
+        ingress:
+          enabled: false
+        config:
+          persistence:
+            existingClaim: data-pvc
+        route:
+          main:
+            enabled: true
+            parentRefs:
+              - name: homelab-gateway
+                namespace: envoy-gateway-system
+                group: gateway.networking.k8s.io
+                kind: Gateway
+            hostnames:
+              - {{ .Values.seerr.host | quote }}
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background 
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
+{{- end }}

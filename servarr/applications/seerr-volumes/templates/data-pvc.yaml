@@ -4,9 +4,9 @@ metadata:
   name: data-pvc
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: truenas-iscsi-nonroot
-  volumeMode: Block
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: seerr-data-pv
   resources:
     requests:
       storage: 25Gi

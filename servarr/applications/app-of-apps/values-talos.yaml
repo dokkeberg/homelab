@@ -9,5 +9,7 @@ enabledApplications:
   - radarr-volumes
   - sabnzbd
   - sabnzbd-volumes
+  - seerr
+  - seerr-volumes
   - sonarr
   - sonarr-volumes

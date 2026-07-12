@@ -22,6 +22,10 @@ spec:
           env:
             - name: ADVERTISE_IP
               value: https://{{ .Values.plex.host }}:443,http://192.168.1.223:32400
+            {{- if .Values.plex.claim }}
+            - name: PLEX_CLAIM
+              value: {{ .Values.plex.claim | quote }}
+            {{- end }}
             - name: PUID
               value: "1000"
             - name: PGID
