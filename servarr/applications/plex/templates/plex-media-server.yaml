@@ -17,53 +17,25 @@ spec:
         app.kubernetes.io/name: plex-media-server
         
     spec:
-      initContainers:
-        - name: format-data
-          image: ubuntu
-          securityContext:
-            privileged: true
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              apt update && apt install -y e2fsprogs && \
-              if ! blkid /dev/plex-data; then \
-                echo "Formatting /dev/plex-data"; \
-                mkfs.ext4 /dev/plex-data; \
-              else \
-                echo "/dev/plex-data already formatted"; \
-              fi
-          volumeDevices:
-            - name: plex-device
-              devicePath: /dev/plex-data
       containers:    
-        - command: ["/bin/sh", "-c"]
-          args:
-            - |
-              mkdir -p /config && \
-              mount /dev/plex-data /config && \
-              chown -R 1000:1000 /config && \
-              exec /init
+        - name: plex-media-server-pms
           env:
             - name: ADVERTISE_IP
-              value: https://{{ .Values.plex.host }}:443,http://k3s.home:32400,http://192.168.1.100:32400
+              value: https://{{ .Values.plex.host }}:443,http://192.168.1.100:32400
             - name: PUID
               value: "1000"
             - name: PGID
               value: "1000"
             - name: TZ
               value: "Europe/Oslo"
-          image: index.docker.io/plexinc/pms-docker:1.41.6.9685-d301f511a
+          image: index.docker.io/plexinc/pms-docker:1.43.2.10687-563d026ea
           imagePullPolicy: IfNotPresent
-          name: plex-media-server-pms
-          securityContext:
-            privileged: true
           ports:
             - containerPort: 32400
               name: pms
-          volumeDevices:
-            - name: plex-device
-              devicePath: /dev/plex-data
           volumeMounts:
+            - mountPath: /config
+              name: plex-config
             - mountPath: /transcode
               name: pms-transcode
             - mountPath: /data/tv
@@ -75,7 +47,7 @@ spec:
       serviceAccountName: plex-media-server
       terminationGracePeriodSeconds: 120
       volumes:
-        - name: plex-device
+        - name: plex-config
           persistentVolumeClaim:
             claimName: config-pvc
         - name: pms-transcode

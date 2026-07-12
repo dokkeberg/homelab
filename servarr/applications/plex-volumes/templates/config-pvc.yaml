@@ -4,9 +4,9 @@ metadata:
   name: config-pvc
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: truenas-iscsi-nonroot
-  volumeMode: Block
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: plex-config-pv
   resources:
     requests:
       storage: 100Gi

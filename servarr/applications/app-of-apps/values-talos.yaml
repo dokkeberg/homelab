@@ -1,3 +1,5 @@
 enabledApplications:
+  - plex
+  - plex-volumes
   - qbittorrent
   - qbittorrent-volumes
