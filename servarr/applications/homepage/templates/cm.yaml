@@ -14,7 +14,10 @@ data:
     - Developer:
         - Github:
             - abbr: GH
-              href: https://github.com/
+              href: https://github.com/dokkeberg
+        - Homelab Repo:
+            - abbr: HL
+              href: https://github.com/dokkeberg/homelab
     - Usenet:
         - NZBFinder:
             - abbr: NZB
