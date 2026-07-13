@@ -20,7 +20,8 @@ homepage:
       key: "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}"
       host: https://prowlarr.talos.home
     qbittorrent:
-      key: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
+      username: "admin"
+      password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
       host: https://qbittorrent.talos.home
     seerr:
       key: "{{HOMEPAGE_VAR_SEERR_API_KEY}}"

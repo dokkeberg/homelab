@@ -78,7 +78,8 @@ data:
             widget:
               type: qbittorrent
               url: {{ .Values.homepage.services.qbittorrent.host }}
-              key: {{ .Values.homepage.services.qbittorrent.key }}
+              username: {{ .Values.homepage.services.qbittorrent.username }}
+              password: {{ .Values.homepage.services.qbittorrent.password }}
         - Prowlarr:
             icon: prowlarr.png
             href: {{ .Values.homepage.services.prowlarr.host }}

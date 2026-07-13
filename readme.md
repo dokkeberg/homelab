@@ -184,5 +184,6 @@ Get Plex token (for `HOMEPAGE_VAR_PLEX_TOKEN`):
      --from-literal=HOMEPAGE_VAR_ARGOCD_TOKEN='<argocd-token>' `
      --dry-run=client -o yaml | kubectl apply -f -
    ```
+   qBittorrent widget uses username `admin` (hardcoded in values) and reads only `HOMEPAGE_VAR_QBITTORRENT_PASSWORD` from this Secret.
 2. Sync/restart the `homepage` app after updating Secret values.
 3. `kubectl create secret generic` reference: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret_generic/
