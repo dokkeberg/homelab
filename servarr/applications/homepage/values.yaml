@@ -1,29 +1,30 @@
 nas:
   host: nas.home
 homepage:
+  apiKeysSecretName: homepage-api-keys
   host: homepage.talos.home
   services:
     radarr:
-      key: ""
+      key: "{{HOMEPAGE_VAR_RADARR_API_KEY}}"
       host: https://radarr.talos.home
     sonarr:
-      key: ""
+      key: "{{HOMEPAGE_VAR_SONARR_API_KEY}}"
       host: https://sonarr.talos.home
     sabnzbd:
-      key: ""
+      key: "{{HOMEPAGE_VAR_SABNZBD_API_KEY}}"
       host: https://sabnzbd.talos.home
     argocd:
-      key: ""
+      key: "{{HOMEPAGE_VAR_ARGOCD_TOKEN}}"
       host: https://argocd.talos.home
     prowlarr:
-      key: ""
+      key: "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}"
       host: https://prowlarr.talos.home
     qbittorrent:
-      key: ""
+      key: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
       host: https://qbittorrent.talos.home
     seerr:
-      key: ""
+      key: "{{HOMEPAGE_VAR_SEERR_API_KEY}}"
       host: https://seerr.talos.home
     plex:
-      key: ""
+      key: "{{HOMEPAGE_VAR_PLEX_TOKEN}}"
       host: https://plex.talos.home

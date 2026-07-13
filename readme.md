@@ -142,3 +142,23 @@ Most Servarr apps require first-run configuration in the app UI after deployment
 1. Complete first login and set permanent WebUI credentials.
 2. Verify category/save paths for `/downloads`, `/downloads-incomplete`, and `/seed`.
 3. Use `https://qbittorrent.talos.home`.
+
+### Homepage API keys (manual Secret)
+
+Homepage now reads widget credentials from a Kubernetes Secret named `homepage-api-keys` in namespace `homepage`.
+
+1. Create or update the Secret manually:
+   ```powershell
+   kubectl -n homepage create secret generic homepage-api-keys `
+     --from-literal=HOMEPAGE_VAR_RADARR_API_KEY='<radarr-api-key>' `
+     --from-literal=HOMEPAGE_VAR_SONARR_API_KEY='<sonarr-api-key>' `
+     --from-literal=HOMEPAGE_VAR_SABNZBD_API_KEY='<sabnzbd-api-key>' `
+     --from-literal=HOMEPAGE_VAR_PROWLARR_API_KEY='<prowlarr-api-key>' `
+     --from-literal=HOMEPAGE_VAR_SEERR_API_KEY='<seerr-api-key>' `
+     --from-literal=HOMEPAGE_VAR_PLEX_TOKEN='<plex-token>' `
+     --from-literal=HOMEPAGE_VAR_QBITTORRENT_PASSWORD='<qbittorrent-webui-password>' `
+     --from-literal=HOMEPAGE_VAR_ARGOCD_TOKEN='<argocd-token>' `
+     --dry-run=client -o yaml | kubectl apply -f -
+   ```
+2. Sync/restart the `homepage` app after updating Secret values.
+3. `kubectl create secret generic` reference: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret_generic/
