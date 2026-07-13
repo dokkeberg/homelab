@@ -69,6 +69,16 @@ data:
               type: sabnzbd
               url: {{ .Values.homepage.services.sabnzbd.host }}
               key: {{ .Values.homepage.services.sabnzbd.key }}
+        - qBittorrent:
+            icon: qbittorrent.png
+            href: {{ .Values.homepage.services.qbittorrent.host }}
+            description: Torrent downloader
+            namespace: qbittorrent
+            app: qbittorrent
+            widget:
+              type: qbittorrent
+              url: {{ .Values.homepage.services.qbittorrent.host }}
+              key: {{ .Values.homepage.services.qbittorrent.key }}
         - Prowlarr:
             icon: prowlarr.png
             href: {{ .Values.homepage.services.prowlarr.host }}
@@ -79,6 +89,13 @@ data:
               type: prowlarr
               url: {{ .Values.homepage.services.prowlarr.host }}
               key: {{ .Values.homepage.services.prowlarr.key }}
+    - Requests:
+        - Seerr:
+            icon: overseerr.png
+            href: {{ .Values.homepage.services.seerr.host }}
+            description: Request management
+            namespace: seerr
+            app: seerr-seerr-chart
   widgets.yaml: |
     - kubernetes:
         cluster:

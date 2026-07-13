@@ -18,6 +18,12 @@ homepage:
     prowlarr:
       key: ""
       host: https://prowlarr.talos.home
+    qbittorrent:
+      key: ""
+      host: https://qbittorrent.talos.home
+    seerr:
+      key: ""
+      host: https://seerr.talos.home
     plex:
       key: ""
       host: https://plex.talos.home
