@@ -15,6 +15,13 @@ data:
         - Github:
             - abbr: GH
               href: https://github.com/
+    - Usenet:
+        - NZBFinder:
+            - abbr: NZB
+              href: https://nzbfinder.ws/
+        - NewsDemon:
+            - abbr: ND
+              href: https://members.newsdemon.com/
   services.yaml: |
     - Infrastructure:
         - ArgoCD:
