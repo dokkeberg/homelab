@@ -165,7 +165,11 @@ Get Plex token (for `HOMEPAGE_VAR_PLEX_TOKEN`):
    ```powershell
    kubectl -n plex exec statefulset/plex-media-server -- sh -c "sed -n 's/.*PlexOnlineToken=\"\\([^\"]*\\)\".*/\\1/p' '/config/Library/Application Support/Plex Media Server/Preferences.xml' | head -n1"
    ```
-2. Optional token reference from Homepage docs: https://www.plexopedia.com/plex-media-server/general/plex-token/
+2. If the command above does not work, get token from Plex Web UI:
+   - Open Plex in browser, press `F12`, go to **Network**, and refresh.
+   - Open a request to `plex.tv` or `:/status/sessions`.
+   - Copy `X-Plex-Token` from query params or request headers.
+3. Optional token reference from Homepage docs: https://www.plexopedia.com/plex-media-server/general/plex-token/
 
 1. Create or update the Secret manually:
    ```powershell
