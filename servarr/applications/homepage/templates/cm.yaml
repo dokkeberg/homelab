@@ -19,10 +19,10 @@ data:
             - abbr: HL
               href: https://github.com/dokkeberg/homelab
     - Usenet:
-        - NZBFinder:
+        - NZBFinder (Index):
             - abbr: NZB
               href: https://nzbfinder.ws/
-        - NewsDemon:
+        - NewsDemon (Provider):
             - abbr: ND
               href: https://members.newsdemon.com/
   services.yaml: |
