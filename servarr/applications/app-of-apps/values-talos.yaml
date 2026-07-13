@@ -1,4 +1,5 @@
 enabledApplications:
+  - homepage
   - plex
   - plex-volumes
   - prowlarr

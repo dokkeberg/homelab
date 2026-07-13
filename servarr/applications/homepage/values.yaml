@@ -1,23 +1,23 @@
 nas:
   host: nas.home
 homepage:
-  host: homepage.k3s.home
+  host: homepage.talos.home
   services:
     radarr:
       key: ""
-      host: https://radarr.k3s.home
+      host: https://radarr.talos.home
     sonarr:
       key: ""
-      host: https://sonarr.k3s.home
+      host: https://sonarr.talos.home
     sabnzbd:
       key: ""
-      host: https://sabnzbd.k3s.home
+      host: https://sabnzbd.talos.home
     argocd:
       key: ""
-      host: https://argocd.k3s.home
+      host: https://argocd.talos.home
     prowlarr:
       key: ""
-      host: https://prowlarr.k3s.home
+      host: https://prowlarr.talos.home
     plex:
       key: ""
-      host: https://plex.k3s.home
+      host: https://plex.talos.home
