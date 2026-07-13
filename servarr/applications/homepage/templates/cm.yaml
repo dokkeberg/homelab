@@ -94,8 +94,10 @@ data:
             icon: overseerr.png
             href: {{ .Values.homepage.services.seerr.host }}
             description: Request management
-            namespace: seerr
-            app: seerr-seerr-chart
+            widget:
+              type: overseerr
+              url: {{ .Values.homepage.services.seerr.host }}
+              key: {{ .Values.homepage.services.seerr.key }}
   widgets.yaml: |
     - kubernetes:
         cluster:
