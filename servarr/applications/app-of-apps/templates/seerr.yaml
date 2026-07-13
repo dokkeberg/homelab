@@ -10,6 +10,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "12"
 spec:
   project: default
+  ignoreDifferences:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      jqPathExpressions:
+        - .spec.rules[].backendRefs[].group
+        - .spec.rules[].backendRefs[].kind
+        - .spec.rules[].backendRefs[].weight
   destination:
     namespace: seerr
     server: {{ .Values.spec.destination.server }}
