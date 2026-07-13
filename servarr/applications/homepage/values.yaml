@@ -18,7 +18,7 @@ homepage:
       host: https://argocd.talos.home
     proxmox:
       enabled: true
-      host: https://cad-server:8006
+      host: https://cad-server.home:8006/
       username: "{{HOMEPAGE_VAR_PROXMOX_TOKEN_ID}}"
       password: "{{HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET}}"
       node: cad-server
