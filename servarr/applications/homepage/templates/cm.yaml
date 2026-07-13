@@ -27,6 +27,31 @@ data:
               href: https://members.newsdemon.com/
   services.yaml: |
     - Infrastructure:
+{{- if .Values.homepage.services.proxmox.enabled }}
+        - Proxmox:
+            icon: proxmox.png
+            href: {{ .Values.homepage.services.proxmox.host }}
+            description: Virtualization host
+            widget:
+              type: proxmox
+              url: {{ .Values.homepage.services.proxmox.host }}
+              username: {{ .Values.homepage.services.proxmox.username }}
+              password: {{ .Values.homepage.services.proxmox.password }}
+              node: {{ .Values.homepage.services.proxmox.node }}
+{{- end }}
+{{- if .Values.homepage.services.truenas.enabled }}
+        - TrueNAS Scale:
+            icon: truenas-scale.png
+            href: {{ .Values.homepage.services.truenas.host }}
+            description: NAS and storage
+            widget:
+              type: truenas
+              url: {{ .Values.homepage.services.truenas.host }}
+              version: {{ .Values.homepage.services.truenas.version }}
+              nasType: {{ .Values.homepage.services.truenas.nasType }}
+              key: {{ .Values.homepage.services.truenas.key }}
+              enablePools: {{ .Values.homepage.services.truenas.enablePools }}
+{{- end }}
         - ArgoCD:
             icon: argo-cd.png
             href: {{ .Values.homepage.services.argocd.host }}

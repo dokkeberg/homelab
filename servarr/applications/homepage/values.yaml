@@ -16,6 +16,19 @@ homepage:
     argocd:
       key: "{{HOMEPAGE_VAR_ARGOCD_TOKEN}}"
       host: https://argocd.talos.home
+    proxmox:
+      enabled: true
+      host: https://cad-server:8006
+      username: "{{HOMEPAGE_VAR_PROXMOX_TOKEN_ID}}"
+      password: "{{HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET}}"
+      node: cad-server
+    truenas:
+      enabled: true
+      host: https://nas.home
+      version: 2
+      nasType: scale
+      key: "{{HOMEPAGE_VAR_TRUENAS_API_KEY}}"
+      enablePools: true
     prowlarr:
       key: "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}"
       host: https://prowlarr.talos.home

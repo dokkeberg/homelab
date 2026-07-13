@@ -146,6 +146,12 @@ Most Servarr apps require first-run configuration in the app UI after deployment
 ### Homepage API keys (manual Secret)
 
 Homepage now reads widget credentials from a Kubernetes Secret named `homepage-api-keys` in namespace `homepage`.
+Optional infrastructure widgets are configured in `servarr/applications/homepage/values.yaml`:
+
+- `homepage.services.proxmox.enabled`
+- `homepage.services.truenas.enabled`
+
+Set either to `false` if you do not want that widget rendered.
 
 Get Argo CD token (for `HOMEPAGE_VAR_ARGOCD_TOKEN`):
 
@@ -171,6 +177,20 @@ Get Plex token (for `HOMEPAGE_VAR_PLEX_TOKEN`):
    - Copy `X-Plex-Token` from query params or request headers.
 3. Optional token reference from Homepage docs: https://www.plexopedia.com/plex-media-server/general/plex-token/
 
+Get Proxmox API token (for `HOMEPAGE_VAR_PROXMOX_TOKEN_ID` and `HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET`):
+
+1. In Proxmox UI, create an API token for a user with read-only role (`PVEAuditor`) and token permission on `/`.
+2. Use token ID format `user@pam!tokenid` as `HOMEPAGE_VAR_PROXMOX_TOKEN_ID`.
+3. Use token secret as `HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET`.
+4. Reference: https://gethomepage.dev/configs/proxmox/#create-token
+
+Get TrueNAS Scale API key (for `HOMEPAGE_VAR_TRUENAS_API_KEY`):
+
+1. In TrueNAS Scale UI, open profile/top bar and manage API keys.
+2. Create a new API key and copy the generated value.
+3. Use that value as `HOMEPAGE_VAR_TRUENAS_API_KEY`.
+4. Reference: https://www.truenas.com/docs/scale/scaletutorials/toptoolbar/managingapikeys/
+
 1. Create or update the Secret manually:
    ```powershell
    kubectl -n homepage create secret generic homepage-api-keys `
@@ -180,6 +200,9 @@ Get Plex token (for `HOMEPAGE_VAR_PLEX_TOKEN`):
      --from-literal=HOMEPAGE_VAR_PROWLARR_API_KEY='<prowlarr-api-key>' `
      --from-literal=HOMEPAGE_VAR_SEERR_API_KEY='<seerr-api-key>' `
      --from-literal=HOMEPAGE_VAR_PLEX_TOKEN='<plex-token>' `
+     --from-literal=HOMEPAGE_VAR_PROXMOX_TOKEN_ID='<user@pam!tokenid>' `
+     --from-literal=HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET='<proxmox-token-secret>' `
+     --from-literal=HOMEPAGE_VAR_TRUENAS_API_KEY='<truenas-scale-api-key>' `
      --from-literal=HOMEPAGE_VAR_QBITTORRENT_PASSWORD='<qbittorrent-webui-password>' `
      --from-literal=HOMEPAGE_VAR_ARGOCD_TOKEN='<argocd-token>' `
      --dry-run=client -o yaml | kubectl apply -f -
