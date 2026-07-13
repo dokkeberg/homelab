@@ -147,6 +147,26 @@ Most Servarr apps require first-run configuration in the app UI after deployment
 
 Homepage now reads widget credentials from a Kubernetes Secret named `homepage-api-keys` in namespace `homepage`.
 
+Get Argo CD token (for `HOMEPAGE_VAR_ARGOCD_TOKEN`):
+
+1. Log in as admin (or another account with permission to mint tokens):
+   ```powershell
+   $ARGOCD_ADMIN_PASSWORD = kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | %{ [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($_)) }
+   argocd login argocd.talos.home --username admin --password $ARGOCD_ADMIN_PASSWORD --grpc-web
+   ```
+2. Generate token for the preconfigured `readonly` account (this account has `apiKey` capability in this repo):
+   ```powershell
+   argocd account generate-token --account readonly --grpc-web
+   ```
+
+Get Plex token (for `HOMEPAGE_VAR_PLEX_TOKEN`):
+
+1. Read token from Plex preferences inside the pod:
+   ```powershell
+   kubectl -n plex exec statefulset/plex-media-server -- sh -c "sed -n 's/.*PlexOnlineToken=\"\\([^\"]*\\)\".*/\\1/p' '/config/Library/Application Support/Plex Media Server/Preferences.xml' | head -n1"
+   ```
+2. Optional token reference from Homepage docs: https://www.plexopedia.com/plex-media-server/general/plex-token/
+
 1. Create or update the Secret manually:
    ```powershell
    kubectl -n homepage create secret generic homepage-api-keys `
