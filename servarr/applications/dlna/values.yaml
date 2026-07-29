@@ -1,2 +1,5 @@
 dlna:
-  host: dlna.k3s.home
+  host: dlna.talos.home
+  # When true, the DLNA pod runs with hostNetwork: true so SSDP (UDP 1900) discovery works on the LAN.
+  # This exposes multicast/UDP directly on the node network interface and is required for DLNA discovery.
+  hostNetwork: true

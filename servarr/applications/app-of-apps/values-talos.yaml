@@ -15,3 +15,6 @@ enabledApplications:
   - seerr-volumes
   - sonarr
   - sonarr-volumes
+  - dlna
+  - dlna-volumes
+ 

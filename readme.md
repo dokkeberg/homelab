@@ -118,6 +118,17 @@ Most Servarr apps require first-run configuration in the app UI after deployment
    - Radarr API key
 4. Configure Seerr defaults to use Sonarr for TV requests and Radarr for movie requests.
 
+### DLNA (LAN discovery)
+
+DLNA discovery uses SSDP (UDP/1900 multicast), which requires the DLNA pod to run with hostNetwork enabled or an alternative multicast bridge. The chart in `servarr/applications/dlna` exposes an opt-in `dlna.hostNetwork` value. To enable LAN discovery:
+
+1. Set `dlna.hostNetwork: true` in `servarr/applications/dlna/values.yaml` (or set the value via Helm/Argo CD application parameters).
+2. Deploy/sync the `dlna` application. When `hostNetwork` is enabled, SSDP packets will be visible on the node's LAN and DLNA clients on the same network will discover the server automatically.
+
+Notes and caveats:
+- hostNetwork exposes UDP/TCP ports on the node network interface; ensure you understand the local network exposure and security implications.
+- If you cannot use hostNetwork, consider a network-level multicast bridge or using the host's DLNA service instead.
+
 ### Recyclarr (manual sync app)
 
 1. `recyclarr` is intentionally configured as an Argo CD app with **manual sync**.
